@@ -6,7 +6,7 @@
     <title>Portfoli - Inici</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="./css/estils.css">
     <style>
         /* --- ESTILS CSS (DISSENY COMPLET) --- */
 
@@ -42,63 +42,8 @@
         ul { list-style: none; }
         img { max-width: 100%; display: block; }
 
-        /* --- HEADER / MENÚ SUPERIOR --- */
-        header {
-            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
-            background-color: rgba(0, 0, 0, 0.9);
-            border-bottom: 1px solid #333;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 15%;
-        }
 
-        .logo-text {
-            font-size: 1.8rem;
-            letter-spacing: 2px;
-            font-weight: 700;
-        }
 
-        nav ul {
-            display: flex;
-            gap: 30px; /* Separació entre enllaços */
-        }
-
-        nav a {
-            font-size: 0.9rem;
-            text-transform: lowercase; /* En minúscules com al disseny */
-            letter-spacing: 1px;
-            opacity: 0.8;
-            position: relative;
-        }
-
-        /* Línia que apareix sota l'enllaç en passar el ratolí o si està actiu */
-        nav a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background-color: var(--accent);
-            transition: 0.3s;
-        }
-
-        nav a:hover, nav a.active { opacity: 1; }
-        nav a:hover::after, nav a.active::after { width: 100%; }
-
-        /* --- MAIN CONTENT --- */
-        main {
-            padding-top: 80px;
-        }
-        .header-titulo {
-        padding: 40px 15% 0 15%; /* Esto lo alinea con la foto */
-        margin-bottom: 20px;
-    }
-
-        .header-titulo h1 {
-        font-size: 3rem;
-        margin-bottom: 5px;
-        font-weight: 400;
-    }
 
         /* --- HERO SECTION (LA PRESENTACIÓ) --- */
         .hero {
@@ -126,8 +71,8 @@
         }
 
         .hero-img img {
-            width: 400px;
-            height: 500px;
+            width: 250px;
+            height: 350px;
             object-fit: cover; /* Retalla la foto perquè ompli l'espai */
             border-radius: 8px; /* Cantons lleugerament arrodonits */
             opacity: 0.9;
@@ -210,7 +155,7 @@
         /* Contenidor de la imatge del projecte */
         .image-container {
             width: 100%;
-            height: 450px; /* Alçada fixa vertical */
+            height: 250px; /* Alçada fixa vertical */
             overflow: hidden;
             border-radius: 8px;
             position: relative;
@@ -251,23 +196,7 @@
         }
         .card-text-link:hover { color: var(--text-main); border-color: var(--text-main); }
 
-        /* --- FOOTER --- */
-        footer {
-            margin-top: 50px;
-            padding: 50px 10%;
-            text-align: center;
-            border-top: 1px solid #333; /* Línia subtil a dalt */
-            color: var(--text-secondary);
-        }
 
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-bottom: 20px;
-        }
-        .footer-links a { text-decoration: underline; font-size: 0.9rem; }
-        .footer-text { font-size: 0.8rem; opacity: 0.7; }
 
         /* --- RESPONSIVE (Adaptació a Mòbil) --- */
         @media (max-width: 768px) {
@@ -295,7 +224,7 @@
 <body>
 
     <header>
-        <div class="logo-text">JOSEP</div>
+        <div class="logo-text">Josep Perez</div>
         <nav>
             <ul>
                 <li><a href="index.html" class="active">index</a></li>
@@ -306,13 +235,10 @@
     </header>
 
     <main>
-        <section class="header-titulo">
-            <h1>JOSEP PEREZ</h1>
 
-        </section>
         <section class="hero">
             <div class="hero-img">
-                <img src="https://images.unsplash.com/photo-1544256718-3bcf237f38b2?auto=format&fit=crop&w=800&q=80" alt="Paisatge abstracte">
+                <img src="./img/unnamed.jpg" alt="Paisatge abstracte">
             </div>
 
             <div class="hero-text">
@@ -320,7 +246,7 @@
                 <p>
                     I'm Josep Perez, a passionate product designer with a knack for creating intuitive and engaging user experiences. With a background in graphic design and a love for technology, I specialize in crafting digital products that not only look great but also function seamlessly.
                 </p>
-                <a href="contacte.html" class="btn">Contactar</a>
+                <a href="./pages/contacte.html" class="btn">Contactar</a>
             </div>
         </section>
 
@@ -332,7 +258,7 @@
                 <article class="project-card">
                     <h3 class="project-title">Projecto 1</h3>
                     <div class="image-container">
-                        <img src="https://images.unsplash.com/photo-1467232004587-fc0413277451?auto=format&fit=crop&w=800&q=80" alt="Projecte 1">
+                        <img src="./img/img.png" alt="Projecte 1">
                     </div>
                     <a href="detall-projecte.html" class="card-link">Veure Detalls</a>
                 </article>
@@ -340,7 +266,7 @@
                 <article class="project-card">
                     <h3 class="project-title">Projecto 2</h3>
                     <div class="image-container">
-                        <img src="https://images.unsplash.com/photo-1550439062-609e1531270e?auto=format&fit=crop&w=800&q=80" alt="Projecte 2">
+                        <img src="./img/img_1.png" alt="Projecte 2">
                     </div>
                     <a href="detall-projecte.html" class="card-link">Veure Detalls</a>
                 </article>
@@ -351,7 +277,7 @@
     </main>
 
     <footer>
-        <p class="footer-text">© 2025 [El Vostre Nom]. Tots els drets reservats.</p>
+        <p class="footer-text">© 2025 Josep Perez. Tots els drets reservats.</p>
     </footer>
 
 </body>

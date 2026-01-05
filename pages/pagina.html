@@ -6,7 +6,7 @@
     <title>Portfoli - Els meus Projectes</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="../css/estils.css">
     <style>
         /* --- ESTILS GENERALS --- */
         :root {
@@ -29,19 +29,7 @@
         ul { list-style: none; }
         img { max-width: 100%; display: block; }
 
-        /* --- HEADER --- */
-        header {
-            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
-            background-color: rgba(0, 0, 0, 0.9);
-            border-bottom: 1px solid #333;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 15%;
-        }
 
-        .logo-text { font-size: 1.5rem; font-weight: 700; letter-spacing: 2px; }
-        nav ul { display: flex; gap: 30px; }
-        nav a { font-size: 0.9rem; text-transform: lowercase; opacity: 0.8; }
-        nav a:hover, nav a.active { opacity: 1; border-bottom: 1px solid white; }
 
         /* --- MAIN --- */
         main {
@@ -126,7 +114,6 @@
         .btn-cta { display: inline-block; padding: 12px 35px; border: 1px solid white; color: white; margin-top: 20px; }
         .btn-cta:hover { background: white; color: black; }
 
-        footer { margin-top: 0; padding: 40px 15%; text-align: center; border-top: 1px solid #333; color: #666; font-size: 0.8rem; }
 
         @media (max-width: 768px) {
             header, main, footer, .cta-section { padding-left: 5%; padding-right: 5%; }
@@ -137,10 +124,10 @@
 <body>
 
     <header>
-        <div class="logo-text">NOM</div>
+        <div class="logo-text">Josep Perez</div>
         <nav>
             <ul>
-                <li><a href="index.html">index</a></li>
+                <li><a href="../index.html">index</a></li>
                 <li><a href="projectes.html" class="active">projectes</a></li>
                 <li><a href="contacte.html">contacte</a></li>
             </ul>
@@ -388,7 +375,7 @@
     </section>
 
     <footer>
-        <p>© 2025 [El Vostre Nom]. Tots els drets reservats.</p>
+        <p class="footer-text">© 2025 Josep Perez. Tots els drets reservats.</p>
     </footer>
 
     <script>

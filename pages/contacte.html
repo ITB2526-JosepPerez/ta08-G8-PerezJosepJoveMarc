@@ -6,7 +6,7 @@
     <title>Portfoli - Contacte</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="../css/estils.css">
     <style>
         /* --- ESTILS GENERALS --- */
         :root {
@@ -31,19 +31,6 @@
         a { text-decoration: none; color: inherit; transition: 0.3s; }
         ul { list-style: none; }
 
-        /* --- HEADER --- */
-        header {
-            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
-            background-color: rgba(0, 0, 0, 0.9);
-            border-bottom: 1px solid #333;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 15%;
-        }
-
-        .logo-text { font-size: 1.5rem; font-weight: 700; letter-spacing: 2px; }
-        nav ul { display: flex; gap: 30px; }
-        nav a { font-size: 0.9rem; text-transform: lowercase; opacity: 0.8; }
-        nav a:hover, nav a.active { opacity: 1; border-bottom: 1px solid white; }
 
         /* --- MAIN --- */
         main {
@@ -131,7 +118,7 @@
         }
 
 
-        footer { margin-top: 50px; padding: 40px 15%; text-align: center; border-top: 1px solid #333; color: #666; font-size: 0.8rem; }
+
 
         @media (max-width: 768px) {
             header { padding: 15px 5%; }
@@ -144,7 +131,7 @@
 <body>
 
     <header>
-        <div class="logo-text">NOM</div>
+        <div class="logo-text">Josep Perez</div>
         <nav>
             <ul>
                 <li><a href="../index.html">index</a></li>
@@ -218,7 +205,7 @@
     </main>
 
     <footer>
-        <p>© 2025 [El Vostre Nom].</p>
+        <p class="footer-text">© 2025 Josep Perez. Tots els drets reservats.</p>
     </footer>
 
     <script>
