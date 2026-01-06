@@ -219,6 +219,40 @@
             .projects-grid { grid-template-columns: 1fr; gap: 50px; } /* Una columna al mòbil */
             .image-container { height: 350px; }
         }
+        /* --- ESTIL NOU PER ALS ENLLAÇOS "VEURE DETALLS" --- */
+        .card-link {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 12px 30px;
+
+            /* Estil Botó "Ghost" (Transparent amb vora) */
+            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.4); /* Vora subtil */
+            color: var(--text-main);
+
+            border-radius: 50px; /* Molt arrodonit (estil càpsula) */
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+
+            transition: all 0.3s ease; /* Suavitat al canviar */
+            position: relative;
+        }
+
+        /* Quan passes el ratolí per sobre del botó */
+        .card-link:hover {
+            border-color: #ffffff;
+            background-color: #ffffff; /* S'omple de blanc */
+            color: #000000;            /* El text es torna negre */
+            transform: translateY(-3px); /* Puja una mica cap amunt */
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2); /* Brillantor */
+        }
+
+        /* Opcional: Fer que tota la targeta sigui clicable si toques la foto */
+        .image-container {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -244,10 +278,11 @@
             </div>
 
             <div class="hero-text">
-                <h1>I'm Josep Perez<br>A Product Designer<br>based in Spain</h1>
+                <h1>Soc en Josep Perez<br>Dissenyador de Producte<br>resident a Espanya</h1>
                 <p>
-                    I'm Josep Perez, a passionate product designer with a knack for creating intuitive and engaging user experiences. With a background in graphic design and a love for technology, I specialize in crafting digital products that not only look great but also function seamlessly.
+                     Soc en Josep Perez, un apassionat del disseny de producte amb un talent especial per crear experiències d'usuari intuïtives i atractives. Amb formació en disseny gràfic i amor per la tecnologia, m'especialitzo a crear productes digitals que no només tenen un gran aspecte, sinó que també funcionen a la perfecció.
                 </p>
+
                 <a href="./pages/contacte.html" class="btn">Contactar</a>
             </div>
         </section>
