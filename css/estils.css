@@ -1,69 +1,12 @@
-/* --- HEADER / MENÚ SUPERIOR --- */
 header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-    background-color: rgba(0, 0, 0, 0.9); /* Fondo negro semitransparente */
-    border-bottom: 1px solid #333;        /* Línea gris fina abajo */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 15%; /* Espacio a los lados */
-}
-
-/* Estilo del Nombre/Logo */
-.logo-text {
-    font-family: 'Playfair Display', serif; /* Tu fuente elegante */
-    font-size: 1.8rem;
-    letter-spacing: 2px;
-    font-weight: 700;
-    color: #ffffff;
-}
-
-/* Contenedor de la lista de enlaces */
-nav ul {
-    display: flex;
-    gap: 30px; /* Separación entre botones */
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-/* Estilo de los enlaces (index, projectes, contacte) */
-nav a {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
-    text-transform: lowercase; /* Texto en minúsculas */
-    letter-spacing: 1px;
-    opacity: 0.8;
-    position: relative;
-    text-decoration: none;
-    color: #ffffff;
-    transition: 0.3s;
-}
-
-/* Efecto: Línea blanca que aparece debajo al pasar el ratón */
-nav a::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background-color: #ffffff;
-    transition: 0.3s;
-}
-
-/* Estados Hover (ratón encima) y Active (página actual) */
-nav a:hover, nav a.active {
-    opacity: 1;
-}
-
-nav a:hover::after, nav a.active::after {
-    width: 100%; /* La línea crece al 100% */
-}
+            position: fixed; top: 0; left: 0; width: 100%; height: 80px; z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.95); border-bottom: 1px solid #333;
+            display: flex; justify-content: space-between; align-items: center; padding: 0 5%;
+        }
+        .logo-text { font-size: 1.8rem; font-weight: 700; color: #ffffff; letter-spacing: 1px; }
+        nav ul { display: flex; gap: 30px; }
+        nav a { font-size: 1rem; font-weight: 400; color: #bbbbbb; }
+        nav a:hover, nav a.active { color: #ffffff; text-decoration: underline; text-underline-offset: 5px; }
 
 /* --- RESPONSIVE (Móvil) --- */
 @media (max-width: 768px) {

@@ -8,7 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/estils.css">
     <style>
-        /* --- ESTILS GENERALS --- */
+        /* =========================================
+           ESTILS ORIGINALS (IDÉNTICOS A TU ARCHIVO)
+           ========================================= */
         :root {
             --bg-color: #000000;
             --text-main: #ffffff;
@@ -33,7 +35,7 @@
 
         /* --- MAIN --- */
         main {
-            padding-top: 120px;
+            padding-top: 150px; /* Ajuste para el menú fijo */
             padding-bottom: 80px;
             padding-left: 15%;
             padding-right: 15%;
@@ -43,7 +45,7 @@
         .page-header h1 { font-size: 3.5rem; margin-bottom: 10px; font-weight: 400; }
         .page-header p { color: var(--text-secondary); font-size: 1.1rem; }
 
-        /* --- FILTRES (ESTÁTICO) --- */
+        /* --- FILTROS (ESTILO ORIGINAL) --- */
         .filters-container {
             text-align: center;
             margin-bottom: 60px;
@@ -54,28 +56,22 @@
         }
 
         .filter-links {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 25px;
+            display: flex; justify-content: center; flex-wrap: wrap; gap: 25px;
         }
 
         .filter-btn {
             background: none; border: none; color: var(--text-secondary);
             font-family: 'Inter', sans-serif; font-size: 1rem; cursor: pointer;
-            text-decoration: none;
-            padding: 5px 10px;
-            border-radius: 20px;
-            transition: 0.3s;
+            padding: 5px 15px; border-radius: 20px; transition: 0.3s;
         }
 
         .filter-btn:hover { color: white; background-color: #222; }
         .filter-btn.active { color: black; background-color: white; font-weight: 600; }
 
-        /* --- GRID PROJECTES --- */
+        /* --- GRID DE 2 COLUMNAS (TU ESTILO) --- */
         .projects-grid-page {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr; /* 2 Columnas */
             column-gap: 80px;
             row-gap: 100px;
         }
@@ -114,10 +110,12 @@
         .btn-cta { display: inline-block; padding: 12px 35px; border: 1px solid white; color: white; margin-top: 20px; }
         .btn-cta:hover { background: white; color: black; }
 
+        footer { text-align: center; padding: 40px; color: #666; font-size: 0.9rem; }
 
         @media (max-width: 768px) {
             header, main, footer, .cta-section { padding-left: 5%; padding-right: 5%; }
             .projects-grid-page { grid-template-columns: 1fr; gap: 60px; }
+            header { padding: 0 20px; }
         }
     </style>
 </head>
@@ -129,6 +127,8 @@
             <ul>
                 <li><a href="../index.html">index</a></li>
                 <li><a href="projectes.html" class="active">projectes</a></li>
+                <li><a href="projecte-calculadora.html">calculadora</a></li>
+                <li><a href="projecte-tetris.html">tetris</a></li>
                 <li><a href="contacte.html">contacte</a></li>
             </ul>
         </nav>
@@ -138,7 +138,7 @@
 
         <section class="page-header">
             <h1>Els meus Projectes</h1>
-            <p>Una selecció dels meus millors treballs organitzats per àrees.</p>
+            <p>Una selecció de 20 projectes destacats en disseny i desenvolupament.</p>
         </section>
 
         <div class="filters-container">
@@ -146,7 +146,7 @@
             <div class="filter-links">
                 <button class="filter-btn active" data-filter="all">Tots</button>
                 <button class="filter-btn" data-filter="web">Web</button>
-                <button class="filter-btn" data-filter="app">Apps</button>
+                <button class="filter-btn" data-filter="app">Apps / Jocs</button>
                 <button class="filter-btn" data-filter="branding">Branding</button>
                 <button class="filter-btn" data-filter="data">Data & AI</button>
             </div>
@@ -154,214 +154,224 @@
 
         <section class="projects-grid-page">
 
+            <article class="project-item" data-category="app">
+                <div class="project-img-box">
+                    <a href="projecte-tetris.html">
+                        <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=600&q=80" alt="Tetris">
+                    </a>
+                </div>
+                <h3>Tetris Game</h3>
+                <p class="project-category">Videojoc Web</p>
+                <div class="tags-container"><span class="tag">JavaScript</span><span class="tag">Game Logic</span></div>
+            </article>
+
             <article class="project-item" data-category="web">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1545235617-9465d2a55698?w=500" alt="P1"></a></div>
-                <h3>Landing Page</h3>
+                <div class="project-img-box">
+                    <a href="projecte-calculadora.html">
+                        <img src="https://images.unsplash.com/photo-1587145820266-a5951ee6f620?w=600&q=80" alt="Calculadora iOS">
+                    </a>
+                </div>
+                <h3>Calculadora iOS</h3>
+                <p class="project-category">UI Replica</p>
+                <div class="tags-container"><span class="tag">HTML/CSS</span><span class="tag">DOM</span></div>
+            </article>
+
+            <article class="project-item" data-category="web">
+                <div class="project-img-box">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=600&q=80" alt="Landing Page">
+                    </a>
+                </div>
+                <h3>Modern Landing</h3>
                 <p class="project-category">Disseny Web</p>
                 <div class="tags-container"><span class="tag">Figma</span><span class="tag">HTML</span></div>
             </article>
 
             <article class="project-item" data-category="app">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=500" alt="P2"></a></div>
-                <h3>Fitness App</h3>
+                <div class="project-img-box">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1576678927484-cc907957088c?w=600&q=80" alt="Fitness App">
+                    </a>
+                </div>
+                <h3>Fitness Tracker</h3>
                 <p class="project-category">Aplicació Mòbil</p>
                 <div class="tags-container"><span class="tag">React Native</span></div>
             </article>
 
             <article class="project-item" data-category="branding">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=500" alt="P3"></a></div>
-                <h3>Eco Brand</h3>
+                <div class="project-img-box">
+                    <a href="#">
+                        <img src="../img/img_6.png" alt="Eco Brand">
+                    </a>
+                </div>
+                <h3>Eco Identity</h3>
                 <p class="project-category">Identitat Corporativa</p>
                 <div class="tags-container"><span class="tag">Illustrator</span></div>
             </article>
 
+            <article class="project-item" data-category="data">
+                <div class="project-img-box">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80" alt="Analytics">
+                    </a>
+                </div>
+                <h3>Data Dashboard</h3>
+                <p class="project-category">Visualització de Dades</p>
+                <div class="tags-container"><span class="tag">Python</span><span class="tag">D3.js</span></div>
+            </article>
+
             <article class="project-item" data-category="app">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500" alt="P4"></a></div>
+                <div class="project-img-box">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=600&q=80" alt="Task Manager">
+                    </a>
+                </div>
                 <h3>Task Manager</h3>
-                <p class="project-category">App iOS</p>
+                <p class="project-category">Productivitat</p>
                 <div class="tags-container"><span class="tag">Swift</span></div>
             </article>
 
-            <article class="project-item" data-category="web">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500" alt="P5"></a></div>
-                <h3>Portfolio Template</h3>
-                <p class="project-category">UI Kit Web</p>
-                <div class="tags-container"><span class="tag">Figma</span></div>
+            <article class="project-item" data-category="branding">
+                <div class="project-img-box">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&q=80" alt="Magazine">
+                    </a>
+                </div>
+                <h3>Art Magazine</h3>
+                <p class="project-category">Disseny Editorial</p>
+                <div class="tags-container"><span class="tag">InDesign</span></div>
             </article>
 
             <article class="project-item" data-category="data">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=500" alt="P6"></a></div>
-                <h3>API Server</h3>
-                <p class="project-category">Backend API</p>
-                <div class="tags-container"><span class="tag">Python</span><span class="tag">Flask</span></div>
+                <div class="project-img-box">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=600&q=80" alt="Cyber Security">
+                    </a>
+                </div>
+                <h3>Secure Login</h3>
+                <p class="project-category">Ciberseguretat</p>
+                <div class="tags-container"><span class="tag">Auth0</span><span class="tag">Node.js</span></div>
             </article>
 
             <article class="project-item" data-category="branding">
-                <div class="project-img-box"><a href="tetris.html"><img src="https://images.unsplash.com/photo-1555862877-523736550400?w=500" alt="P7"></a></div>
-                <h3>Magazine Cover</h3>
-                <p class="project-category">Disseny Editorial</p>
-                <div class="tags-container"><span class="tag">Indesign</span></div>
-            </article>
-
-            <article class="project-item" data-category="web">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=500" alt="P8"></a></div>
-                <h3>Corporate Site</h3>
-                <p class="project-category">Frontend</p>
-                <div class="tags-container"><span class="tag">Vue.js</span></div>
-            </article>
-
-            <article class="project-item" data-category="branding">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1542744094-24638eff58bb?w=500" alt="P9"></a></div>
-                <h3>Tech Product</h3>
-                <p class="project-category">Product Design</p>
-                <div class="tags-container"><span class="tag">Sketch</span></div>
-            </article>
-
-            <article class="project-item" data-category="web">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1550439062-609e1531270e?w=500" alt="P10"></a></div>
-                <h3>Social Network</h3>
-                <p class="project-category">Fullstack</p>
-                <div class="tags-container"><span class="tag">MERN</span></div>
-            </article>
-
-            <article class="project-item" data-category="branding">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1600607686527-6fb886090705?w=500" alt="P11"></a></div>
-                <h3>Coffee Pack</h3>
+                <div class="project-img-box">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1559526323-cb2f2fe2591b?w=600&q=80" alt="Coffee">
+                    </a>
+                </div>
+                <h3>Organic Coffee</h3>
                 <p class="project-category">Packaging</p>
                 <div class="tags-container"><span class="tag">Photoshop</span></div>
             </article>
 
-            <article class="project-item" data-category="data">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?w=500" alt="P12"></a></div>
-                <h3>Analytics Dashboard</h3>
-                <p class="project-category">Data Science</p>
-                <div class="tags-container"><span class="tag">Python</span><span class="tag">Pandas</span></div>
-            </article>
-
             <article class="project-item" data-category="web">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=500" alt="P13"></a></div>
-                <h3>Agency Site</h3>
-                <p class="project-category">Web Design</p>
-                <div class="tags-container"><span class="tag">Figma</span></div>
+                <div class="project-img-box">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&q=80" alt="Social Media">
+                    </a>
+                </div>
+                <h3>Connect App</h3>
+                <p class="project-category">Xarxa Social</p>
+                <div class="tags-container"><span class="tag">React</span><span class="tag">Firebase</span></div>
             </article>
 
             <article class="project-item" data-category="data">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=500" alt="P14"></a></div>
-                <h3>Secure Login</h3>
-                <p class="project-category">Security</p>
-                <div class="tags-container"><span class="tag">Cyber</span></div>
+                <div class="project-img-box">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&q=80" alt="Cloud">
+                    </a>
+                </div>
+                <h3>Cloud System</h3>
+                <p class="project-category">Infraestructura</p>
+                <div class="tags-container"><span class="tag">AWS</span><span class="tag">Docker</span></div>
             </article>
 
             <article class="project-item" data-category="branding">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500" alt="P15"></a></div>
-                <h3>Instagram Kit</h3>
-                <p class="project-category">Social Media</p>
-                <div class="tags-container"><span class="tag">Canva</span></div>
-            </article>
-
-            <article class="project-item" data-category="data">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1555099962-4199c345e5dd?w=500" alt="P16"></a></div>
-                <h3>Container System</h3>
-                <p class="project-category">DevOps</p>
-                <div class="tags-container"><span class="tag">Docker</span></div>
-            </article>
-
-            <article class="project-item" data-category="branding">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1557053503-0c252e5c8093?w=500" alt="P17"></a></div>
+                <div class="project-img-box">
+                    <a href="#">
+                        <img src="../img/img_7.png" alt="Logo Design">
+                    </a>
+                </div>
                 <h3>Minimal Logo</h3>
-                <p class="project-category">Logo Design</p>
-                <div class="tags-container"><span class="tag">Illustrator</span></div>
+                <p class="project-category">Disseny de Marca</p>
+                <div class="tags-container"><span class="tag">Vector</span></div>
             </article>
 
             <article class="project-item" data-category="web">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=500" alt="P18"></a></div>
-                <h3>Shoe Store</h3>
+                <div class="project-img-box">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&q=80" alt="Shoes">
+                    </a>
+                </div>
+                <h3>Sneaker Shop</h3>
                 <p class="project-category">E-commerce</p>
                 <div class="tags-container"><span class="tag">Shopify</span></div>
             </article>
 
-            <article class="project-item" data-category="branding">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1606857521015-7f9fcf423740?w=500" alt="P19"></a></div>
-                <h3>New Typeface</h3>
-                <p class="project-category">Typography</p>
-                <div class="tags-container"><span class="tag">FontLab</span></div>
-            </article>
-
             <article class="project-item" data-category="data">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=500" alt="P20"></a></div>
-                <h3>Scrum Board</h3>
-                <p class="project-category">Management Tool</p>
-                <div class="tags-container"><span class="tag">Agile</span></div>
+                <div class="project-img-box">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=600&q=80" alt="AI Robot">
+                    </a>
+                </div>
+                <h3>AI Assistant</h3>
+                <p class="project-category">Intel·ligència Artificial</p>
+                <div class="tags-container"><span class="tag">Python</span><span class="tag">NLP</span></div>
             </article>
 
-             <article class="project-item" data-category="web">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=500" alt="P21"></a></div>
-                <h3>User Research</h3>
+            <article class="project-item" data-category="branding">
+                <div class="project-img-box">
+                    <a href="#">
+                        <img src="../img/img_8.png" alt="Poster">
+                    </a>
+                </div>
+                <h3>Music Fest</h3>
+                <p class="project-category">Cartelleria</p>
+                <div class="tags-container"><span class="tag">Print</span></div>
+            </article>
+
+            <article class="project-item" data-category="app">
+                <div class="project-img-box">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&q=80" alt="Gaming">
+                    </a>
+                </div>
+                <h3>Space Runner</h3>
+                <p class="project-category">Videojoc Mòbil</p>
+                <div class="tags-container"><span class="tag">Unity</span><span class="tag">C#</span></div>
+            </article>
+
+            <article class="project-item" data-category="web">
+                <div class="project-img-box">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=600&q=80" alt="Office">
+                    </a>
+                </div>
+                <h3>Law Firm</h3>
+                <p class="project-category">Web Corporativa</p>
+                <div class="tags-container"><span class="tag">WordPress</span></div>
+            </article>
+
+            <article class="project-item" data-category="web">
+                <div class="project-img-box">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=600&q=80" alt="UX Research">
+                    </a>
+                </div>
+                <h3>User Journey</h3>
                 <p class="project-category">UX Research</p>
                 <div class="tags-container"><span class="tag">Miro</span></div>
             </article>
 
-            <article class="project-item" data-category="data">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=500" alt="P22"></a></div>
-                <h3>Penetration Test</h3>
-                <p class="project-category">Cybersecurity</p>
-                <div class="tags-container"><span class="tag">Kali</span></div>
-            </article>
-
             <article class="project-item" data-category="branding">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1509395062183-67c5ad6faff9?w=500" alt="P23"></a></div>
-                <h3>Intro Video</h3>
+                <div class="project-img-box">
+                    <a href="#">
+                        <img src="../img/img_9.png" alt="Video Editing">
+                    </a>
+                </div>
+                <h3>Brand Intro</h3>
                 <p class="project-category">Motion Graphics</p>
                 <div class="tags-container"><span class="tag">After Effects</span></div>
-            </article>
-
-            <article class="project-item" data-category="data">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?w=500" alt="P24"></a></div>
-                <h3>Cloud Migration</h3>
-                <p class="project-category">Cloud</p>
-                <div class="tags-container"><span class="tag">AWS</span></div>
-            </article>
-
-             <article class="project-item" data-category="branding">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500" alt="P25"></a></div>
-                <h3>Event Poster</h3>
-                <p class="project-category">Poster Design</p>
-                <div class="tags-container"><span class="tag">Indesign</span></div>
-            </article>
-
-            <article class="project-item" data-category="data">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1643554078755-129043900000?w=500" alt="P26"></a></div>
-                <h3>Chat Bot</h3>
-                <p class="project-category">AI Bot</p>
-                <div class="tags-container"><span class="tag">Python</span></div>
-            </article>
-
-            <article class="project-item" data-category="branding">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=500" alt="P27"></a></div>
-                <h3>Rebranding</h3>
-                <p class="project-category">Brand Identity</p>
-                <div class="tags-container"><span class="tag">Corel</span></div>
-            </article>
-
-            <article class="project-item" data-category="app">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1535223289827-42f1e9919769?w=500" alt="P28"></a></div>
-                <h3>Mobile Game</h3>
-                <p class="project-category">Game Dev</p>
-                <div class="tags-container"><span class="tag">Unity</span></div>
-            </article>
-
-             <article class="project-item" data-category="branding">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1522542550221-31fd19575a2d?w=500" alt="P29"></a></div>
-                <h3>Hand Sketch</h3>
-                <p class="project-category">Sketching</p>
-                <div class="tags-container"><span class="tag">Paper</span></div>
-            </article>
-
-            <article class="project-item" data-category="web">
-                <div class="project-img-box"><a href="detall-projecte.html"><img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=500" alt="P30"></a></div>
-                <h3>Final Project</h3>
-                <p class="project-category">Web Development</p>
-                <div class="tags-container"><span class="tag">HTML/CSS</span></div>
             </article>
 
         </section>
