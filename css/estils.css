@@ -3,7 +3,7 @@ header {
             background-color: rgba(0, 0, 0, 0.95); border-bottom: 1px solid #333;
             display: flex; justify-content: space-between; align-items: center; padding: 0 5%;
         }
-        .logo-text { font-size: 1.8rem; font-weight: 700; color: #ffffff; letter-spacing: 1px; }
+        .logo-text { font-size: 1.8rem; font-weight: 700; color: #ffffff; letter-spacing: 1px;font-family: 'Playfair Display', serif; }
         nav ul { display: flex; gap: 30px; }
         nav a { font-size: 1rem; font-weight: 400; color: #bbbbbb; }
         nav a:hover, nav a.active { color: #ffffff; text-decoration: underline; text-underline-offset: 5px; }
