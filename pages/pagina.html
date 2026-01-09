@@ -411,6 +411,97 @@
             });
         });
     </script>
+<button id="btnScrollTop" title="Pujar a dalt">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
 
+    <style>
+        #btnScrollTop {
+            /* Posició i estat inicial (invisible) */
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999; /* Sempre a sobre */
+
+            /* Estètica Premium */
+            width: 50px;
+            height: 50px;
+            border-radius: 50%; /* Cercle perfecte */
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            cursor: pointer;
+
+            /* Centrar la icona perfectament */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            /* Ombra suau "Glow" */
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+
+            /* Animacions d'entrada i sortida suaus */
+            opacity: 0; /* Comença invisible */
+            visibility: hidden;
+            transform: translateY(20px); /* Comença una mica més avall */
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* Classe que afegeix JS quan fem scroll per mostrar-lo */
+        #btnScrollTop.show-btn {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0); /* Puja a la seva posició */
+        }
+
+        /* Efecte Hover (al passar el ratolí) */
+        #btnScrollTop:hover {
+            background-color: #f0f0f0; /* Un blanc una mica més gris */
+            transform: translateY(-5px); /* Flota una mica cap amunt */
+            box-shadow: 0 5px 25px rgba(255, 255, 255, 0.5); /* Més brillantor */
+        }
+
+        /* --- RESPONSIVE: Adaptació per a Mòbil --- */
+        @media (max-width: 768px) {
+            #btnScrollTop {
+                width: 45px;  /* Una mica més petit */
+                height: 45px;
+                bottom: 20px; /* Més a prop de la vora */
+                right: 20px;
+            }
+            #btnScrollTop svg {
+                width: 20px; /* Icona més petita */
+                height: 20px;
+            }
+        }
+    </style>
+
+    <script>
+        // Agafem l'element del botó
+        const mybutton = document.getElementById("btnScrollTop");
+
+        // Escoltem l'esdeveniment de scroll
+        window.addEventListener('scroll', function() {
+            // Si baixem més de 300px, afegim la classe que el mostra
+            if (window.scrollY > 300) {
+                mybutton.classList.add("show-btn");
+            } else {
+                // Si estem a dalt, treiem la classe per amagar-lo suaument
+                mybutton.classList.remove("show-btn");
+            }
+        });
+
+        // Quan es clica, pugem a dalt suaument
+        mybutton.addEventListener("click", function() {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+    </script>
+
+</body> ```
 </body>
 </html>
