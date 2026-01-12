@@ -34,16 +34,16 @@
 
         /* --- MAIN --- */
         main {
-            padding-top: 180px; /* He aumentado esto para que no se solape con el menú */
-            padding-bottom: 80px;
-            padding-left: 15%;
-            padding-right: 15%;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start; /* Alineación arriba */
-            gap: 80px;
-            min-height: 80vh;
-        }
+    padding-top: 150px; /* Reduït una mica per coherència */
+    padding-bottom: 80px;
+    padding-left: 10%;  /* Baixem de 15% a 10% */
+    padding-right: 10%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 60px; /* Reduïm gap perquè en tablets no es vegi massa separat */
+    min-height: 80vh;
+}
 
         /* --- COLUMNA ESQUERRA (TEXTO) --- */
         .contact-info { width: 40%; position: sticky; top: 150px; } /* Sticky para que te siga al bajar */
@@ -126,6 +126,37 @@
             .contact-info, .contact-form-container { width: 100%; }
             .contact-info { position: static; margin-bottom: 50px; }
         }
+        @media (max-width: 768px) {
+    main {
+        flex-direction: column; /* Apilem les columnes */
+        padding: 120px 8% 50px 8%;
+        gap: 40px;
+    }
+
+    .contact-info {
+        width: 100%;
+        position: static; /* En mòbil no volem que sigui sticky */
+        text-align: center; /* Opcional: centrar el títol queda bé en mòbil */
+    }
+
+    .contact-info h1 {
+        font-size: 2.8rem;
+    }
+
+    .social-links {
+        justify-content: center; /* Centrem icones en mòbil */
+    }
+
+    .contact-form-container {
+        width: 100%;
+        padding: 25px; /* Menys espai intern per guanyar amplada pel teclat */
+    }
+}
+        /* Millora el focus per a accessibilitat */
+.form-group input:focus, .form-group textarea:focus {
+    border-color: white;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
     </style>
 </head>
 <body>
