@@ -69,12 +69,19 @@
         .filter-btn.active { color: black; background-color: white; font-weight: 600; }
 
         /* --- GRID DE 2 COLUMNAS (TU ESTILO) --- */
-        .projects-grid-page {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* 2 Columnas */
-            column-gap: 80px;
-            row-gap: 100px;
-        }
+.projects-grid-page {
+    display: grid;
+    /* Esto intentará poner 2 columnas si hay espacio (+350px cada una), si no, pondrá 1 */
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    column-gap: 80px;
+    row-gap: 100px;
+}
+@media (max-width: 480px) {
+    .projects-grid-page {
+        grid-template-columns: 1fr; /* Forzado a 1 columna en móviles muy pequeños */
+        row-gap: 50px; /* Reducimos el espacio vertical para que no sea eterno */
+    }
+}
 
         .project-item { text-align: center; transition: all 0.4s ease; }
         .project-item.hide { display: none; }
@@ -117,6 +124,11 @@
             .projects-grid-page { grid-template-columns: 1fr; gap: 60px; }
             header { padding: 0 20px; }
         }
+        @media (max-width: 480px) {
+    .project-img-box {
+        height: 200px; /* Altura más cómoda para móviles */
+    }
+}
     </style>
 </head>
 <body>
