@@ -38,23 +38,24 @@
            ========================================= */
 
         /* Contenedor principal */
-        .projecte-container {
-            padding-top: 150px; /* Espacio para no chocar con el menú */
-            padding-left: 15%;
-            padding-right: 15%;
-            padding-bottom: 50px;
-            max-width: 1600px;
-            margin: 0 auto;
-        }
+.projecte-container {
+    padding-top: 150px;
+    padding-left: 10%;  /* Baixem de 15% a 10% per guanyar espai */
+    padding-right: 10%;
+    padding-bottom: 50px;
+    max-width: 1400px; /* Un pel més estret per llegir millor */
+    margin: 0 auto;
+}
 
         /* Títulos */
         .projecte-header h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 4rem; /* Título grande */
-            font-weight: 400;
-            margin-bottom: 15px;
-            color: #ffffff;
-        }
+    font-family: 'Playfair Display', serif;
+    /* Mínim 2.5rem, mida ideal 6vw, màxim 4rem */
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 400;
+    margin-bottom: 15px;
+    color: #ffffff;
+}
 
         .subtitle {
             font-size: 1.2rem;
@@ -144,6 +145,26 @@
             .projecte-split { flex-direction: column; }
             .split-text, .split-image { width: 100%; }
         }
+        /* --- BUSCA EL @media (max-width: 768px) I AFEGEIX AIXÒ --- */
+@media (max-width: 768px) {
+    .projecte-container { padding-left: 5%; padding-right: 5%; }
+
+    .projecte-split {
+        flex-direction: column;
+        align-items: center; /* Centrem els elements en mòbil */
+        gap: 30px;
+    }
+
+    .split-text, .split-image {
+        width: 100%;
+        text-align: left; /* O center, segons prefereixis */
+    }
+
+    .meta-info {
+        flex-wrap: wrap; /* Perquè els tags no surtin de la pantalla */
+        gap: 10px;
+    }
+}
     </style>
 </head>
 <body>

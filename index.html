@@ -47,13 +47,13 @@
 
         /* --- HERO SECTION (LA PRESENTACIÓ) --- */
         .hero {
-            display: flex;
-            align-items: center; /* Centrat verticalment */
-            justify-content: center;
-            gap: 80px; /* Separació entre foto i text */
-            min-height: 85vh; /* Ocupa gairebé tota la pantalla */
-            padding: 0 15%;
-        }
+    display: flex;
+    flex-wrap: wrap;      /* <--- AÑADE ESTO: permite que los elementos bajen */
+    align-items: center;
+    justify-content: center;
+    gap: 40px;            /* <--- AJUSTA: un poco menos de espacio ayuda en tablets */
+    padding: 100px 10%;   /* <--- CAMBIA: usa % en lugar de px fijos para los lados */
+}
 
         /* NOVA CLASSE: Contenidor de la imatge i el seu títol */
         .hero-img {
@@ -71,8 +71,9 @@
         }
 
         .hero-img img {
-            width: 250px;
-            height: 350px;
+            width: 100%;
+            max-width: 300px;
+            height: auto;
             object-fit: cover; /* Retalla la foto perquè ompli l'espai */
             border-radius: 8px; /* Cantons lleugerament arrodonits */
             opacity: 0.9;
@@ -135,11 +136,12 @@
             font-weight: 400;
         }
 
-        .projects-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* Dues columnes */
-            gap: 80px; /* Espai gran entre ells */
-        }
+       .projects-grid {
+    display: grid;
+    /* Sustituye tu '1fr 1fr' por esto: */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 40px;
+}
 
         .project-card {
             text-align: center;
@@ -253,6 +255,14 @@
         .image-container {
             cursor: pointer;
         }
+        @media (max-width: 600px) {
+            header { justify-content: center; text-align: center; }
+            .hero { padding: 40px 5%; }
+            .hero-text h1 { text-align: center; }
+            .hero-text p { text-align: center; }
+            .btn { display: block; text-align: center; }
+        }
+
     </style>
 </head>
 <body>
@@ -274,7 +284,7 @@
 
         <section class="hero">
             <div class="hero-img">
-                <img src="./img/unnamed.jpg" alt="Paisatge abstracte">
+                <span class="img-titulo"></span> <img src="./img/unnamed.jpg" >
             </div>
 
             <div class="hero-text">

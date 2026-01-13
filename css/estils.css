@@ -10,10 +10,20 @@ header {
 
 /* --- RESPONSIVE (Móvil) --- */
 @media (max-width: 768px) {
-    header { padding: 15px 5%; }
-    .logo-text { font-size: 1.5rem; }
-    nav ul { gap: 15px; }
-    nav a { font-size: 0.8rem; }
+    header {
+        flex-direction: column; /* Logo arriba, menú abajo */
+        padding: 15px 5%;
+        height: auto;
+    }
+    nav ul {
+        flex-wrap: wrap; /* Permite que los enlaces bajen a otra línea si no caben */
+        justify-content: center;
+        gap: 15px;
+        margin-top: 10px;
+    }
+    nav a {
+        font-size: 0.8rem; /* Letra un poco más pequeña en móvil */
+    }
 }
 /* --- MAIN CONTENT --- */
 main {
