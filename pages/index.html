@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Energètica ITB - Fase 3</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Calculadora de Sostenibilitat - ITB</h1>
+        <p>Anàlisi de consums, tendències estacionals i pla de reducció a 3 anys.</p>
+    </header>
+
+    <main>
+        <section class="controls">
+            <h2>Panell de Control</h2>
+            <div class="opcions-temps">
+                <label for="periode-select">Tria el període a calcular:</label>
+                <select id="periode-select">
+                    <option value="anual">Pròxim Any Complet (12 mesos)</option>
+                    <option value="curs">Curs Escolar (Setembre a Juny - 10 mesos)</option>
+                    <option value="hivern">Període d'Hivern (Desembre a Febrer - 3 mesos)</option>
+                </select>
+                <button id="btn-calcular">Generar Càlculs</button>
+            </div>
+
+            <div class="pla-reduccio">
+                <h3>Pla d'Acció Circular (-30%)</h3>
+                <p>Aplica les millores d'economia circular projectades a 3 anys.</p>
+                <button id="btn-reduccio" class="btn-inactiu">Activar Pla de Reducció</button>
+            </div>
+        </section>
+
+        <section class="resultats-grid">
+            <div class="targeta" id="targeta-electricitat">
+                <h3>⚡ Electricitat</h3>
+                <p>Consum pròxim any: <span id="res-elec-any">0</span> kWh</p>
+                <p>Consum període: <span id="res-elec-periode">0</span> kWh</p>
+            </div>
+
+            <div class="targeta" id="targeta-aigua">
+                <h3>💧 Aigua</h3>
+                <p>Consum pròxim any: <span id="res-aigua-any">0</span> L</p>
+                <p>Consum període: <span id="res-aigua-periode">0</span> L</p>
+            </div>
+
+            <div class="targeta" id="targeta-oficina">
+                <h3>📝 Consumibles Oficina</h3>
+                <p>Consum pròxim any: <span id="res-ofi-any">0</span> unitats</p>
+                <p>Consum període: <span id="res-ofi-periode">0</span> unitats</p>
+            </div>
+
+            <div class="targeta" id="targeta-neteja">
+                <h3>🧼 Productes Neteja</h3>
+                <p>Consum pròxim any: <span id="res-net-any">0</span> unitats</p>
+                <p>Consum període: <span id="res-net-periode">0</span> unitats</p>
+            </div>
+        </section>
+
+        <section class="explicacio-millores">
+            <h2>Accions per reduir un 30% l'impacte (Pla a 3 anys)</h2>
+            <div class="millores-grid">
+                <div class="millora-item">
+                    <strong>Electricitat:</strong> Apagar equips en standby i ajustar termòstats (Hivern 19°C / Estiu 25°C).
+                </div>
+                <div class="millora-item">
+                    <strong>Aigua:</strong> Instal·lar airejadors a les aixetes i polsadors de doble descàrrega.
+                </div>
+                <div class="millora-item">
+                    <strong>Oficina:</strong> Política "Zero Paper" amb entregues digitals al Moodle i recanvis de tinta.
+                </div>
+                <div class="millora-item">
+                    <strong>Neteja:</strong> Compra de productes a granel (economia circular) i dispensadors automàtics.
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
