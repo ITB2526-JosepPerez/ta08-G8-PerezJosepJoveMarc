@@ -1,107 +1,252 @@
+/* Importar font moderna */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+:root {
+    --primary-color: #2e7d32; /* Verde eco */
+    --primary-light: #4caf50;
+    --dark-bg: #1b5e20;
+    --bg-color: #f4f7f6;
+    --text-color: #333;
+    --card-bg: #ffffff;
+    --elec-color: #f39c12;
+    --agua-color: #3498db;
+    --ofi-color: #9b59b6;
+    --net-color: #1abc9c;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 body {
-    background-color: #f4f7f6;
-    color: #333;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     line-height: 1.6;
 }
 
-header {
-    background-color: #2c3e50;
+/* Header amb gradient */
+.main-header {
+    background: linear-gradient(135deg, var(--dark-bg), var(--primary-light));
     color: white;
+    padding: 3rem 1rem;
     text-align: center;
-    padding: 2rem 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-main {
+.main-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.main-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* Contenidor Principal */
+.dashboard {
     max-width: 1200px;
-    margin: 2rem auto;
+    margin: -2rem auto 2rem auto; /* Puja una mica per sobre del header */
     padding: 0 1rem;
+    position: relative;
+    z-index: 10;
 }
 
-.controls {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    margin-bottom: 2rem;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-.opcions-temps select, .opcions-temps button {
-    padding: 0.5rem;
-    margin-top: 0.5rem;
-    font-size: 1rem;
-}
-
-button {
-    cursor: pointer;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 0.5rem 1rem;
-    transition: background 0.3s;
-}
-
-button:hover {
-    background-color: #2980b9;
-}
-
-#btn-reduccio {
-    background-color: #95a5a6;
-}
-
-#btn-reduccio.btn-actiu {
-    background-color: #27ae60;
-}
-
-.resultats-grid {
+/* Panell de Control */
+.panel-control {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: 1.5rem;
     margin-bottom: 2rem;
 }
 
-.targeta {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    border-top: 4px solid #3498db;
+.control-box {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.05);
 }
 
-.targeta span {
-    font-weight: bold;
-    font-size: 1.2rem;
-    color: #2c3e50;
+.control-box h2 {
+    color: var(--primary-color);
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5rem;
 }
 
-.explicacio-millores {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-.millores-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+.selector-grup {
+    display: flex;
     gap: 1rem;
+    align-items: center;
+}
+
+.modern-select {
+    flex: 1;
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+}
+
+.modern-select:focus {
+    border-color: var(--primary-color);
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-primari {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primari:hover {
+    background-color: var(--dark-bg);
+    transform: translateY(-2px);
+}
+
+#btn-reduccio {
+    margin-top: 1rem;
+    width: 100%;
+    justify-content: center;
+}
+
+.btn-inactiu {
+    background-color: #95a5a6;
+    color: white;
+}
+
+.btn-actiu {
+    background-color: #27ae60 !important;
+    color: white;
+    box-shadow: 0 0 15px rgba(39, 174, 96, 0.4);
+}
+
+/* Grid de Resultats */
+.resultats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.card {
+    background: var(--card-bg);
+    padding: 2rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+    text-align: center;
+    transition: transform 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+}
+
+.card-electricitat::before { background-color: var(--elec-color); }
+.card-aigua::before { background-color: var(--agua-color); }
+.card-oficina::before { background-color: var(--ofi-color); }
+.card-neteja::before { background-color: var(--net-color); }
+
+.card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.card-electricitat .card-icon { color: var(--elec-color); }
+.card-aigua .card-icon { color: var(--agua-color); }
+.card-oficina .card-icon { color: var(--ofi-color); }
+.card-neteja .card-icon { color: var(--net-color); }
+
+.card h3 {
+    margin-bottom: 1.5rem;
+    color: #555;
+}
+
+.dades p {
+    margin-bottom: 0.5rem;
+    color: #666;
+}
+
+.numero {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-color);
+    display: block;
+}
+
+.numero-secundari {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #7f8c8d;
+}
+
+/* Taula del Cronograma */
+.detall-millores {
+    background: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+}
+
+.detall-millores h2 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.subtitol-seccio {
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.taula-responsive {
+    overflow-x: auto;
+}
+
+.taula-cronograma {
+    width: 100%;
+    border-collapse: collapse;
     margin-top: 1rem;
 }
 
-.millora-item {
-    background: #e8f4f8;
+.taula-cronograma th, .taula-cronograma td {
     padding: 1rem;
-    border-radius: 4px;
-    border-left: 4px solid #3498db;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.taula-cronograma th {
+    background-color: var(--primary-light);
+    color: white;
+    font-weight: 600;
+}
+
+.taula-cronograma tbody tr:hover {
+    background-color: #f9fdfa;
 }

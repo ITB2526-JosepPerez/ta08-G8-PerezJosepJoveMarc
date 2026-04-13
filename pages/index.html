@@ -3,80 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Energètica ITB - Fase 3</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Calculadora Sostenible - ITB</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1>Calculadora de Sostenibilitat - ITB</h1>
-        <p>Anàlisi de consums, tendències estacionals i pla de reducció a 3 anys.</p>
+    <header class="main-header">
+        <div class="header-content">
+            <h1><i class="fa-solid fa-leaf"></i> Calculadora Energètica ITB</h1>
+            <p>Anàlisi de consums, tendències estacionals i economia circular (Fase 3)</p>
+        </div>
     </header>
 
-    <main>
-        <section class="controls">
-            <h2>Panell de Control</h2>
-            <div class="opcions-temps">
-                <label for="periode-select">Tria el període a calcular:</label>
-                <select id="periode-select">
-                    <option value="anual">Pròxim Any Complet (12 mesos)</option>
-                    <option value="curs">Curs Escolar (Setembre a Juny - 10 mesos)</option>
-                    <option value="hivern">Període d'Hivern (Desembre a Febrer - 3 mesos)</option>
-                </select>
-                <button id="btn-calcular">Generar Càlculs</button>
+    <main class="dashboard">
+        <section class="panel-control">
+            <div class="control-box">
+                <h2><i class="fa-solid fa-clock"></i> Tria el període a calcular</h2>
+                <div class="selector-grup">
+                    <select id="periode-select" class="modern-select">
+                        <option value="anual">Pròxim Any Complet (12 mesos)</option>
+                        <option value="curs">Curs Escolar (Setembre a Juny - 10 mesos)</option>
+                        <option value="hivern">Període d'Hivern (Desembre a Febrer - 3 mesos)</option>
+                    </select>
+                    <button id="btn-calcular" class="btn-primari"><i class="fa-solid fa-calculator"></i> Calcular</button>
+                </div>
             </div>
 
-            <div class="pla-reduccio">
-                <h3>Pla d'Acció Circular (-30%)</h3>
-                <p>Aplica les millores d'economia circular projectades a 3 anys.</p>
-                <button id="btn-reduccio" class="btn-inactiu">Activar Pla de Reducció</button>
+            <div class="control-box reduccio-box">
+                <h2><i class="fa-solid fa-recycle"></i> Pla d'Acció Circular</h2>
+                <p>Aplica les millores projectades a 3 anys per reduir l'impacte.</p>
+                <button id="btn-reduccio" class="btn-inactiu"><i class="fa-solid fa-power-off"></i> Activar Reducció (-30%)</button>
             </div>
         </section>
 
         <section class="resultats-grid">
-            <div class="targeta" id="targeta-electricitat">
-                <h3>⚡ Electricitat</h3>
-                <p>Consum pròxim any: <span id="res-elec-any">0</span> kWh</p>
-                <p>Consum període: <span id="res-elec-periode">0</span> kWh</p>
+            <div class="card card-electricitat">
+                <div class="card-icon"><i class="fa-solid fa-bolt"></i></div>
+                <h3>Electricitat</h3>
+                <div class="dades">
+                    <p>Pròxim any: <span id="res-elec-any" class="numero">0</span> <small>kWh</small></p>
+                    <p>Període triat: <span id="res-elec-periode" class="numero-secundari">0</span> <small>kWh</small></p>
+                </div>
             </div>
 
-            <div class="targeta" id="targeta-aigua">
-                <h3>💧 Aigua</h3>
-                <p>Consum pròxim any: <span id="res-aigua-any">0</span> L</p>
-                <p>Consum període: <span id="res-aigua-periode">0</span> L</p>
+            <div class="card card-aigua">
+                <div class="card-icon"><i class="fa-solid fa-droplet"></i></div>
+                <h3>Aigua</h3>
+                <div class="dades">
+                    <p>Pròxim any: <span id="res-aigua-any" class="numero">0</span> <small>L</small></p>
+                    <p>Període triat: <span id="res-aigua-periode" class="numero-secundari">0</span> <small>L</small></p>
+                </div>
             </div>
 
-            <div class="targeta" id="targeta-oficina">
-                <h3>📝 Consumibles Oficina</h3>
-                <p>Consum pròxim any: <span id="res-ofi-any">0</span> unitats</p>
-                <p>Consum període: <span id="res-ofi-periode">0</span> unitats</p>
+            <div class="card card-oficina">
+                <div class="card-icon"><i class="fa-solid fa-paperclip"></i></div>
+                <h3>Consumibles Oficina</h3>
+                <div class="dades">
+                    <p>Pròxim any: <span id="res-ofi-any" class="numero">0</span> <small>uts</small></p>
+                    <p>Període triat: <span id="res-ofi-periode" class="numero-secundari">0</span> <small>uts</small></p>
+                </div>
             </div>
 
-            <div class="targeta" id="targeta-neteja">
-                <h3>🧼 Productes Neteja</h3>
-                <p>Consum pròxim any: <span id="res-net-any">0</span> unitats</p>
-                <p>Consum període: <span id="res-net-periode">0</span> unitats</p>
+            <div class="card card-neteja">
+                <div class="card-icon"><i class="fa-solid fa-soap"></i></div>
+                <h3>Productes Neteja</h3>
+                <div class="dades">
+                    <p>Pròxim any: <span id="res-net-any" class="numero">0</span> <small>uts</small></p>
+                    <p>Període triat: <span id="res-net-periode" class="numero-secundari">0</span> <small>uts</small></p>
+                </div>
             </div>
         </section>
 
-        <section class="explicacio-millores">
-            <h2>Accions per reduir un 30% l'impacte (Pla a 3 anys)</h2>
-            <div class="millores-grid">
-                <div class="millora-item">
-                    <strong>Electricitat:</strong> Apagar equips en standby i ajustar termòstats (Hivern 19°C / Estiu 25°C).
-                </div>
-                <div class="millora-item">
-                    <strong>Aigua:</strong> Instal·lar airejadors a les aixetes i polsadors de doble descàrrega.
-                </div>
-                <div class="millora-item">
-                    <strong>Oficina:</strong> Política "Zero Paper" amb entregues digitals al Moodle i recanvis de tinta.
-                </div>
-                <div class="millora-item">
-                    <strong>Neteja:</strong> Compra de productes a granel (economia circular) i dispensadors automàtics.
-                </div>
+        <section class="detall-millores">
+            <h2><i class="fa-solid fa-chart-line"></i> Cronograma d'Implantació a 3 Anys</h2>
+            <p class="subtitol-seccio">Estratègies d'economia circular per assolir la reducció del 30%.</p>
+
+            <div class="taula-responsive">
+                <table class="taula-cronograma">
+                    <thead>
+                        <tr>
+                            <th>Àmbit</th>
+                            <th>Any 1 (Curt Termini)</th>
+                            <th>Any 2 (Mig Termini)</th>
+                            <th>Any 3 (Llarg Termini)</th>
+                            <th>Indicador d'Èxit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>⚡ Electricitat</strong></td>
+                            <td>Auditoria de standby i ajust de termòstats (19°C/25°C)</td>
+                            <td>Substitució de fluorescents per LEDs intel·ligents</td>
+                            <td>Ampliació de panells solars (+15kWp)</td>
+                            <td>Menys de 100kWh/dia consumits de xarxa</td>
+                        </tr>
+                        <tr>
+                            <td><strong>💧 Aigua</strong></td>
+                            <td>Instal·lació d'airejadors a totes les aixetes</td>
+                            <td>Polisadors de doble descàrrega als WC</td>
+                            <td>Sistema de recollida d'aigües pluvials per reg</td>
+                            <td>Baixar el pic de 600L/hora a 400L/hora</td>
+                        </tr>
+                        <tr>
+                            <td><strong>📝 Oficina</strong></td>
+                            <td>Política "Zero Paper" obligatòria al Moodle</td>
+                            <td>Compra exclusiva de marcadors recarregables</td>
+                            <td>Digitalització total de tràmits administratius</td>
+                            <td>Consum de paper inferior a 5 paquets/mes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🧼 Neteja</strong></td>
+                            <td>Substitució de paper eixugamans per assecadors d'aire</td>
+                            <td>Compra de sabó a granel (economia circular)</td>
+                            <td>Ús de productes de neteja probiòtics i ecològics</td>
+                            <td>Eliminació total de residus plàstics d'un sol ús</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </section>
     </main>
 
-    <script src="js/script.js"></script>
+    <script src="../js/script.js"></script>
 </body>
 </html>
