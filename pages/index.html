@@ -5,125 +5,395 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora Sostenible - ITB</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <header class="main-header">
+
+    <header class="main-header" role="banner">
         <div class="header-content">
-            <h1><i class="fa-solid fa-leaf"></i> Calculadora Energètica ITB</h1>
-            <p>Anàlisi de consums, tendències estacionals i economia circular (Fase 3)</p>
+            <div class="header-badge">Fase 3 · Economia Circular</div>
+            <h1><i class="fa-solid fa-leaf" aria-hidden="true"></i> Calculadora Energètica ITB</h1>
+            <p>Anàlisi de consums reals amb variabilitat estacional · Pla de reducció 30% · 3 anys</p>
         </div>
     </header>
 
-    <main class="dashboard">
-        <section class="panel-control">
+    <main class="dashboard" id="main-content">
+
+        <!-- ── CONTROLS ─────────────────────────────────────────────── -->
+        <section class="panel-control" aria-labelledby="heading-periode">
             <div class="control-box">
-                <h2><i class="fa-solid fa-clock"></i> Tria el període a calcular</h2>
+                <h2 id="heading-periode">
+                    <i class="fa-solid fa-sliders" aria-hidden="true"></i> Configuració del Càlcul
+                </h2>
                 <div class="selector-grup">
+                    <label for="periode-select" class="select-label">Període d'anàlisi</label>
                     <select id="periode-select" class="modern-select">
                         <option value="anual">Pròxim Any Complet (12 mesos)</option>
-                        <option value="curs">Curs Escolar (Setembre a Juny - 10 mesos)</option>
-                        <option value="hivern">Període d'Hivern (Desembre a Febrer - 3 mesos)</option>
+                        <option value="curs">Curs Escolar (Setembre–Juny · 10 mesos)</option>
+                        <option value="hivern">Període d'Hivern (Desembre–Febrer · 3 mesos)</option>
                     </select>
-                    <button id="btn-calcular" class="btn-primari"><i class="fa-solid fa-calculator"></i> Calcular</button>
+                    <button id="btn-calcular" class="btn-primari"
+                            aria-label="Recalcular el consum amb nova variabilitat">
+                        <i class="fa-solid fa-rotate" aria-hidden="true"></i>
+                        <span>Recalcular</span>
+                    </button>
                 </div>
+                <p class="variability-note">
+                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                    Cada càlcul aplica una <strong>variabilitat aleatòria ±2–5%</strong> per simular fluctuacions reals.
+                </p>
             </div>
 
-            <div class="control-box reduccio-box">
-                <h2><i class="fa-solid fa-recycle"></i> Pla d'Acció Circular</h2>
-                <p>Aplica les millores projectades a 3 anys per reduir l'impacte.</p>
-                <button id="btn-reduccio" class="btn-inactiu"><i class="fa-solid fa-power-off"></i> Activar Reducció (-30%)</button>
+            <div class="control-box reduccio-box" aria-labelledby="heading-pla">
+                <h2 id="heading-pla">
+                    <i class="fa-solid fa-recycle" aria-hidden="true"></i> Pla d'Acció Circular
+                </h2>
+                <p class="reduccio-desc">
+                    Activa les millores projectades a 3 anys.<br>
+                    Veuràs l'estalvi real respecte al consum base.
+                </p>
+                <button id="btn-reduccio" class="btn-inactiu"
+                        aria-pressed="false"
+                        aria-label="Activar el Pla de Reducció del 30%">
+                    <i class="fa-solid fa-power-off" aria-hidden="true"></i>
+                    <span>Activar Reducció (−30%)</span>
+                </button>
+                <!-- Live saving summary injected by JS -->
+                <div id="saving-summary" class="saving-summary" hidden aria-live="polite"></div>
             </div>
         </section>
 
-        <section class="resultats-grid">
-            <div class="card card-electricitat">
-                <div class="card-icon"><i class="fa-solid fa-bolt"></i></div>
-                <h3>Electricitat</h3>
-                <div class="dades">
-                    <p>Pròxim any: <span id="res-elec-any" class="numero">0</span> <small>kWh</small></p>
-                    <p>Període triat: <span id="res-elec-periode" class="numero-secundari">0</span> <small>kWh</small></p>
-                </div>
-            </div>
+        <!-- ── RESULTS — 8 calculations ───────────────────────────────── -->
+        <section class="resultats-grid" aria-labelledby="heading-resultats"
+                 aria-live="polite" aria-atomic="true">
+            <h2 id="heading-resultats" class="visually-hidden">Resultats del Càlcul</h2>
 
-            <div class="card card-aigua">
-                <div class="card-icon"><i class="fa-solid fa-droplet"></i></div>
-                <h3>Aigua</h3>
-                <div class="dades">
-                    <p>Pròxim any: <span id="res-aigua-any" class="numero">0</span> <small>L</small></p>
-                    <p>Període triat: <span id="res-aigua-periode" class="numero-secundari">0</span> <small>L</small></p>
+            <!-- ELECTRICITY -->
+            <article class="card card-electricitat" data-resource="elec">
+                <div class="card-header">
+                    <div class="card-icon" aria-hidden="true"><i class="fa-solid fa-bolt"></i></div>
+                    <h3>Electricitat</h3>
+                    <span class="unit-badge">kWh</span>
                 </div>
-            </div>
+                <div class="dades">
+                    <!-- Calc 1 -->
+                    <div class="dada-row">
+                        <span class="dada-label">Pròxim any</span>
+                        <div class="dada-values">
+                            <span id="res-elec-any-original" class="numero original-value">–</span>
+                            <span id="res-elec-any" class="numero numero-principal">–</span>
+                            <span id="badge-elec-any" class="saving-badge" hidden></span>
+                        </div>
+                    </div>
+                    <!-- Calc 2 -->
+                    <div class="dada-row">
+                        <span class="dada-label">Període triat</span>
+                        <div class="dada-values">
+                            <span id="res-elec-periode-original" class="numero-secundari original-value">–</span>
+                            <span id="res-elec-periode" class="numero-secundari">–</span>
+                            <span id="badge-elec-periode" class="saving-badge saving-badge--sm" hidden></span>
+                        </div>
+                    </div>
+                </div>
+            </article>
 
-            <div class="card card-oficina">
-                <div class="card-icon"><i class="fa-solid fa-paperclip"></i></div>
-                <h3>Consumibles Oficina</h3>
-                <div class="dades">
-                    <p>Pròxim any: <span id="res-ofi-any" class="numero">0</span> <small>uts</small></p>
-                    <p>Període triat: <span id="res-ofi-periode" class="numero-secundari">0</span> <small>uts</small></p>
+            <!-- WATER -->
+            <article class="card card-aigua" data-resource="aigua">
+                <div class="card-header">
+                    <div class="card-icon" aria-hidden="true"><i class="fa-solid fa-droplet"></i></div>
+                    <h3>Aigua</h3>
+                    <span class="unit-badge">L</span>
                 </div>
-            </div>
+                <div class="dades">
+                    <!-- Calc 3 -->
+                    <div class="dada-row">
+                        <span class="dada-label">Pròxim any</span>
+                        <div class="dada-values">
+                            <span id="res-aigua-any-original" class="numero original-value">–</span>
+                            <span id="res-aigua-any" class="numero numero-principal">–</span>
+                            <span id="badge-aigua-any" class="saving-badge" hidden></span>
+                        </div>
+                    </div>
+                    <!-- Calc 4 -->
+                    <div class="dada-row">
+                        <span class="dada-label">Període triat</span>
+                        <div class="dada-values">
+                            <span id="res-aigua-periode-original" class="numero-secundari original-value">–</span>
+                            <span id="res-aigua-periode" class="numero-secundari">–</span>
+                            <span id="badge-aigua-periode" class="saving-badge saving-badge--sm" hidden></span>
+                        </div>
+                    </div>
+                </div>
+            </article>
 
-            <div class="card card-neteja">
-                <div class="card-icon"><i class="fa-solid fa-soap"></i></div>
-                <h3>Productes Neteja</h3>
-                <div class="dades">
-                    <p>Pròxim any: <span id="res-net-any" class="numero">0</span> <small>uts</small></p>
-                    <p>Període triat: <span id="res-net-periode" class="numero-secundari">0</span> <small>uts</small></p>
+            <!-- OFFICE SUPPLIES -->
+            <article class="card card-oficina" data-resource="ofi">
+                <div class="card-header">
+                    <div class="card-icon" aria-hidden="true"><i class="fa-solid fa-paperclip"></i></div>
+                    <h3>Consumibles Oficina</h3>
+                    <span class="unit-badge">uts</span>
                 </div>
-            </div>
+                <div class="dades">
+                    <!-- Calc 5 -->
+                    <div class="dada-row">
+                        <span class="dada-label">Pròxim any</span>
+                        <div class="dada-values">
+                            <span id="res-ofi-any-original" class="numero original-value">–</span>
+                            <span id="res-ofi-any" class="numero numero-principal">–</span>
+                            <span id="badge-ofi-any" class="saving-badge" hidden></span>
+                        </div>
+                    </div>
+                    <!-- Calc 6 -->
+                    <div class="dada-row">
+                        <span class="dada-label">Període triat</span>
+                        <div class="dada-values">
+                            <span id="res-ofi-periode-original" class="numero-secundari original-value">–</span>
+                            <span id="res-ofi-periode" class="numero-secundari">–</span>
+                            <span id="badge-ofi-periode" class="saving-badge saving-badge--sm" hidden></span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- CLEANING -->
+            <article class="card card-neteja" data-resource="net">
+                <div class="card-header">
+                    <div class="card-icon" aria-hidden="true"><i class="fa-solid fa-soap"></i></div>
+                    <h3>Productes Neteja</h3>
+                    <span class="unit-badge">uts</span>
+                </div>
+                <div class="dades">
+                    <!-- Calc 7 -->
+                    <div class="dada-row">
+                        <span class="dada-label">Pròxim any</span>
+                        <div class="dada-values">
+                            <span id="res-net-any-original" class="numero original-value">–</span>
+                            <span id="res-net-any" class="numero numero-principal">–</span>
+                            <span id="badge-net-any" class="saving-badge" hidden></span>
+                        </div>
+                    </div>
+                    <!-- Calc 8 -->
+                    <div class="dada-row">
+                        <span class="dada-label">Període triat</span>
+                        <div class="dada-values">
+                            <span id="res-net-periode-original" class="numero-secundari original-value">–</span>
+                            <span id="res-net-periode" class="numero-secundari">–</span>
+                            <span id="badge-net-periode" class="saving-badge saving-badge--sm" hidden></span>
+                        </div>
+                    </div>
+                </div>
+            </article>
         </section>
 
-        <section class="detall-millores">
-            <h2><i class="fa-solid fa-chart-line"></i> Cronograma d'Implantació a 3 Anys</h2>
-            <p class="subtitol-seccio">Estratègies d'economia circular per assolir la reducció del 30%.</p>
+        <!-- ── 3-YEAR CIRCULAR ECONOMY ROADMAP ───────────────────────── -->
+        <section class="roadmap-section" aria-labelledby="heading-roadmap">
+            <div class="roadmap-header">
+                <h2 id="heading-roadmap">
+                    <i class="fa-solid fa-arrows-spin" aria-hidden="true"></i>
+                    Pla d'Economia Circular · 3 Anys · −30%
+                </h2>
+                <p class="subtitol-seccio">
+                    Cada acció segueix els principis de l'economia circular:
+                    <strong>Reduir → Reutilitzar → Reciclar</strong>.
+                    Els indicadors d'èxit són mesurables i temporitzats.
+                </p>
 
-            <div class="taula-responsive">
-                <table class="taula-cronograma">
-                    <thead>
-                        <tr>
-                            <th>Àmbit</th>
-                            <th>Any 1 (Curt Termini)</th>
-                            <th>Any 2 (Mig Termini)</th>
-                            <th>Any 3 (Llarg Termini)</th>
-                            <th>Indicador d'Èxit</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>⚡ Electricitat</strong></td>
-                            <td>Auditoria de standby i ajust de termòstats (19°C/25°C)</td>
-                            <td>Substitució de fluorescents per LEDs intel·ligents</td>
-                            <td>Ampliació de panells solars (+15kWp)</td>
-                            <td>Menys de 100kWh/dia consumits de xarxa</td>
-                        </tr>
-                        <tr>
-                            <td><strong>💧 Aigua</strong></td>
-                            <td>Instal·lació d'airejadors a totes les aixetes</td>
-                            <td>Polisadors de doble descàrrega als WC</td>
-                            <td>Sistema de recollida d'aigües pluvials per reg</td>
-                            <td>Baixar el pic de 600L/hora a 400L/hora</td>
-                        </tr>
-                        <tr>
-                            <td><strong>📝 Oficina</strong></td>
-                            <td>Política "Zero Paper" obligatòria al Moodle</td>
-                            <td>Compra exclusiva de marcadors recarregables</td>
-                            <td>Digitalització total de tràmits administratius</td>
-                            <td>Consum de paper inferior a 5 paquets/mes</td>
-                        </tr>
-                        <tr>
-                            <td><strong>🧼 Neteja</strong></td>
-                            <td>Substitució de paper eixugamans per assecadors d'aire</td>
-                            <td>Compra de sabó a granel (economia circular)</td>
-                            <td>Ús de productes de neteja probiòtics i ecològics</td>
-                            <td>Eliminació total de residus plàstics d'un sol ús</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <!-- CE Principles legend -->
+                <div class="ce-legend" aria-label="Llegenda de principis d'economia circular">
+                    <span class="ce-pill ce-reduce">♻ Reduir</span>
+                    <span class="ce-pill ce-reuse">↩ Reutilitzar</span>
+                    <span class="ce-pill ce-recycle">🔄 Reciclar</span>
+                </div>
             </div>
+
+            <!-- Year timeline strip -->
+            <div class="year-strip" aria-label="Línia de temps dels tres anys">
+                <div class="year-marker year-1">Any 1 · Curt termini</div>
+                <div class="year-connector" aria-hidden="true"></div>
+                <div class="year-marker year-2">Any 2 · Mig termini</div>
+                <div class="year-connector" aria-hidden="true"></div>
+                <div class="year-marker year-3">Any 3 · Llarg termini</div>
+            </div>
+
+            <!-- Resource roadmap cards -->
+            <div class="roadmap-grid">
+
+                <!-- ELECTRICITY CARD -->
+                <div class="roadmap-card roadmap-electricitat">
+                    <div class="roadmap-card-title">
+                        <span class="roadmap-icon">⚡</span>
+                        <strong>Electricitat</strong>
+                        <span class="target-badge">Objectiu: −30% xarxa</span>
+                    </div>
+
+                    <div class="roadmap-kpis">
+                        <span class="kpi-chip">
+                            <i class="fa-solid fa-bullseye" aria-hidden="true"></i>
+                            KPI: &lt;100 kWh/dia de xarxa
+                        </span>
+                        <span class="kpi-chip kpi-measurable">
+                            <i class="fa-solid fa-chart-simple" aria-hidden="true"></i>
+                            Mesura: Comptador intel·ligent mensual
+                        </span>
+                    </div>
+
+                    <ol class="roadmap-steps">
+                        <li class="step step-y1">
+                            <span class="step-year">Any 1</span>
+                            <span class="ce-tag ce-reduce">♻ Reduir</span>
+                            <p>Auditoria de standby · Termòstats 19°C/25°C</p>
+                            <em class="step-indicator">Indicador: −5% en factura trimestral</em>
+                        </li>
+                        <li class="step step-y2">
+                            <span class="step-year">Any 2</span>
+                            <span class="ce-tag ce-reuse">↩ Reutilitzar</span>
+                            <p>Substitució fluorescents per LEDs intel·ligents amb sensor de presència</p>
+                            <em class="step-indicator">Indicador: −15% consum il·luminació</em>
+                        </li>
+                        <li class="step step-y3">
+                            <span class="step-year">Any 3</span>
+                            <span class="ce-tag ce-recycle">🔄 Reciclar</span>
+                            <p>Ampliació panells solars +15 kWp · Energia renovable pròpia</p>
+                            <em class="step-indicator">Indicador: 40% autosuficiència elèctrica</em>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- WATER CARD -->
+                <div class="roadmap-card roadmap-aigua">
+                    <div class="roadmap-card-title">
+                        <span class="roadmap-icon">💧</span>
+                        <strong>Aigua</strong>
+                        <span class="target-badge">Objectiu: −30% consum</span>
+                    </div>
+
+                    <div class="roadmap-kpis">
+                        <span class="kpi-chip">
+                            <i class="fa-solid fa-bullseye" aria-hidden="true"></i>
+                            KPI: Pic &lt;400 L/hora (ara 600)
+                        </span>
+                        <span class="kpi-chip kpi-measurable">
+                            <i class="fa-solid fa-chart-simple" aria-hidden="true"></i>
+                            Mesura: Comptador digital setmanal
+                        </span>
+                    </div>
+
+                    <ol class="roadmap-steps">
+                        <li class="step step-y1">
+                            <span class="step-year">Any 1</span>
+                            <span class="ce-tag ce-reduce">♻ Reduir</span>
+                            <p>Instal·lació d'airejadors a totes les aixetes del centre</p>
+                            <em class="step-indicator">Indicador: −10% litres/mes en 6 mesos</em>
+                        </li>
+                        <li class="step step-y2">
+                            <span class="step-year">Any 2</span>
+                            <span class="ce-tag ce-reduce">♻ Reduir</span>
+                            <p>Cisternes de doble descàrrega a tots els WC</p>
+                            <em class="step-indicator">Indicador: −8 L per cicle WC</em>
+                        </li>
+                        <li class="step step-y3">
+                            <span class="step-year">Any 3</span>
+                            <span class="ce-tag ce-recycle">🔄 Reciclar</span>
+                            <p>Sistema de recollida d'aigües pluvials per reg de jardins</p>
+                            <em class="step-indicator">Indicador: 100% reg extern amb aigua reciclada</em>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- OFFICE CARD -->
+                <div class="roadmap-card roadmap-oficina">
+                    <div class="roadmap-card-title">
+                        <span class="roadmap-icon">📝</span>
+                        <strong>Consumibles Oficina</strong>
+                        <span class="target-badge">Objectiu: −30% paper</span>
+                    </div>
+
+                    <div class="roadmap-kpis">
+                        <span class="kpi-chip">
+                            <i class="fa-solid fa-bullseye" aria-hidden="true"></i>
+                            KPI: &lt;5 paquets paper/mes
+                        </span>
+                        <span class="kpi-chip kpi-measurable">
+                            <i class="fa-solid fa-chart-simple" aria-hidden="true"></i>
+                            Mesura: Registre de comandes mensual
+                        </span>
+                    </div>
+
+                    <ol class="roadmap-steps">
+                        <li class="step step-y1">
+                            <span class="step-year">Any 1</span>
+                            <span class="ce-tag ce-reduce">♻ Reduir</span>
+                            <p>Política "Zero Paper" obligatòria a Moodle i comunicats digitals</p>
+                            <em class="step-indicator">Indicador: 0 fotocòpies d'avisos interns</em>
+                        </li>
+                        <li class="step step-y2">
+                            <span class="step-year">Any 2</span>
+                            <span class="ce-tag ce-reuse">↩ Reutilitzar</span>
+                            <p>Compra exclusiva de retoladors i bolígrafs recarregables</p>
+                            <em class="step-indicator">Indicador: −100% residus de plàstic d'un sol ús</em>
+                        </li>
+                        <li class="step step-y3">
+                            <span class="step-year">Any 3</span>
+                            <span class="ce-tag ce-recycle">🔄 Reciclar</span>
+                            <p>Digitalització total de tràmits administratius i arxiu en núvol</p>
+                            <em class="step-indicator">Indicador: 0 expedients físics nous</em>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- CLEANING CARD -->
+                <div class="roadmap-card roadmap-neteja">
+                    <div class="roadmap-card-title">
+                        <span class="roadmap-icon">🧼</span>
+                        <strong>Productes Neteja</strong>
+                        <span class="target-badge">Objectiu: −30% residus</span>
+                    </div>
+
+                    <div class="roadmap-kpis">
+                        <span class="kpi-chip">
+                            <i class="fa-solid fa-bullseye" aria-hidden="true"></i>
+                            KPI: 0 plàstics d'un sol ús
+                        </span>
+                        <span class="kpi-chip kpi-measurable">
+                            <i class="fa-solid fa-chart-simple" aria-hidden="true"></i>
+                            Mesura: Auditoria de residus trimestral
+                        </span>
+                    </div>
+
+                    <ol class="roadmap-steps">
+                        <li class="step step-y1">
+                            <span class="step-year">Any 1</span>
+                            <span class="ce-tag ce-reduce">♻ Reduir</span>
+                            <p>Substitució de paper eixugamans per assecadors d'aire de baix consum</p>
+                            <em class="step-indicator">Indicador: −90% compra de paper eixugamans</em>
+                        </li>
+                        <li class="step step-y2">
+                            <span class="step-year">Any 2</span>
+                            <span class="ce-tag ce-reuse">↩ Reutilitzar</span>
+                            <p>Compra de sabó i productes a granel en dipòsits reutilitzables</p>
+                            <em class="step-indicator">Indicador: −80% envasos plàstics comprats</em>
+                        </li>
+                        <li class="step step-y3">
+                            <span class="step-year">Any 3</span>
+                            <span class="ce-tag ce-recycle">🔄 Reciclar</span>
+                            <p>Ús exclusiu de productes de neteja probiòtics i ecològics certificats</p>
+                            <em class="step-indicator">Indicador: Certificació ISO 14001 del centre</em>
+                        </li>
+                    </ol>
+                </div>
+
+            </div><!-- /.roadmap-grid -->
         </section>
+
+        <!-- Error banner -->
+        <div id="error-banner" class="error-banner" role="alert" aria-live="assertive" hidden>
+            <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+            <span id="error-message">S'ha produït un error en carregar les dades.</span>
+        </div>
+
     </main>
-
     <script src="../js/script.js"></script>
 </body>
 </html>

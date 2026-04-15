@@ -1,12 +1,18 @@
 {
   "centre": "ITB",
   "configuracio_calculadora": {
-    "descripcio": "Dades base per a 8 càlculs de sostenibilitat",
-    "unitats": { "energia": "kWh", "aigua": "litres", "oficina": "unitats", "neteja": "unitats" }
+    "descripcio": "Dades base per a 8 càlculs de sostenibilitat amb variabilitat mensual",
+    "unitats": {
+      "energia": "kWh",
+      "aigua": "litres",
+      "oficina": "unitats",
+      "neteja": "unitats"
+    }
   },
   "dades_base": {
     "electricitat": {
       "consum_mitja_diari_kWh": 261.54,
+      "variability_range": { "min": 0.02, "max": 0.05 },
       "factors_estacionals": {
         "curs_escolar_set_juny": 1.1,
         "anual_global": 1.0
@@ -14,12 +20,14 @@
     },
     "aigua": {
       "consum_mitja_diari_litres": 850,
+      "variability_range": { "min": 0.02, "max": 0.04 },
       "factors_estacionals": {
         "curs_escolar_set_juny": 1.0,
         "anual_global": 0.9
       }
     },
     "consumibles_oficina": {
+      "variability_range": { "min": 0.03, "max": 0.05 },
       "mitjana_mensual": {
         "paper_A4_paquets": 22.5
       },
@@ -28,6 +36,7 @@
       }
     },
     "productes_neteja": {
+      "variability_range": { "min": 0.02, "max": 0.03 },
       "mitjana_mensual": {
         "paper_higienic_rotllos": 108
       },
