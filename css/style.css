@@ -1,17 +1,18 @@
 /* ─────────────────────────────────────────────────────────────────────────────
-   Calculadora Sostenible ITB — Stylesheet
+   Calculadora Sostenible ITB — Stylesheet (v2 amb Manteniment + Gràfic)
    Sections:
-     1. Design tokens
-     2. Reset & base
-     3. Layout
-     4. Controls
-     5. Result cards
-     6. Saving badges & reduction animations
-     7. Roadmap / CE section
-     8. Accessibility utilities
-     9. Error state
-    10. Responsive
-    11. Motion preferences
+     1.  Design tokens
+     2.  Reset & base
+     3.  Layout
+     4.  Controls
+     5.  Result cards
+     6.  Saving badges & reduction animations
+     7.  Roadmap / CE section
+     8.  Gràfic estacional (Chart.js wrapper)  ← NOU
+     9.  Accessibility utilities
+    10.  Error state
+    11.  Responsive
+    12.  Motion preferences
    ───────────────────────────────────────────────────────────────────────────── */
 
 /* ── 1. Design Tokens ─────────────────────────────────────────────────────── */
@@ -27,6 +28,8 @@
     --color-aigua:          #3498db;
     --color-oficina:        #9b59b6;
     --color-neteja:         #1abc9c;
+    /* ── NOU: color accent per a Manteniment i Residus ── */
+    --color-manteniment:    #e74c3c;
 
     --color-bg:             #eef2ef;
     --color-surface:        #ffffff;
@@ -298,18 +301,22 @@ button:focus-visible {
     border: 1px solid var(--color-border);
 }
 
-/* Coloured left border accent */
+/* Coloured left border accent — les 5 targetes */
 .card { border-left: 5px solid transparent; }
-.card-electricitat { border-left-color: var(--color-electricitat); }
-.card-aigua        { border-left-color: var(--color-aigua); }
-.card-oficina      { border-left-color: var(--color-oficina); }
-.card-neteja       { border-left-color: var(--color-neteja); }
+.card-electricitat  { border-left-color: var(--color-electricitat); }
+.card-aigua         { border-left-color: var(--color-aigua); }
+.card-oficina       { border-left-color: var(--color-oficina); }
+.card-neteja        { border-left-color: var(--color-neteja); }
+/* ── NOU: 5ª targeta Manteniment ── */
+.card-manteniment   { border-left-color: var(--color-manteniment); }
 
 .card-icon { font-size: 1.6rem; }
 .card-electricitat .card-icon { color: var(--color-electricitat); }
 .card-aigua        .card-icon { color: var(--color-aigua); }
 .card-oficina      .card-icon { color: var(--color-oficina); }
 .card-neteja       .card-icon { color: var(--color-neteja); }
+/* ── NOU: icona manteniment ── */
+.card-manteniment  .card-icon { color: var(--color-manteniment); }
 
 .dades { padding: var(--space-md); display: flex; flex-direction: column; gap: var(--space-sm); }
 
@@ -358,18 +365,12 @@ button:focus-visible {
 
 /* ── 6. Saving Badges & Reduction Animations ──────────────────────────────── */
 
-/*
-  When reduction is active:
-  - .original-value gets the strikethrough style and red colour
-  - .numero-principal turns green
-  - saving badges animate in
-*/
 .is-reduction-active .original-value {
     text-decoration: line-through;
     text-decoration-color: var(--color-strikethrough);
     color: var(--color-strikethrough);
     opacity: 0.75;
-    font-size: 1rem;       /* shrinks so it reads as "old" value */
+    font-size: 1rem;
     font-weight: 600;
     transition: all var(--transition);
 }
@@ -378,7 +379,6 @@ button:focus-visible {
     font-size: 0.85rem;
 }
 
-/* Make the new (reduced) value pop in green */
 .is-reduction-active .numero-principal {
     color: var(--color-saving);
 }
@@ -501,10 +501,12 @@ button:focus-visible {
 
 .roadmap-card:hover { box-shadow: var(--shadow-hover); }
 
-.roadmap-electricitat { border-top-color: var(--color-electricitat); }
-.roadmap-aigua        { border-top-color: var(--color-aigua); }
-.roadmap-oficina      { border-top-color: var(--color-oficina); }
-.roadmap-neteja       { border-top-color: var(--color-neteja); }
+.roadmap-electricitat  { border-top-color: var(--color-electricitat); }
+.roadmap-aigua         { border-top-color: var(--color-aigua); }
+.roadmap-oficina       { border-top-color: var(--color-oficina); }
+.roadmap-neteja        { border-top-color: var(--color-neteja); }
+/* ── NOU: roadmap card manteniment ── */
+.roadmap-manteniment   { border-top-color: var(--color-manteniment); }
 
 .roadmap-card-title {
     display: flex;
@@ -602,14 +604,83 @@ button:focus-visible {
 .ce-tag.ce-reuse   { background: #fef5e7; color: #a04000; }
 .ce-tag.ce-recycle { background: #eafaf1; color: #1a6b3c; }
 
-/* ── 8. Accessibility Utilities ───────────────────────────────────────────── */
+/* ── 8. Gràfic Estacional (Chart.js wrapper) ──────────────────────────────── */
+/*
+ * Secció nova per al gràfic de línies mensuals.
+ * Apareix entre els cards de resultats i el roadmap.
+ */
+.chart-section {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-xl);
+}
+
+.chart-header {
+    margin-bottom: var(--space-lg);
+}
+
+.chart-header h2 {
+    color: var(--color-primary);
+    font-size: 1.35rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+/* Reutilitzem .subtitol-seccio del roadmap (ja definit a dalt) */
+
+/* Legend chips descriptius (sota el subtítol) */
+.chart-legend-chips {
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    margin-top: var(--space-sm);
+}
+
+.legend-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* Colors dels dots per a cada sèrie */
+.legend-elec .legend-dot  { background: var(--color-electricitat); }
+.legend-aigua .legend-dot { background: var(--color-aigua); }
+
+/* Canvas wrapper: limita l'alçada per a millor proporció */
+.chart-wrapper {
+    position: relative;
+    /* Alçada màxima per evitar que el canvas creixi massa en pantalles grans */
+    max-height: 420px;
+}
+
+.chart-wrapper canvas {
+    width:  100% !important;
+    height: 100% !important;
+}
+
+/* ── 9. Accessibility Utilities ───────────────────────────────────────────── */
 .visually-hidden {
     position: absolute; width: 1px; height: 1px;
     padding: 0; margin: -1px; overflow: hidden;
     clip: rect(0,0,0,0); white-space: nowrap; border: 0;
 }
 
-/* ── 9. Error State ───────────────────────────────────────────────────────── */
+/* ── 10. Error State ──────────────────────────────────────────────────────── */
 .error-banner {
     display: flex;
     align-items: center;
@@ -625,7 +696,7 @@ button:focus-visible {
 
 [hidden] { display: none !important; }
 
-/* ── 10. Responsive ───────────────────────────────────────────────────────── */
+/* ── 11. Responsive ───────────────────────────────────────────────────────── */
 @media (max-width: 600px) {
     .panel-control { grid-template-columns: 1fr; }
 
@@ -635,12 +706,17 @@ button:focus-visible {
     .main-header   { padding-bottom: calc(var(--space-xl) + 2.5rem); }
 
     .roadmap-section { padding: var(--space-md); }
+    .chart-section   { padding: var(--space-md); }
 
     .year-strip { gap: 0.3rem; }
     .year-connector { flex: 0 0 0.6rem; }
+
+    .chart-wrapper { max-height: 300px; }
+
+    /* En mòbil la 5ª targeta ocupa tota l'amplada (ja cobert per auto-fit) */
 }
 
-/* ── 11. Motion Preferences ───────────────────────────────────────────────── */
+/* ── 12. Motion Preferences ───────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important;

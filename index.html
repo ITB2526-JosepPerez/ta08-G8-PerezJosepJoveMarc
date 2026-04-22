@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -65,7 +67,7 @@
             </div>
         </section>
 
-        <!-- ── RESULTS — 8 calculations ───────────────────────────────── -->
+        <!-- ── RESULTS — 10 calculations (5 resources × 2 periods) ───── -->
         <section class="resultats-grid" aria-labelledby="heading-resultats"
                  aria-live="polite" aria-atomic="true">
             <h2 id="heading-resultats" class="visually-hidden">Resultats del Càlcul</h2>
@@ -78,7 +80,6 @@
                     <span class="unit-badge">kWh</span>
                 </div>
                 <div class="dades">
-                    <!-- Calc 1 -->
                     <div class="dada-row">
                         <span class="dada-label">Pròxim any</span>
                         <div class="dada-values">
@@ -87,7 +88,6 @@
                             <span id="badge-elec-any" class="saving-badge" hidden></span>
                         </div>
                     </div>
-                    <!-- Calc 2 -->
                     <div class="dada-row">
                         <span class="dada-label">Període triat</span>
                         <div class="dada-values">
@@ -107,7 +107,6 @@
                     <span class="unit-badge">L</span>
                 </div>
                 <div class="dades">
-                    <!-- Calc 3 -->
                     <div class="dada-row">
                         <span class="dada-label">Pròxim any</span>
                         <div class="dada-values">
@@ -116,7 +115,6 @@
                             <span id="badge-aigua-any" class="saving-badge" hidden></span>
                         </div>
                     </div>
-                    <!-- Calc 4 -->
                     <div class="dada-row">
                         <span class="dada-label">Període triat</span>
                         <div class="dada-values">
@@ -136,7 +134,6 @@
                     <span class="unit-badge">uts</span>
                 </div>
                 <div class="dades">
-                    <!-- Calc 5 -->
                     <div class="dada-row">
                         <span class="dada-label">Pròxim any</span>
                         <div class="dada-values">
@@ -145,7 +142,6 @@
                             <span id="badge-ofi-any" class="saving-badge" hidden></span>
                         </div>
                     </div>
-                    <!-- Calc 6 -->
                     <div class="dada-row">
                         <span class="dada-label">Període triat</span>
                         <div class="dada-values">
@@ -165,7 +161,6 @@
                     <span class="unit-badge">uts</span>
                 </div>
                 <div class="dades">
-                    <!-- Calc 7 -->
                     <div class="dada-row">
                         <span class="dada-label">Pròxim any</span>
                         <div class="dada-values">
@@ -174,7 +169,6 @@
                             <span id="badge-net-any" class="saving-badge" hidden></span>
                         </div>
                     </div>
-                    <!-- Calc 8 -->
                     <div class="dada-row">
                         <span class="dada-label">Període triat</span>
                         <div class="dada-values">
@@ -185,6 +179,71 @@
                     </div>
                 </div>
             </article>
+
+            <!-- ── 5ª TARGETA: MANTENIMENT I RESIDUS ──────────────────── -->
+            <!-- Nova categoria: costos de manteniment i gestió de residus en €  -->
+            <article class="card card-manteniment" data-resource="mant">
+                <div class="card-header">
+                    <div class="card-icon" aria-hidden="true"><i class="fa-solid fa-wrench"></i></div>
+                    <h3>Manteniment i Residus</h3>
+                    <span class="unit-badge">€</span>
+                </div>
+                <div class="dades">
+                    <!-- Calc 9: cost anual de manteniment i residus -->
+                    <div class="dada-row">
+                        <span class="dada-label">Pròxim any</span>
+                        <div class="dada-values">
+                            <span id="res-mant-any-original" class="numero original-value">–</span>
+                            <span id="res-mant-any" class="numero numero-principal">–</span>
+                            <span id="badge-mant-any" class="saving-badge" hidden></span>
+                        </div>
+                    </div>
+                    <!-- Calc 10: cost pel període triat -->
+                    <div class="dada-row">
+                        <span class="dada-label">Període triat</span>
+                        <div class="dada-values">
+                            <span id="res-mant-periode-original" class="numero-secundari original-value">–</span>
+                            <span id="res-mant-periode" class="numero-secundari">–</span>
+                            <span id="badge-mant-periode" class="saving-badge saving-badge--sm" hidden></span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+        </section>
+
+        <!-- ── GRÀFIC DE CICLES ESTACIONALS ──────────────────────────── -->
+        <!--
+            Secció analítica amb Chart.js.
+            Mostra dues línies mensuals (Electricitat i Aigua) per justificar
+            la variabilitat estacional de la rúbrica:
+              · Electricitat puja a l'hivern (dic–feb) i baixa a l'estiu.
+              · Aigua puja a l'estiu (jun–ago) i baixa a l'hivern.
+        -->
+        <section class="chart-section" aria-labelledby="heading-grafic">
+            <div class="chart-header">
+                <h2 id="heading-grafic">
+                    <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+                    Cicles Estacionals · Electricitat vs Aigua (12 mesos)
+                </h2>
+                <p class="subtitol-seccio">
+                    Comparació del consum mensual base vs. projecció amb plans de reducció actius.
+                    <br>Observa com l'electricitat puja a l'hivern i l'aigua creix a l'estiu.
+                </p>
+                <!-- Legend chips -->
+                <div class="chart-legend-chips" aria-hidden="true">
+                    <span class="legend-chip legend-elec">
+                        <span class="legend-dot"></span> Electricitat (kWh/dia · mig)
+                    </span>
+                    <span class="legend-chip legend-aigua">
+                        <span class="legend-dot"></span> Aigua (L/dia · mitja)
+                    </span>
+                </div>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="seasonal-chart" role="img"
+                        aria-label="Gràfic de línies amb els cicles estacionals d'electricitat i aigua"></canvas>
+            </div>
         </section>
 
         <!-- ── 3-YEAR CIRCULAR ECONOMY ROADMAP ───────────────────────── -->
@@ -227,7 +286,6 @@
                         <strong>Electricitat</strong>
                         <span class="target-badge">Objectiu: −30% xarxa</span>
                     </div>
-
                     <div class="roadmap-kpis">
                         <span class="kpi-chip">
                             <i class="fa-solid fa-bullseye" aria-hidden="true"></i>
@@ -238,7 +296,6 @@
                             Mesura: Comptador intel·ligent mensual
                         </span>
                     </div>
-
                     <ol class="roadmap-steps">
                         <li class="step step-y1">
                             <span class="step-year">Any 1</span>
@@ -268,7 +325,6 @@
                         <strong>Aigua</strong>
                         <span class="target-badge">Objectiu: −30% consum</span>
                     </div>
-
                     <div class="roadmap-kpis">
                         <span class="kpi-chip">
                             <i class="fa-solid fa-bullseye" aria-hidden="true"></i>
@@ -276,10 +332,9 @@
                         </span>
                         <span class="kpi-chip kpi-measurable">
                             <i class="fa-solid fa-chart-simple" aria-hidden="true"></i>
-                            Mesura: Comptador dgital setmanal
+                            Mesura: Comptador digital setmanal
                         </span>
                     </div>
-
                     <ol class="roadmap-steps">
                         <li class="step step-y1">
                             <span class="step-year">Any 1</span>
@@ -309,7 +364,6 @@
                         <strong>Consumibles Oficina</strong>
                         <span class="target-badge">Objectiu: −30% paper</span>
                     </div>
-
                     <div class="roadmap-kpis">
                         <span class="kpi-chip">
                             <i class="fa-solid fa-bullseye" aria-hidden="true"></i>
@@ -320,7 +374,6 @@
                             Mesura: Registre de comandes mensual
                         </span>
                     </div>
-
                     <ol class="roadmap-steps">
                         <li class="step step-y1">
                             <span class="step-year">Any 1</span>
@@ -350,7 +403,6 @@
                         <strong>Productes Neteja</strong>
                         <span class="target-badge">Objectiu: −30% residus</span>
                     </div>
-
                     <div class="roadmap-kpis">
                         <span class="kpi-chip">
                             <i class="fa-solid fa-bullseye" aria-hidden="true"></i>
@@ -361,7 +413,6 @@
                             Mesura: Auditoria de residus trimestral
                         </span>
                     </div>
-
                     <ol class="roadmap-steps">
                         <li class="step step-y1">
                             <span class="step-year">Any 1</span>
@@ -380,6 +431,45 @@
                             <span class="ce-tag ce-recycle">🔄 Reciclar</span>
                             <p>Ús exclusiu de productes de neteja probiòtics i ecològics certificats</p>
                             <em class="step-indicator">Indicador: Certificació ISO 14001 del centre</em>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- MAINTENANCE & WASTE ROADMAP CARD -->
+                <div class="roadmap-card roadmap-manteniment">
+                    <div class="roadmap-card-title">
+                        <span class="roadmap-icon">🔧</span>
+                        <strong>Manteniment i Residus</strong>
+                        <span class="target-badge">Objectiu: −30% cost</span>
+                    </div>
+                    <div class="roadmap-kpis">
+                        <span class="kpi-chip">
+                            <i class="fa-solid fa-bullseye" aria-hidden="true"></i>
+                            KPI: Reducció cost residus &lt;800 €/mes
+                        </span>
+                        <span class="kpi-chip kpi-measurable">
+                            <i class="fa-solid fa-chart-simple" aria-hidden="true"></i>
+                            Mesura: Factures de gestió mensual
+                        </span>
+                    </div>
+                    <ol class="roadmap-steps">
+                        <li class="step step-y1">
+                            <span class="step-year">Any 1</span>
+                            <span class="ce-tag ce-reduce">♻ Reduir</span>
+                            <p>Implantació de contenidors de separació selectiva en cada aula</p>
+                            <em class="step-indicator">Indicador: −20% residus barrejats</em>
+                        </li>
+                        <li class="step step-y2">
+                            <span class="step-year">Any 2</span>
+                            <span class="ce-tag ce-reuse">↩ Reutilitzar</span>
+                            <p>Programa de reparació d'equips i mobiliari en lloc de substitució</p>
+                            <em class="step-indicator">Indicador: −40% cost de reposició d'equips</em>
+                        </li>
+                        <li class="step step-y3">
+                            <span class="step-year">Any 3</span>
+                            <span class="ce-tag ce-recycle">🔄 Reciclar</span>
+                            <p>Gestió de residus electrònics (RAEE) amb empresa certificada</p>
+                            <em class="step-indicator">Indicador: 100% RAEE gestionats correctament</em>
                         </li>
                     </ol>
                 </div>
