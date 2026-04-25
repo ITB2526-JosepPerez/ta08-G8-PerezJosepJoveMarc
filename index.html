@@ -59,6 +59,8 @@ body {
   line-height: 1.6;
   min-height: 100vh;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ══════════════════════════════════════════════
@@ -197,6 +199,8 @@ body::before {
   gap: 1.75rem;
   position: relative;
   z-index: 1;
+  flex: 1;
+  width: 100%;
 }
 
 /* ══════════════════════════════════════════════
@@ -865,6 +869,7 @@ footer {
   padding: 1.2rem;
   font-size: .75rem;
   color: var(--muted);
+  margin-top: auto;
 }
 
 /* ══════════════════════════════════════════════
@@ -1077,9 +1082,173 @@ footer {
   .card, .chart-card, .rm-card, .tip-card { border: 1px solid #ccc; break-inside: avoid; }
 }
 
+/* ══════════════════════════════════════════════
+   AMBIENT PARTICLES CANVAS
+══════════════════════════════════════════════ */
+#ambient-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: .7;
+}
+
+/* ══════════════════════════════════════════════
+   ENHANCED KPI HOVER GLOW
+══════════════════════════════════════════════ */
+.kpi-card {
+  position: relative;
+  overflow: hidden;
+}
+.kpi-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  opacity: 0;
+  transition: opacity .4s ease;
+  pointer-events: none;
+}
+.kpi-card:has(.kpi-value.elec)::after  { background: radial-gradient(ellipse at 50% 100%, rgba(251,191,36,.12) 0%, transparent 70%); }
+.kpi-card:has(.kpi-value.water)::after { background: radial-gradient(ellipse at 50% 100%, rgba(56,189,248,.12) 0%, transparent 70%); }
+.kpi-card:has(.kpi-value.paper)::after { background: radial-gradient(ellipse at 50% 100%, rgba(167,139,250,.12) 0%, transparent 70%); }
+.kpi-card:has(.kpi-value.clean)::after { background: radial-gradient(ellipse at 50% 100%, rgba(52,211,153,.12) 0%, transparent 70%); }
+.kpi-card:hover::after { opacity: 1; }
+
+/* ══════════════════════════════════════════════
+   CARD SHIMMER EFFECT ON HOVER
+══════════════════════════════════════════════ */
+.card {
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -75%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255,255,255,.04) 50%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  transition: left .6s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+.card:hover::before { left: 125%; }
+
+/* ══════════════════════════════════════════════
+   BRAND ICON PULSE RING
+══════════════════════════════════════════════ */
+@keyframes brandPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(52,211,153,.4), 0 0 30px rgba(52,211,153,.15), inset 0 1px 0 rgba(255,255,255,.05); }
+  70%  { box-shadow: 0 0 0 10px rgba(52,211,153,0), 0 0 30px rgba(52,211,153,.15), inset 0 1px 0 rgba(255,255,255,.05); }
+  100% { box-shadow: 0 0 0 0 rgba(52,211,153,0), 0 0 30px rgba(52,211,153,.15), inset 0 1px 0 rgba(255,255,255,.05); }
+}
+.brand-icon {
+  animation: brandPulse 3s ease infinite;
+}
+
+/* ══════════════════════════════════════════════
+   NAV TAB ACTIVE INDICATOR GLOW
+══════════════════════════════════════════════ */
+.nav-tab.active {
+  text-shadow: 0 0 20px rgba(52,211,153,.5);
+}
+
+/* ══════════════════════════════════════════════
+   COUNTER ROLL ANIMATION
+══════════════════════════════════════════════ */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.kpi-value {
+  animation: countUp .5s ease both;
+}
+
+/* ══════════════════════════════════════════════
+   FLOATING DATA BADGE (tooltip-like on hover)
+══════════════════════════════════════════════ */
+@keyframes floatBadge {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-4px); }
+}
+.kpi-delta {
+  animation: floatBadge 2.5s ease infinite;
+}
+
+/* ══════════════════════════════════════════════
+   SCAN LINE EFFECT on charts
+══════════════════════════════════════════════ */
+.chart-card {
+  position: relative;
+  overflow: hidden;
+}
+.chart-card::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(52,211,153,.3), transparent);
+  top: -2px;
+  animation: scanLine 4s ease infinite;
+  pointer-events: none;
+}
+@keyframes scanLine {
+  0%   { top: -2px; opacity: 0; }
+  5%   { opacity: 1; }
+  95%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* ══════════════════════════════════════════════
+   TOAST NOTIFICATION
+══════════════════════════════════════════════ */
+#itb-toast {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  background: var(--bg2);
+  border: 1px solid rgba(52,211,153,.3);
+  border-radius: var(--radius-lg);
+  padding: .75rem 1.2rem;
+  font-size: .82rem;
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5), 0 0 20px rgba(52,211,153,.1);
+  z-index: 9999;
+  transform: translateY(120%);
+  transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+  pointer-events: none;
+}
+#itb-toast.show { transform: translateY(0); }
+#itb-toast i { font-size: .9rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  #ambient-canvas { display: none; }
+  .brand-icon { animation: none; }
+  .kpi-delta  { animation: none; }
+  .chart-card::after { display: none; }
+  .card::before { display: none; }
+}
+
 </style>
 </head>
 <body>
+
+<!-- AMBIENT PARTICLES -->
+<canvas id="ambient-canvas"></canvas>
+
+<!-- TOAST -->
+<div id="itb-toast"><i class="fa-solid fa-leaf"></i> <span id="toast-msg">Calculant...</span></div>
 
 <!-- HEADER -->
 <header class="site-header">
@@ -2850,6 +3019,158 @@ document.getElementById('date-to').value   = toLocalISODate(sixMonths);
 
 handleCalc();
 initSimulator();
+
+// ─── AMBIENT PARTICLE SYSTEM ─────────────────────────────
+(function() {
+  const canvas = document.getElementById('ambient-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  let W, H, particles = [];
+
+  const TYPES = [
+    { color: 'rgba(251,191,36,',  symbol: '⚡', size: [6,11],  speed: [.18,.4],  count: 6  },
+    { color: 'rgba(56,189,248,',  symbol: '💧', size: [4,9],   speed: [.12,.28], count: 9  },
+    { color: 'rgba(167,139,250,', symbol: '○',  size: [3,7],   speed: [.1,.22],  count: 8  },
+    { color: 'rgba(52,211,153,',  symbol: '✦',  size: [4,10],  speed: [.14,.32], count: 7  },
+  ];
+
+  function rand(a, b) { return a + Math.random() * (b - a); }
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function createParticle(type, force) {
+    return {
+      type,
+      x: rand(0, W),
+      y: force ? rand(0, H) : H + rand(10, 50),
+      size: rand(type.size[0], type.size[1]),
+      speed: rand(type.speed[0], type.speed[1]),
+      opacity: rand(.12, .35),
+      drift: rand(-.3, .3),
+      wobble: rand(0, Math.PI * 2),
+      wobbleSpeed: rand(.005, .018),
+      life: 0,
+      maxLife: rand(280, 520),
+    };
+  }
+
+  function initParticles() {
+    particles = [];
+    TYPES.forEach(t => {
+      for (let i = 0; i < t.count; i++) {
+        particles.push(createParticle(t, true));
+      }
+    });
+  }
+
+  function drawParticle(p) {
+    const fade = Math.min(1, Math.min(p.life / 40, (p.maxLife - p.life) / 40));
+    ctx.save();
+    ctx.globalAlpha = p.opacity * fade;
+    ctx.font = `${p.size}px serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    // For symbols use text, for circles draw shape
+    if (p.type.symbol === '○') {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
+      ctx.strokeStyle = p.type.color + '.6)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    } else if (p.type.symbol === '✦') {
+      // draw a 4-point star
+      const s = p.size / 2;
+      ctx.fillStyle = p.type.color + '.8)';
+      ctx.beginPath();
+      for (let i = 0; i < 8; i++) {
+        const angle = (i * Math.PI) / 4;
+        const r = i % 2 === 0 ? s : s * .4;
+        if (i === 0) ctx.moveTo(p.x + r * Math.cos(angle), p.y + r * Math.sin(angle));
+        else ctx.lineTo(p.x + r * Math.cos(angle), p.y + r * Math.sin(angle));
+      }
+      ctx.closePath();
+      ctx.fill();
+    } else {
+      ctx.fillText(p.type.symbol, p.x, p.y);
+    }
+    ctx.restore();
+  }
+
+  let raf;
+  function tick() {
+    ctx.clearRect(0, 0, W, H);
+
+    particles.forEach((p, i) => {
+      p.wobble += p.wobbleSpeed;
+      p.x += p.drift + Math.sin(p.wobble) * .4;
+      p.y -= p.speed;
+      p.life++;
+
+      drawParticle(p);
+
+      if (p.life >= p.maxLife || p.y < -30) {
+        const t = TYPES[Math.floor(Math.random() * TYPES.length)];
+        particles[i] = createParticle(t, false);
+      }
+    });
+
+    raf = requestAnimationFrame(tick);
+  }
+
+  window.addEventListener('resize', () => { resize(); initParticles(); });
+  resize();
+  initParticles();
+  tick();
+
+  // Pause when tab not visible
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) cancelAnimationFrame(raf);
+    else tick();
+  });
+})();
+
+// ─── TOAST SYSTEM ───────────────────────────────────────
+(function() {
+  const toast = document.getElementById('itb-toast');
+  const msg   = document.getElementById('toast-msg');
+  let timer;
+
+  function showToast(text, duration = 2800) {
+    if (!toast) return;
+    msg.textContent = text;
+    toast.classList.add('show');
+    clearTimeout(timer);
+    timer = setTimeout(() => toast.classList.remove('show'), duration);
+  }
+
+  // Show toast on tab switch
+  document.querySelectorAll('.nav-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const labels = {
+        calculadora: '🌿 Calculadora de consums',
+        grafics:     '📊 Visualització de dades',
+        pla:         '🗺️ Pla de reducció',
+        simulador:   '🔬 Simulador d\'estalvi',
+        consells:    '💡 Consells pràctics',
+      };
+      const key = tab.dataset.tab;
+      if (labels[key]) showToast(labels[key]);
+    });
+  });
+
+  // Show toast on calc button
+  const calcBtn = document.querySelector('.btn-primary');
+  if (calcBtn) {
+    calcBtn.addEventListener('click', () => {
+      showToast('✅ Resultats actualitzats!');
+    });
+  }
+})();
 </script>
 </body>
 </html>
