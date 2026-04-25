@@ -50,7 +50,7 @@ const PERIOD_CONFIG = {
 };
 
 const REDUCTION_FACTOR = 0.70;  // 30% reduction plan
-const DATA_URL = '../json/dataclean.json';
+const DATA_URL = './json/dataclean.json';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 2. VARIABILITY — Realistic monthly fluctuation algorithm
