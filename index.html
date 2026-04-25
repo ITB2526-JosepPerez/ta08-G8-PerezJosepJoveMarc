@@ -251,6 +251,8 @@ label.field-lbl {
 }
 
 .select-row { display: flex; gap: .6rem; align-items: flex-end; }
+.demo-row { margin-top: .6rem; }
+.demo-row .btn { width: 100%; justify-content: center; }
 
 select.itb-select, input.itb-input {
   flex: 1;
@@ -307,6 +309,13 @@ select.itb-select:focus, input.itb-input:focus {
   color: #040810;
 }
 .btn-primary:hover { background: #2ec788; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(52,211,153,.3); }
+
+.btn-demo {
+  background: rgba(167,139,250,.12);
+  color: var(--paper);
+  border: 1px solid rgba(167,139,250,.28);
+}
+.btn-demo:hover { background: rgba(167,139,250,.2); transform: translateY(-1px); }
 
 .btn-secondary {
   background: var(--surface);
@@ -367,6 +376,12 @@ select.itb-select:focus, input.itb-input:focus {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: .85rem;
+}
+.kpi-row.flash .kpi-card { animation: pulseGlow .9s ease; }
+@keyframes pulseGlow {
+  0%   { box-shadow: 0 0 0 rgba(52,211,153,0); }
+  50%  { box-shadow: 0 0 0 3px rgba(52,211,153,.2), 0 12px 36px rgba(52,211,153,.2); }
+  100% { box-shadow: 0 0 0 rgba(52,211,153,0); }
 }
 
 .kpi-card {
@@ -1130,6 +1145,11 @@ footer {
             </select>
             <button id="btn-calcular" class="btn btn-primary">
               <i class="fa-solid fa-rotate"></i> Calcular
+            </button>
+          </div>
+          <div class="demo-row">
+            <button id="btn-demo" class="btn btn-demo" type="button" title="Carrega un escenari visual de demostració">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Mode Demo
             </button>
           </div>
         </div>
@@ -1933,6 +1953,19 @@ const MONTHS_CA = ['Gen','Feb','Mar','Abr','Mai','Jun','Jul','Ago','Set','Oct','
 const DAYS_PER_MONTH = [31,28,31,30,31,30,31,31,30,31,30,31];
 const REDUCTION = 0.70;
 
+function hasChartLib() {
+  return typeof window.Chart !== 'undefined';
+}
+
+function hasPdfLibs() {
+  return !!(window.jspdf && typeof window.jspdf.jsPDF === 'function');
+}
+
+function toLocalISODate(date) {
+  const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return local.toISOString().split('T')[0];
+}
+
 // ─── VARIABILITY ─────────────────────────────────────────
 function getVar(min, max) {
   const r=(Math.random()+Math.random()+Math.random()+Math.random())/4;
@@ -2126,6 +2159,7 @@ function buildMonthlyUnits(monthAvg, mfArr) {
 }
 
 function makeChart(canvasId, label, data, color, unit) {
+  if (!hasChartLib()) return;
   const ctx = document.getElementById(canvasId)?.getContext('2d');
   if (!ctx) return;
   if (charts[canvasId]) { charts[canvasId].destroy(); }
@@ -2162,6 +2196,7 @@ function makeChart(canvasId, label, data, color, unit) {
 }
 
 function renderCharts() {
+  if (!hasChartLib()) return;
   const d = DATA.dades_base;
   const elecData  = buildMonthlyKWh(d.electricitat.consum_mitja_diari_kWh, MONTHLY_FACTORS.electricitat);
   const waterData = buildMonthlyKWh(d.aigua.consum_mitja_diari_litres, MONTHLY_FACTORS.aigua);
@@ -2217,6 +2252,7 @@ function renderCharts() {
 }
 
 function renderCompareCharts() {
+  if (!hasChartLib()) return;
   const d = DATA.dades_base;
   const p = PERIOD_CONFIG.anual;
 
@@ -2320,8 +2356,36 @@ function handleCalc() {
   renderCharts();
 }
 
+function activateDemoMode() {
+  const periodSelect = document.getElementById('periode-select');
+  if (periodSelect) periodSelect.value = 'anual';
+
+  if (!state.isReduction) {
+    const toggleBtn = document.getElementById('btn-reduccio');
+    if (toggleBtn) toggleBtn.click();
+  } else {
+    handleCalc();
+  }
+
+  const featuredMeasures = ['cb-sensors','cb-led','cb-solar','cb-airejadors','cb-cisternes','cb-zeropaper','cb-assecadors','cb-ecologics'];
+  document.querySelectorAll('.sim-cb').forEach(cb => {
+    cb.checked = featuredMeasures.includes(cb.id);
+  });
+  updateSimulator();
+
+  const kpiRow = document.getElementById('kpi-row');
+  if (kpiRow) {
+    kpiRow.classList.remove('flash');
+    void kpiRow.offsetWidth;
+    kpiRow.classList.add('flash');
+    setTimeout(() => kpiRow.classList.remove('flash'), 1000);
+    kpiRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
 // ─── EVENTS ──────────────────────────────────────────────
 document.getElementById('btn-calcular').addEventListener('click', handleCalc);
+document.getElementById('btn-demo').addEventListener('click', activateDemoMode);
 document.getElementById('periode-select').addEventListener('change', handleCalc);
 document.getElementById('date-from').addEventListener('change', handleCalc);
 document.getElementById('date-to').addEventListener('change', handleCalc);
@@ -2381,6 +2445,11 @@ document.querySelectorAll('.year-btn').forEach(btn => {
 // ─── PDF EXPORT ──────────────────────────────────────────
 async function exportPDF() {
   const btn = document.getElementById('btn-pdf');
+  if (!btn) return;
+  if (!hasPdfLibs()) {
+    alert('No s\'ha pogut generar el PDF perquè la llibreria no s\'ha carregat.');
+    return;
+  }
   const origText = btn.innerHTML;
   btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generant…';
   btn.disabled = true;
@@ -2535,6 +2604,7 @@ function getSimBase() {
 let simDonutChart = null;
 
 function initSimDonut() {
+  if (!hasChartLib()) return;
   const ctx = document.getElementById('sim-donut')?.getContext('2d');
   if (!ctx) return;
   simDonutChart = new Chart(ctx, {
@@ -2664,8 +2734,7 @@ function updateSimulator() {
 }
 
 function updateSimCompareCharts(base, reds) {
-  const d = DATA.dades_base;
-  const p = PERIOD_CONFIG.anual;
+  if (!hasChartLib()) return;
   const baseE = base.elec;
   const baseA = Math.round(base.water / 1000); // kL
   const baseO = base.paper;
@@ -2776,8 +2845,8 @@ function initSimulator() {
 // Set default dates for custom range
 const today = new Date();
 const sixMonths = new Date(today); sixMonths.setMonth(sixMonths.getMonth()+6);
-document.getElementById('date-from').value = today.toISOString().split('T')[0];
-document.getElementById('date-to').value   = sixMonths.toISOString().split('T')[0];
+document.getElementById('date-from').value = toLocalISODate(today);
+document.getElementById('date-to').value   = toLocalISODate(sixMonths);
 
 handleCalc();
 initSimulator();
