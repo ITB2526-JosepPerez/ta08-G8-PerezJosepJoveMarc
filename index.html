@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ca">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora Sostenible · ITB</title>
+<title>Sustainable Calculator · ITB</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -1248,7 +1248,7 @@ footer {
 <canvas id="ambient-canvas"></canvas>
 
 <!-- TOAST -->
-<div id="itb-toast"><i class="fa-solid fa-leaf"></i> <span id="toast-msg">Calculant...</span></div>
+<div id="itb-toast"><i class="fa-solid fa-leaf"></i> <span id="toast-msg">Calculating...</span></div>
 
 <!-- HEADER -->
 <header class="site-header">
@@ -1256,31 +1256,31 @@ footer {
     <div class="header-brand">
       <div class="brand-icon">🌿</div>
       <div class="brand-text">
-        <h1>Calculadora Sostenible · ITB</h1>
-        <p>Anàlisi de consums reals · Variabilitat estacional · Economia circular</p>
+        <h1>Sustainable Calculator · ITB</h1>
+        <p>Real Consumption Analysis · Seasonal Variability · Circular Economy</p>
       </div>
     </div>
     <div class="header-tags">
-      <span class="tag tag-green">⚡ 8 Indicadors</span>
-      <span class="tag tag-blue">📊 Gràfics</span>
-      <span class="tag tag-yellow">−30% Reducció</span>
-      <span class="tag tag-purple">📅 Rang de Dates</span>
+      <span class="tag tag-green">⚡ 8 Indicators</span>
+      <span class="tag tag-blue">📊 Charts</span>
+      <span class="tag tag-yellow">−30% Reduction</span>
+      <span class="tag tag-purple">📅 Date Range</span>
     </div>
   </div>
 
   <!-- NAV TABS -->
   <nav class="nav-tabs" role="tablist">
     <button class="nav-tab active" data-tab="calculadora" role="tab">
-      <i class="fa-solid fa-calculator"></i> <span>Calculadora</span>
+      <i class="fa-solid fa-calculator"></i> <span>Calculator</span>
     </button>
     <button class="nav-tab" data-tab="grafics" role="tab">
-      <i class="fa-solid fa-chart-line"></i> <span>Gràfics</span>
+      <i class="fa-solid fa-chart-line"></i> <span>Charts</span>
     </button>
     <button class="nav-tab" data-tab="pla" role="tab">
-      <i class="fa-solid fa-road"></i> <span>Pla 3 Anys</span>
+      <i class="fa-solid fa-road"></i> <span>3-Year Plan</span>
     </button>
     <button class="nav-tab" data-tab="consells" role="tab">
-      <i class="fa-solid fa-lightbulb"></i> <span>Consells</span>
+      <i class="fa-solid fa-lightbulb"></i> <span>Tips</span>
     </button>
   </nav>
 </header>
@@ -1290,7 +1290,7 @@ footer {
   <!-- ERROR -->
   <div id="error-banner" class="error-bar" role="alert" hidden>
     <i class="fa-solid fa-triangle-exclamation"></i>
-    <span id="error-msg">Error en carregar les dades.</span>
+    <span id="error-msg">Error loading data.</span>
   </div>
 
   <!-- ══════════════════════════════════════════
@@ -1302,71 +1302,71 @@ footer {
     <div class="controls-panel">
 
       <div class="ctrl-box">
-        <h2><i class="fa-solid fa-sliders"></i> Configuració del Càlcul</h2>
+        <h2><i class="fa-solid fa-sliders"></i> Calculation Settings</h2>
         <div>
-          <label class="field-lbl" for="periode-select">Període predefinit</label>
+          <label class="field-lbl" for="periode-select">Predefined period</label>
           <div class="select-row">
             <select id="periode-select" class="itb-select">
-              <option value="anual">Pròxim Any Complet (12 mesos)</option>
-              <option value="curs">Curs Escolar (Set–Jun · 10 mesos)</option>
-              <option value="hivern">Hivern (Des–Feb · 3 mesos)</option>
-              <option value="custom">Rang de dates personalitzat…</option>
+              <option value="anual">Next Full Year (12 months)</option>
+              <option value="curs">Academic Year (Sep–Jun · 10 months)</option>
+              <option value="hivern">Winter (Dec–Feb · 3 months)</option>
+              <option value="custom">Custom date range…</option>
             </select>
             <button id="btn-calcular" class="btn btn-primary">
-              <i class="fa-solid fa-rotate"></i> Calcular
+              <i class="fa-solid fa-rotate"></i> Calculate
             </button>
           </div>
           <div class="demo-row">
-            <button id="btn-demo" class="btn btn-demo" type="button" title="Carrega un escenari visual de demostració">
-              <i class="fa-solid fa-wand-magic-sparkles"></i> Mode Demo
+            <button id="btn-demo" class="btn btn-demo" type="button" title="Load a visual demonstration scenario">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Demo Mode
             </button>
           </div>
         </div>
 
         <!-- Custom date range (shown only when "custom" selected) -->
         <div id="custom-date-block" hidden>
-          <label class="field-lbl">Rang de dates personalitzat</label>
+          <label class="field-lbl">Custom date range</label>
           <div class="date-range-row">
             <div>
-              <label class="field-lbl" for="date-from" style="font-size:.65rem">Des de</label>
+              <label class="field-lbl" for="date-from" style="font-size:.65rem">From</label>
               <input type="date" id="date-from" class="itb-input" />
             </div>
             <div>
-              <label class="field-lbl" for="date-to" style="font-size:.65rem">Fins a</label>
+              <label class="field-lbl" for="date-to" style="font-size:.65rem">To</label>
               <input type="date" id="date-to" class="itb-input" />
             </div>
           </div>
           <p class="note-info" style="margin-top:.5rem">
             <i class="fa-solid fa-circle-info"></i>
-            El sistema interpola els factors estacionals per al rang seleccionat.
+            The system interpolates seasonal factors for the selected range.
           </p>
         </div>
 
         <p class="note-info">
           <i class="fa-solid fa-circle-info"></i>
-          Cada càlcul aplica <strong>variabilitat aleatòria ±2–5%</strong> per simular fluctuacions reals.
+          Each calculation applies <strong>random variability ±2–5%</strong> to simulate real fluctuations.
         </p>
       </div>
 
       <div class="ctrl-box">
-        <h2><i class="fa-solid fa-recycle"></i> Pla d'Acció Circular</h2>
-        <p style="font-size:.82rem;color:var(--muted);">Activa les millores projectades a 3 anys per veure l'estalvi real respecte al consum base.</p>
+        <h2><i class="fa-solid fa-recycle"></i> Circular Action Plan</h2>
+        <p style="font-size:.82rem;color:var(--muted);">Activate the 3-year projected improvements to see real savings versus baseline consumption.</p>
         <button id="btn-reduccio" class="btn btn-toggle" aria-pressed="false">
           <i class="fa-solid fa-power-off"></i>
-          <span>Activar Reducció (−30%)</span>
+          <span>Activate Reduction (−30%)</span>
         </button>
         <div id="saving-summary" class="savings-banner" hidden aria-live="polite"></div>
       </div>
 
       <div class="ctrl-box">
-        <h2><i class="fa-solid fa-file-pdf"></i> Exportació</h2>
-        <p style="font-size:.82rem;color:var(--muted);">Exporta l'informe complet amb tots els indicadors i el pla de reducció.</p>
+        <h2><i class="fa-solid fa-file-pdf"></i> Export</h2>
+        <p style="font-size:.82rem;color:var(--muted);">Export the full report with all indicators and reduction plan.</p>
         <button id="btn-pdf" class="btn btn-pdf" onclick="exportPDF()">
-          <i class="fa-solid fa-download"></i> Exportar PDF
+          <i class="fa-solid fa-download"></i> Export PDF
         </button>
         <p class="note-info" style="margin-top:.5rem">
           <i class="fa-solid fa-circle-info"></i>
-          El PDF inclou els 8 indicadors, gràfics mensuals i el pla de reducció.
+          The PDF includes the 8 indicators, monthly charts and the reduction plan.
         </p>
       </div>
     </div>
@@ -1374,32 +1374,32 @@ footer {
     <!-- KPI Summary Row -->
     <div>
       <div class="section-title">
-        <i class="fa-solid fa-gauge-high"></i> Resum Executiu
-        <span class="muted" id="kpi-period-label">— any complet</span>
+        <i class="fa-solid fa-gauge-high"></i> Executive Summary
+        <span class="muted" id="kpi-period-label">— full year</span>
       </div>
       <div class="kpi-row" id="kpi-row">
         <div class="kpi-card">
-          <span class="kpi-label">⚡ Electricitat</span>
+          <span class="kpi-label">⚡ Electricity</span>
           <span class="kpi-value elec" id="kpi-elec">–</span>
-          <span class="kpi-sub">kWh · any complet</span>
+          <span class="kpi-sub">kWh · full year</span>
           <span class="kpi-delta" id="kpi-elec-delta" hidden></span>
         </div>
         <div class="kpi-card">
-          <span class="kpi-label">💧 Aigua</span>
+          <span class="kpi-label">💧 Water</span>
           <span class="kpi-value water" id="kpi-water">–</span>
-          <span class="kpi-sub">L · any complet</span>
+          <span class="kpi-sub">L · full year</span>
           <span class="kpi-delta" id="kpi-water-delta" hidden></span>
         </div>
         <div class="kpi-card">
-          <span class="kpi-label">📝 Paper Oficina</span>
+          <span class="kpi-label">📝 Office Paper</span>
           <span class="kpi-value paper" id="kpi-paper">–</span>
-          <span class="kpi-sub">paquets A4 · any</span>
+          <span class="kpi-sub">A4 packs · year</span>
           <span class="kpi-delta" id="kpi-paper-delta" hidden></span>
         </div>
         <div class="kpi-card">
-          <span class="kpi-label">🧼 Neteja</span>
+          <span class="kpi-label">🧼 Cleaning</span>
           <span class="kpi-value clean" id="kpi-clean">–</span>
-          <span class="kpi-sub">rotllos · any</span>
+          <span class="kpi-sub">rolls · year</span>
           <span class="kpi-delta" id="kpi-clean-delta" hidden></span>
         </div>
       </div>
@@ -1408,20 +1408,20 @@ footer {
     <!-- 8 Indicators -->
     <div>
       <div class="section-title">
-        <i class="fa-solid fa-chart-bar"></i> 8 Indicadors de Sostenibilitat
-        <span class="muted">— projeccions amb estacionalitat i variabilitat</span>
+        <i class="fa-solid fa-chart-bar"></i> 8 Sustainability Indicators
+        <span class="muted">— projections with seasonality and variability</span>
       </div>
       <div class="results-grid" id="results-grid">
 
         <div class="card card-accent-elec">
           <div class="card-top">
             <div class="card-icon icon-elec"><i class="fa-solid fa-bolt"></i></div>
-            <h3>Electricitat</h3>
+            <h3>Electricity</h3>
             <span class="unit-tag">kWh</span>
           </div>
           <div class="card-body">
             <div class="data-row">
-              <span class="row-label">① Pròxim any</span>
+              <span class="row-label">① Next year</span>
               <div class="row-values">
                 <span id="res-elec-any-old" class="val-old" hidden></span>
                 <span id="res-elec-any" class="val-main">–</span>
@@ -1429,7 +1429,7 @@ footer {
               </div>
             </div>
             <div class="data-row">
-              <span class="row-label">② Període triat</span>
+              <span class="row-label">② Selected period</span>
               <div class="row-values">
                 <span id="res-elec-periode-old" class="val-old" hidden></span>
                 <span id="res-elec-periode" class="val-secondary">–</span>
@@ -1442,12 +1442,12 @@ footer {
         <div class="card card-accent-water">
           <div class="card-top">
             <div class="card-icon icon-water"><i class="fa-solid fa-droplet"></i></div>
-            <h3>Aigua</h3>
+            <h3>Water</h3>
             <span class="unit-tag">L</span>
           </div>
           <div class="card-body">
             <div class="data-row">
-              <span class="row-label">③ Pròxim any</span>
+              <span class="row-label">③ Next year</span>
               <div class="row-values">
                 <span id="res-aigua-any-old" class="val-old" hidden></span>
                 <span id="res-aigua-any" class="val-main">–</span>
@@ -1455,7 +1455,7 @@ footer {
               </div>
             </div>
             <div class="data-row">
-              <span class="row-label">④ Període triat</span>
+              <span class="row-label">④ Selected period</span>
               <div class="row-values">
                 <span id="res-aigua-periode-old" class="val-old" hidden></span>
                 <span id="res-aigua-periode" class="val-secondary">–</span>
@@ -1468,12 +1468,12 @@ footer {
         <div class="card card-accent-paper">
           <div class="card-top">
             <div class="card-icon icon-paper"><i class="fa-solid fa-file-alt"></i></div>
-            <h3>Consumibles Oficina</h3>
-            <span class="unit-tag">paquets A4</span>
+            <h3>Office Supplies</h3>
+            <span class="unit-tag">A4 packs</span>
           </div>
           <div class="card-body">
             <div class="data-row">
-              <span class="row-label">⑤ Pròxim any</span>
+              <span class="row-label">⑤ Next year</span>
               <div class="row-values">
                 <span id="res-ofi-any-old" class="val-old" hidden></span>
                 <span id="res-ofi-any" class="val-main">–</span>
@@ -1481,7 +1481,7 @@ footer {
               </div>
             </div>
             <div class="data-row">
-              <span class="row-label">⑥ Període triat</span>
+              <span class="row-label">⑥ Selected period</span>
               <div class="row-values">
                 <span id="res-ofi-periode-old" class="val-old" hidden></span>
                 <span id="res-ofi-periode" class="val-secondary">–</span>
@@ -1494,12 +1494,12 @@ footer {
         <div class="card card-accent-clean">
           <div class="card-top">
             <div class="card-icon icon-clean"><i class="fa-solid fa-soap"></i></div>
-            <h3>Productes de Neteja</h3>
-            <span class="unit-tag">rotllos</span>
+            <h3>Cleaning Products</h3>
+            <span class="unit-tag">rolls</span>
           </div>
           <div class="card-body">
             <div class="data-row">
-              <span class="row-label">⑦ Pròxim any</span>
+              <span class="row-label">⑦ Next year</span>
               <div class="row-values">
                 <span id="res-net-any-old" class="val-old" hidden></span>
                 <span id="res-net-any" class="val-main">–</span>
@@ -1507,7 +1507,7 @@ footer {
               </div>
             </div>
             <div class="data-row">
-              <span class="row-label">⑧ Període triat</span>
+              <span class="row-label">⑧ Selected period</span>
               <div class="row-values">
                 <span id="res-net-periode-old" class="val-old" hidden></span>
                 <span id="res-net-periode" class="val-secondary">–</span>
@@ -1523,38 +1523,38 @@ footer {
     <!-- Impact comparison bars -->
     <div>
       <div class="section-title">
-        <i class="fa-solid fa-arrows-left-right"></i> Impacte Relatiu per Indicador
-        <span class="muted">— % del consum anual base</span>
+        <i class="fa-solid fa-arrows-left-right"></i> Relative Impact per Indicator
+        <span class="muted">— % of annual baseline consumption</span>
       </div>
       <div class="chart-card">
         <div class="impact-bar-list" id="impact-bars">
           <div class="impact-item">
-            <span class="impact-label">⚡ Electricitat any</span>
+            <span class="impact-label">⚡ Electricity any</span>
             <div class="impact-track"><div class="impact-fill" id="imp-elec-any" style="width:0%;background:var(--elec)"></div></div>
             <span class="impact-pct" id="imp-elec-any-pct">–</span>
           </div>
           <div class="impact-item">
-            <span class="impact-label">⚡ Electricitat per.</span>
+            <span class="impact-label">⚡ Electricity per.</span>
             <div class="impact-track"><div class="impact-fill" id="imp-elec-per" style="width:0%;background:var(--elec);opacity:.6"></div></div>
             <span class="impact-pct" id="imp-elec-per-pct">–</span>
           </div>
           <div class="impact-item">
-            <span class="impact-label">💧 Aigua any</span>
+            <span class="impact-label">💧 Water any</span>
             <div class="impact-track"><div class="impact-fill" id="imp-water-any" style="width:0%;background:var(--water)"></div></div>
             <span class="impact-pct" id="imp-water-any-pct">–</span>
           </div>
           <div class="impact-item">
-            <span class="impact-label">💧 Aigua per.</span>
+            <span class="impact-label">💧 Water per.</span>
             <div class="impact-track"><div class="impact-fill" id="imp-water-per" style="width:0%;background:var(--water);opacity:.6"></div></div>
             <span class="impact-pct" id="imp-water-per-pct">–</span>
           </div>
           <div class="impact-item">
-            <span class="impact-label">📝 Paper any</span>
+            <span class="impact-label">📝 Paper year</span>
             <div class="impact-track"><div class="impact-fill" id="imp-paper-any" style="width:0%;background:var(--paper)"></div></div>
             <span class="impact-pct" id="imp-paper-any-pct">–</span>
           </div>
           <div class="impact-item">
-            <span class="impact-label">🧼 Neteja any</span>
+            <span class="impact-label">🧼 Cleaning any</span>
             <div class="impact-track"><div class="impact-fill" id="imp-clean-any" style="width:0%;background:var(--clean)"></div></div>
             <span class="impact-pct" id="imp-clean-any-pct">–</span>
           </div>
@@ -1572,8 +1572,8 @@ footer {
     <!-- Combined chart -->
     <div>
       <div class="section-title">
-        <i class="fa-solid fa-chart-area"></i> Vista Combinada Mensual
-        <span class="muted">— tots els indicadors normalitzats (% del màxim)</span>
+        <i class="fa-solid fa-chart-area"></i> Combined Monthly View
+        <span class="muted">— all indicators normalized (% of maximum)</span>
       </div>
       <div class="chart-card">
         <div class="chart-combined-wrap">
@@ -1585,35 +1585,35 @@ footer {
     <!-- Individual charts -->
     <div>
       <div class="section-title">
-        <i class="fa-solid fa-chart-column"></i> Distribució Mensual Estacional
-        <span class="muted">— consum estimat per mes (any complet)</span>
+        <i class="fa-solid fa-chart-column"></i> Seasonal Monthly Distribution
+        <span class="muted">— estimated consumption per month (full year)</span>
       </div>
       <div class="charts-grid">
         <div class="chart-card">
           <div class="chart-header">
-            <h3>⚡ Electricitat</h3>
-            <span class="chart-unit">kWh/mes</span>
+            <h3>⚡ Electricity</h3>
+            <span class="chart-unit">kWh/month</span>
           </div>
           <div class="chart-wrap"><canvas id="chart-elec"></canvas></div>
         </div>
         <div class="chart-card">
           <div class="chart-header">
-            <h3>💧 Aigua</h3>
-            <span class="chart-unit">L/mes</span>
+            <h3>💧 Water</h3>
+            <span class="chart-unit">L/month</span>
           </div>
           <div class="chart-wrap"><canvas id="chart-water"></canvas></div>
         </div>
         <div class="chart-card">
           <div class="chart-header">
-            <h3>📝 Paper Oficina</h3>
-            <span class="chart-unit">paquets/mes</span>
+            <h3>📝 Office Paper</h3>
+            <span class="chart-unit">packs/month</span>
           </div>
           <div class="chart-wrap"><canvas id="chart-paper"></canvas></div>
         </div>
         <div class="chart-card">
           <div class="chart-header">
-            <h3>🧼 Neteja</h3>
-            <span class="chart-unit">rotllos/mes</span>
+            <h3>🧼 Cleaning</h3>
+            <span class="chart-unit">rolls/month</span>
           </div>
           <div class="chart-wrap"><canvas id="chart-clean"></canvas></div>
         </div>
@@ -1623,14 +1623,14 @@ footer {
   </div><!-- /tab-grafics -->
 
   <!-- ══════════════════════════════════════════
-       TAB 3: PLA 3 ANYS — SIMULADOR INTERACTIU
+       TAB 3: 3-YEAR PLAN — INTERACTIVE SIMULATOR
   ══════════════════════════════════════════ -->
   <div id="tab-pla" class="page-section">
 
     <!-- Intro -->
     <div class="section-title">
-      <i class="fa-solid fa-sliders"></i> Simulador de Pla de Reducció
-      <span class="muted">— activa/desactiva mesures i veu l'impacte en temps real</span>
+      <i class="fa-solid fa-sliders"></i> Reduction Plan Simulator
+      <span class="muted">— enable/disable measures and see the impact in real time</span>
     </div>
 
     <!-- SIMULATOR LAYOUT -->
@@ -1655,11 +1655,11 @@ footer {
               </div>
               <div class="sim-measure-info">
                 <div class="sim-measure-top">
-                  <span class="step-yr">Any 1 · ♻ Reduir</span>
+                  <span class="step-yr">Year 1 · ♻ Reduce</span>
                   <span class="sim-badge sim-badge-elec">−10%</span>
                 </div>
-                <p class="step-desc">Sensors de presència a totes les aules i espais comuns</p>
-                <em class="step-kpi">KPI: −10% consum elèctric en 6 mesos</em>
+                <p class="step-desc">Presence sensors in all classrooms and common areas</p>
+                <em class="step-kpi">KPI: −10% electricity consumption in 6 months</em>
               </div>
             </label>
 
@@ -1670,11 +1670,11 @@ footer {
               </div>
               <div class="sim-measure-info">
                 <div class="sim-measure-top">
-                  <span class="step-yr">Any 2 · ↩ Reutilitzar</span>
+                  <span class="step-yr">Year 2 · ↩ Reuse</span>
                   <span class="sim-badge sim-badge-elec">−15%</span>
                 </div>
-                <p class="step-desc">Substitució de tot el parc lumínic per tecnologia LED</p>
-                <em class="step-kpi">KPI: −15% consum il·luminació</em>
+                <p class="step-desc">Replacement of all lighting with LED technology</p>
+                <em class="step-kpi">KPI: −15% lighting consumption</em>
               </div>
             </label>
 
@@ -1685,11 +1685,11 @@ footer {
               </div>
               <div class="sim-measure-info">
                 <div class="sim-measure-top">
-                  <span class="step-yr">Any 3 · 🔄 Reciclar</span>
+                  <span class="step-yr">Year 3 · 🔄 Recycle</span>
                   <span class="sim-badge sim-badge-elec">−15%</span>
                 </div>
-                <p class="step-desc">Ampliació panells solars +15 kWp · Energia renovable pròpia</p>
-                <em class="step-kpi">KPI: 40% autosuficiència elèctrica</em>
+                <p class="step-desc">Solar panel expansion +15 kWp · Own renewable energy</p>
+                <em class="step-kpi">KPI: 40% electrical self-sufficiency</em>
               </div>
             </label>
 
@@ -1712,11 +1712,11 @@ footer {
               </div>
               <div class="sim-measure-info">
                 <div class="sim-measure-top">
-                  <span class="step-yr">Any 1 · ♻ Reduir</span>
+                  <span class="step-yr">Year 1 · ♻ Reduce</span>
                   <span class="sim-badge sim-badge-water">−10%</span>
                 </div>
-                <p class="step-desc">Instal·lació d'airejadors a totes les aixetes del centre</p>
-                <em class="step-kpi">KPI: −10% litres/mes en 6 mesos</em>
+                <p class="step-desc">Installation of aerators on all taps in the centre</p>
+                <em class="step-kpi">KPI: −10% litres/month in 6 months</em>
               </div>
             </label>
 
@@ -1730,8 +1730,8 @@ footer {
                   <span class="step-yr">Any 2 · ♻ Reduir</span>
                   <span class="sim-badge sim-badge-water">−10%</span>
                 </div>
-                <p class="step-desc">Cisternes de doble descàrrega a tots els WC</p>
-                <em class="step-kpi">KPI: −8 L per cicle WC</em>
+                <p class="step-desc">Dual-flush cisterns in all toilets</p>
+                <em class="step-kpi">KPI: −8 L per toilet cycle</em>
               </div>
             </label>
 
@@ -1742,11 +1742,11 @@ footer {
               </div>
               <div class="sim-measure-info">
                 <div class="sim-measure-top">
-                  <span class="step-yr">Any 3 · 🔄 Reciclar</span>
+                  <span class="step-yr">Year 3 · 🔄 Recycle</span>
                   <span class="sim-badge sim-badge-water">−12%</span>
                 </div>
-                <p class="step-desc">Sistema de recollida d'aigües pluvials per reg de jardins</p>
-                <em class="step-kpi">KPI: 100% reg extern amb aigua reciclada</em>
+                <p class="step-desc">Rainwater collection system for garden irrigation</p>
+                <em class="step-kpi">KPI: 100% external irrigation with recycled water</em>
               </div>
             </label>
 
@@ -1756,7 +1756,7 @@ footer {
         <!-- PAPER -->
         <div class="rm-card" style="border-top:2px solid var(--paper)">
           <div class="rm-card-head">
-            <h3><span>📝</span> Consumibles Oficina</h3>
+            <h3><span>📝</span> Office Supplies</h3>
             <span class="rm-target" id="sim-paper-pct">−0%</span>
           </div>
           <div class="rm-progress"><div class="rm-progress-bar" id="sim-paper-bar" style="width:0%;background:var(--paper);transition:width .5s ease"></div></div>
@@ -1769,11 +1769,11 @@ footer {
               </div>
               <div class="sim-measure-info">
                 <div class="sim-measure-top">
-                  <span class="step-yr">Any 1 · ♻ Reduir</span>
+                  <span class="step-yr">Year 1 · ♻ Reduce</span>
                   <span class="sim-badge sim-badge-paper">−15%</span>
                 </div>
-                <p class="step-desc">Política "Zero Paper" obligatòria a Moodle i comunicats digitals</p>
-                <em class="step-kpi">KPI: 0 fotocòpies d'avisos interns</em>
+                <p class="step-desc">Mandatory "Zero Paper" policy on Moodle and digital communications</p>
+                <em class="step-kpi">KPI: 0 photocopies of internal notices</em>
               </div>
             </label>
 
@@ -1784,11 +1784,11 @@ footer {
               </div>
               <div class="sim-measure-info">
                 <div class="sim-measure-top">
-                  <span class="step-yr">Any 2 · ↩ Reutilitzar</span>
+                  <span class="step-yr">Year 2 · ↩ Reuse</span>
                   <span class="sim-badge sim-badge-paper">−5%</span>
                 </div>
-                <p class="step-desc">Compra exclusiva de retoladors i bolígrafs recarregables</p>
-                <em class="step-kpi">KPI: −100% residus plàstic d'un sol ús</em>
+                <p class="step-desc">Exclusive purchase of refillable markers and pens</p>
+                <em class="step-kpi">KPI: −100% single-use plastic waste</em>
               </div>
             </label>
 
@@ -1799,11 +1799,11 @@ footer {
               </div>
               <div class="sim-measure-info">
                 <div class="sim-measure-top">
-                  <span class="step-yr">Any 3 · 🔄 Reciclar</span>
+                  <span class="step-yr">Year 3 · 🔄 Recycle</span>
                   <span class="sim-badge sim-badge-paper">−12%</span>
                 </div>
-                <p class="step-desc">Digitalització total de tràmits administratius i arxiu en núvol</p>
-                <em class="step-kpi">KPI: 0 expedients físics nous</em>
+                <p class="step-desc">Full digitalisation of administrative procedures and cloud archiving</p>
+                <em class="step-kpi">KPI: 0 new physical files</em>
               </div>
             </label>
 
@@ -1813,7 +1813,7 @@ footer {
         <!-- NETEJA -->
         <div class="rm-card" style="border-top:2px solid var(--clean)">
           <div class="rm-card-head">
-            <h3><span>🧼</span> Productes Neteja</h3>
+            <h3><span>🧼</span> Cleaning Products</h3>
             <span class="rm-target" id="sim-clean-pct">−0%</span>
           </div>
           <div class="rm-progress"><div class="rm-progress-bar" id="sim-clean-bar" style="width:0%;background:var(--clean);transition:width .5s ease"></div></div>
@@ -1826,11 +1826,11 @@ footer {
               </div>
               <div class="sim-measure-info">
                 <div class="sim-measure-top">
-                  <span class="step-yr">Any 1 · ♻ Reduir</span>
+                  <span class="step-yr">Year 1 · ♻ Reduce</span>
                   <span class="sim-badge sim-badge-clean">−20%</span>
                 </div>
-                <p class="step-desc">Substitució de paper eixugamans per assecadors d'aire</p>
-                <em class="step-kpi">KPI: −90% compra paper eixugamans</em>
+                <p class="step-desc">Replacement of paper towels with air dryers</p>
+                <em class="step-kpi">KPI: −90% paper towel purchases</em>
               </div>
             </label>
 
@@ -1841,11 +1841,11 @@ footer {
               </div>
               <div class="sim-measure-info">
                 <div class="sim-measure-top">
-                  <span class="step-yr">Any 2 · ↩ Reutilitzar</span>
+                  <span class="step-yr">Year 2 · ↩ Reuse</span>
                   <span class="sim-badge sim-badge-clean">−8%</span>
                 </div>
-                <p class="step-desc">Compra de sabó i productes a granel en dipòsits reutilitzables</p>
-                <em class="step-kpi">KPI: −80% envasos plàstics comprats</em>
+                <p class="step-desc">Purchase of soap and products in bulk in reusable containers</p>
+                <em class="step-kpi">KPI: −80% plastic containers purchased</em>
               </div>
             </label>
 
@@ -1856,11 +1856,11 @@ footer {
               </div>
               <div class="sim-measure-info">
                 <div class="sim-measure-top">
-                  <span class="step-yr">Any 3 · 🔄 Reciclar</span>
+                  <span class="step-yr">Year 3 · 🔄 Recycle</span>
                   <span class="sim-badge sim-badge-clean">−5%</span>
                 </div>
-                <p class="step-desc">Ús exclusiu de productes de neteja probiòtics i ecològics certificats</p>
-                <em class="step-kpi">KPI: Certificació ISO 14001 del centre</em>
+                <p class="step-desc">Exclusive use of certified probiotic and ecological cleaning products</p>
+                <em class="step-kpi">KPI: ISO 14001 certification for the centre</em>
               </div>
             </label>
 
@@ -1875,8 +1875,8 @@ footer {
         <!-- Total reduction summary -->
         <div class="rm-card" style="border-top:2px solid var(--green)">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
-            <h3 style="font-size:.9rem;display:flex;align-items:center;gap:.4rem"><i class="fa-solid fa-chart-pie" style="color:var(--green)"></i> Impacte Total</h3>
-            <span style="font-size:.7rem;color:var(--muted);font-family:'JetBrains Mono',monospace">SIMULACIÓ EN VIVO</span>
+            <h3 style="font-size:.9rem;display:flex;align-items:center;gap:.4rem"><i class="fa-solid fa-chart-pie" style="color:var(--green)"></i> Total Impact</h3>
+            <span style="font-size:.7rem;color:var(--muted);font-family:'JetBrains Mono',monospace">LIVE SIMULATION</span>
           </div>
 
           <!-- Donut / big number -->
@@ -1885,7 +1885,7 @@ footer {
               <canvas id="sim-donut" width="160" height="160"></canvas>
               <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">
                 <span id="sim-total-pct" style="font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;color:var(--green);line-height:1">0%</span>
-                <span style="font-size:.65rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase">reducció</span>
+                <span style="font-size:.65rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase">reduction</span>
               </div>
             </div>
           </div>
@@ -1938,18 +1938,18 @@ footer {
         <!-- Absolute values card -->
         <div class="rm-card sim-abs-card" style="border-top:2px solid var(--border2)">
           <h3 style="font-size:.82rem;color:var(--text2);margin-bottom:.85rem;display:flex;align-items:center;gap:.4rem">
-            <i class="fa-solid fa-calculator" style="color:var(--muted)"></i> Valors Absoluts Anuals
+            <i class="fa-solid fa-calculator" style="color:var(--muted)"></i> Annual Absolute Values
           </h3>
           <div style="display:flex;flex-direction:column;gap:.55rem">
             <div class="sim-abs-row">
-              <span style="font-size:.78rem;color:var(--muted)">⚡ Electricitat</span>
+              <span style="font-size:.78rem;color:var(--muted)">⚡ Electricity</span>
               <div style="text-align:right">
                 <div style="font-family:'JetBrains Mono',monospace;font-size:.88rem;color:var(--elec)" id="sim-abs-elec">—</div>
                 <div style="font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted)" id="sim-abs-elec-save"></div>
               </div>
             </div>
             <div class="sim-abs-row">
-              <span style="font-size:.78rem;color:var(--muted)">💧 Aigua</span>
+              <span style="font-size:.78rem;color:var(--muted)">💧 Water</span>
               <div style="text-align:right">
                 <div style="font-family:'JetBrains Mono',monospace;font-size:.88rem;color:var(--water)" id="sim-abs-water">—</div>
                 <div style="font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted)" id="sim-abs-water-save"></div>
@@ -1963,7 +1963,7 @@ footer {
               </div>
             </div>
             <div class="sim-abs-row">
-              <span style="font-size:.78rem;color:var(--muted)">🧼 Neteja</span>
+              <span style="font-size:.78rem;color:var(--muted)">🧼 Cleaning</span>
               <div style="text-align:right">
                 <div style="font-family:'JetBrains Mono',monospace;font-size:.88rem;color:var(--clean)" id="sim-abs-clean">—</div>
                 <div style="font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted)" id="sim-abs-clean-save"></div>
@@ -1975,16 +1975,16 @@ footer {
         <!-- Quick actions -->
         <div class="sim-actions" style="display:flex;gap:.5rem">
           <button class="btn btn-secondary" onclick="simSetAll(true)" style="flex:1;font-size:.78rem;padding:.5rem .75rem">
-            <i class="fa-solid fa-check-double"></i> Totes
+            <i class="fa-solid fa-check-double"></i> All
           </button>
           <button class="btn btn-secondary" onclick="simSetAll(false)" style="flex:1;font-size:.78rem;padding:.5rem .75rem">
-            <i class="fa-solid fa-xmark"></i> Cap
+            <i class="fa-solid fa-xmark"></i> None
           </button>
         </div>
 
         <!-- Scenario message -->
         <div id="sim-scenario-msg" class="note-info" style="flex-direction:column;gap:.25rem;align-items:flex-start">
-          <strong style="font-size:.75rem;color:var(--green)"><i class="fa-solid fa-circle-info"></i> Escenari actual</strong>
+          <strong style="font-size:.75rem;color:var(--green)"><i class="fa-solid fa-circle-info"></i> Current scenario</strong>
           <span id="sim-scenario-text" style="font-size:.75rem"></span>
         </div>
 
@@ -1995,16 +1995,16 @@ footer {
     <!-- Bottom compare charts -->
     <div>
       <div class="section-title">
-        <i class="fa-solid fa-scale-balanced"></i> Visualització: Base vs. Escenari Simulat
-        <span class="muted">— s'actualitza en temps real</span>
+        <i class="fa-solid fa-scale-balanced"></i> Visualisation: Baseline vs. Simulated Scenario
+        <span class="muted">— updates in real time</span>
       </div>
       <div class="charts-grid">
         <div class="chart-card">
-          <div class="chart-header"><h3>Comparació Anual per Indicador</h3><span class="chart-unit">valors absoluts</span></div>
+          <div class="chart-header"><h3>Annual Comparison by Indicator</h3><span class="chart-unit">absolute values</span></div>
           <div class="chart-wrap"><canvas id="chart-compare"></canvas></div>
         </div>
         <div class="chart-card">
-          <div class="chart-header"><h3>Estalvi Acumulat 3 Anys</h3><span class="chart-unit">projecció</span></div>
+          <div class="chart-header"><h3>3-Year Cumulative Savings</h3><span class="chart-unit">projection</span></div>
           <div class="chart-wrap"><canvas id="chart-savings3y"></canvas></div>
         </div>
       </div>
@@ -2013,55 +2013,55 @@ footer {
   </div><!-- /tab-pla -->
 
   <!-- ══════════════════════════════════════════
-       TAB 4: CONSELLS
+       TAB 4: TIPS
   ══════════════════════════════════════════ -->
   <div id="tab-consells" class="page-section">
 
     <div class="section-title">
-      <i class="fa-solid fa-lightbulb"></i> Com Reduir el Consum de Cada Indicador
+      <i class="fa-solid fa-lightbulb"></i> How to Reduce Consumption for Each Indicator
     </div>
 
     <div class="tips-grid">
       <div class="tip-card">
         <h3><span>⚡</span> Electricitat</h3>
         <ul class="tip-list">
-          <li>Instal·lar sensors de presència per apagar automàticament la il·luminació</li>
-          <li>Substituir tota la il·luminació per LED de baix consum (−50% il·luminació)</li>
-          <li>Instal·lar panells solars fotovoltaics a la coberta (−40% factura)</li>
-          <li>Programar apagat automàtic d'equips electrònics fora d'horari lectiu</li>
-          <li>Revisar el manteniment de climatitzadors i calderes cada any</li>
-          <li>Implementar gestió intel·ligent de l'energia (Building Management System)</li>
+          <li>Install presence sensors to automatically switch off lighting</li>
+          <li>Replace all lighting with low-consumption LED (−50% lighting)</li>
+          <li>Install photovoltaic solar panels on the roof (−40% bill)</li>
+          <li>Schedule automatic shutdown of electronic equipment outside school hours</li>
+          <li>Review maintenance of air conditioning units and boilers every year</li>
+          <li>Implement intelligent energy management (Building Management System)</li>
         </ul>
       </div>
       <div class="tip-card">
         <h3><span>💧</span> Aigua</h3>
         <ul class="tip-list">
-          <li>Instal·lar airejadors a totes les aixetes (redueix cabal fins a 50%)</li>
-          <li>Substituir cisternes convencionals per cisternes de doble descàrrega</li>
-          <li>Recollir aigües pluvials per al reg de zones enjardinades</li>
-          <li>Detectar i reparar fuites periòdicament amb comptadors digitals</li>
-          <li>Sensibilitzar l'alumnat amb campanyes sobre l'ús responsable</li>
+          <li>Install aerators on all taps (reduces flow by up to 50%)</li>
+          <li>Replace conventional cisterns with dual-flush cisterns</li>
+          <li>Collect rainwater for irrigation of landscaped areas</li>
+          <li>Detect and repair leaks periodically with digital meters</li>
+          <li>Raise student awareness with campaigns on responsible use</li>
         </ul>
       </div>
       <div class="tip-card">
-        <h3><span>📝</span> Consumibles Oficina</h3>
+        <h3><span>📝</span> Office Supplies</h3>
         <ul class="tip-list">
-          <li>Política "Paper Zero" per a comunicats interns i documents administratius</li>
-          <li>Digitalitzar tots els tràmits acadèmics i administratius al núvol</li>
-          <li>Usar bolígrafs i retoladors recarregables en lloc de d'un sol ús</li>
-          <li>Impressió doble cara per defecte a totes les impressores</li>
-          <li>Reutilitzar paper imprès per una sola cara com a esborranys</li>
-          <li>Comprar consumibles amb etiqueta ecològica certificada</li>
+          <li>"Zero Paper" policy for internal communications and administrative documents</li>
+          <li>Digitise all academic and administrative procedures in the cloud</li>
+          <li>Use refillable pens and markers instead of single-use ones</li>
+          <li>Double-sided printing by default on all printers</li>
+          <li>Reuse paper printed on one side as drafts</li>
+          <li>Purchase consumables with certified eco-label</li>
         </ul>
       </div>
       <div class="tip-card">
-        <h3><span>🧼</span> Productes de Neteja</h3>
+        <h3><span>🧼</span> Cleaning Products</h3>
         <ul class="tip-list">
-          <li>Substituir eixugamans de paper per assecadors d'aire de baix consum</li>
-          <li>Comprar sabons i productes a granel en dipòsits reutilitzables</li>
-          <li>Usar exclusivament productes de neteja probiòtics i ecològics certificats</li>
-          <li>Eliminar envasos de plàstic d'un sol ús en tots els espais</li>
-          <li>Avaluar l'impacte ambiental en la selecció de proveïdors de neteja</li>
+          <li>Replace paper towels with low-consumption air dryers</li>
+          <li>Purchase soaps and products in bulk in reusable containers</li>
+          <li>Use exclusively certified probiotic and ecological cleaning products</li>
+          <li>Eliminate single-use plastic containers in all spaces</li>
+          <li>Evaluate environmental impact when selecting cleaning suppliers</li>
         </ul>
       </div>
     </div>
@@ -2071,7 +2071,7 @@ footer {
 </div><!-- /.app -->
 
 <footer>
-  <p>Calculadora Sostenible · Institut de Tecnologia del Bages · Fase 3 Economia Circular · 2025–2026</p>
+  <p>Sustainable Calculator · Institut de Tecnologia del Bages · Circular Economy Phase 3 · 2025–2026</p>
 </footer>
 
 <!-- ══════════════════════════════════════════
@@ -2118,7 +2118,7 @@ const MONTHLY_FACTORS = {
   neteja:       [1.30,1.28,1.15,1.05,0.95,0.85,0.80,0.80,1.00,1.10,1.20,1.30],
 };
 
-const MONTHS_CA = ['Gen','Feb','Mar','Abr','Mai','Jun','Jul','Ago','Set','Oct','Nov','Des'];
+const MONTHS_CA = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const DAYS_PER_MONTH = [31,28,31,30,31,30,31,31,30,31,30,31];
 const REDUCTION = 0.70;
 
@@ -2272,16 +2272,16 @@ function render(result) {
   setRow('res-net-any',     'res-net-any-old',     'pill-net-any',     base.netAny,   show.netAny);
   setRow('res-net-periode', 'res-net-periode-old', 'pill-net-periode',  base.netPer,   show.netPer);
 
-  // KPI row
-  animateCount(document.getElementById('kpi-elec'),  show.elecAny);
-  animateCount(document.getElementById('kpi-water'), show.aiguaAny);
-  animateCount(document.getElementById('kpi-paper'), show.ofiAny);
-  animateCount(document.getElementById('kpi-clean'), show.netAny);
+  // KPI row — show period values so they match the selected date range
+  animateCount(document.getElementById('kpi-elec'),  show.elecPer);
+  animateCount(document.getElementById('kpi-water'), show.aiguaPer);
+  animateCount(document.getElementById('kpi-paper'), show.ofiPer);
+  animateCount(document.getElementById('kpi-clean'), show.netPer);
 
   ['elec','water','paper','clean'].forEach(k => {
     const el = document.getElementById(`kpi-${k}-delta`);
     if (!el) return;
-    if (isR) { el.textContent = '−30% actiu'; el.hidden = false; }
+    if (isR) { el.textContent = '−30% active'; el.hidden = false; }
     else el.hidden = true;
   });
 
@@ -2292,11 +2292,11 @@ function render(result) {
     const sE = base.elecAny - show.elecAny;
     const sA = base.aiguaAny - show.aiguaAny;
     banner.innerHTML = `
-      <strong>Estalvi anual estimat amb pla −30%:</strong><br>
-      ⚡ <strong>${fmt(sE)} kWh</strong> menys d'electricitat<br>
-      💧 <strong>${fmt(sA)} L</strong> menys d'aigua<br>
-      📝 <strong>${fmt(base.ofiAny - show.ofiAny)} paquets A4</strong> menys<br>
-      🧼 <strong>${fmt(base.netAny - show.netAny)} rotllos</strong> menys de paper higiène
+      <strong>Estimated annual savings with −30% plan:</strong><br>
+      ⚡ <strong>${fmt(sE)} kWh</strong> less electricity<br>
+      💧 <strong>${fmt(sA)} L</strong> less water<br>
+      📝 <strong>${fmt(base.ofiAny - show.ofiAny)} A4 packs</strong> less paper<br>
+      🧼 <strong>${fmt(base.netAny - show.netAny)} rolls</strong> less cleaning paper
     `;
   } else { banner.hidden = true; }
 
@@ -2327,16 +2327,17 @@ function buildMonthlyUnits(monthAvg, mfArr) {
   return MONTHS_CA.map((_,i) => Math.round(monthAvg * mfArr[i] * getVar(.02,.04)));
 }
 
-function makeChart(canvasId, label, data, color, unit) {
+function makeChart(canvasId, label, data, color, unit, labels) {
   if (!hasChartLib()) return;
   const ctx = document.getElementById(canvasId)?.getContext('2d');
   if (!ctx) return;
   if (charts[canvasId]) { charts[canvasId].destroy(); }
   const [r,g,b] = color;
+  const chartLabels = labels || MONTHS_CA;
   charts[canvasId] = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: MONTHS_CA,
+      labels: chartLabels,
       datasets: [{
         label,
         data,
@@ -2364,18 +2365,46 @@ function makeChart(canvasId, label, data, color, unit) {
   });
 }
 
-function renderCharts() {
-  if (!hasChartLib()) return;
+// Returns { labels, elecData, waterData, paperData, cleanData } filtered to the active period
+function buildChartDataForPeriod(period, customFrom, customTo) {
   const d = DATA.dades_base;
-  const elecData  = buildMonthlyKWh(d.electricitat.consum_mitja_diari_kWh, MONTHLY_FACTORS.electricitat);
-  const waterData = buildMonthlyKWh(d.aigua.consum_mitja_diari_litres, MONTHLY_FACTORS.aigua);
-  const paperData = buildMonthlyUnits(d.consumibles_oficina.mitjana_mensual.paper_A4_paquets, MONTHLY_FACTORS.oficina);
-  const cleanData = buildMonthlyUnits(d.productes_neteja.mitjana_mensual.paper_higienic_rotllos, MONTHLY_FACTORS.neteja);
+  // Determine which months to include
+  let monthIndices;
+  if (period === 'custom' && customFrom && customTo) {
+    // Collect every month index spanned by the custom range
+    const seen = new Set();
+    const cur = new Date(customFrom);
+    while (cur <= customTo) {
+      seen.add(cur.getMonth());
+      cur.setDate(cur.getDate() + 1);
+    }
+    monthIndices = [...seen].sort((a,b) => a-b);
+  } else if (period === 'curs') {
+    // Academic year: Sep(8)–Jun(5)
+    monthIndices = [8,9,10,11,0,1,2,3,4,5];
+  } else if (period === 'hivern') {
+    monthIndices = [11,0,1];
+  } else {
+    // anual or fallback: all 12 months
+    monthIndices = [0,1,2,3,4,5,6,7,8,9,10,11];
+  }
 
-  makeChart('chart-elec',  'Electricitat', elecData,  [251,191,36], 'kWh');
-  makeChart('chart-water', 'Aigua',        waterData, [56,189,248], 'L');
-  makeChart('chart-paper', 'Paper A4',     paperData, [167,139,250],'paquets');
-  makeChart('chart-clean', 'Neteja',       cleanData, [52,211,153], 'rotllos');
+  const labels    = monthIndices.map(i => MONTHS_CA[i]);
+  const elecData  = monthIndices.map(i => Math.round(d.electricitat.consum_mitja_diari_kWh * DAYS_PER_MONTH[i] * MONTHLY_FACTORS.electricitat[i] * getVar(.02,.04)));
+  const waterData = monthIndices.map(i => Math.round(d.aigua.consum_mitja_diari_litres    * DAYS_PER_MONTH[i] * MONTHLY_FACTORS.aigua[i]        * getVar(.02,.04)));
+  const paperData = monthIndices.map(i => Math.round(d.consumibles_oficina.mitjana_mensual.paper_A4_paquets        * MONTHLY_FACTORS.oficina[i] * getVar(.02,.04)));
+  const cleanData = monthIndices.map(i => Math.round(d.productes_neteja.mitjana_mensual.paper_higienic_rotllos    * MONTHLY_FACTORS.neteja[i]  * getVar(.02,.04)));
+  return { labels, elecData, waterData, paperData, cleanData };
+}
+
+function renderCharts(period, customFrom, customTo) {
+  if (!hasChartLib()) return;
+  const { labels, elecData, waterData, paperData, cleanData } = buildChartDataForPeriod(period, customFrom, customTo);
+
+  makeChart('chart-elec',  'Electricitat', elecData,  [251,191,36], 'kWh',     labels);
+  makeChart('chart-water', 'Aigua',        waterData, [56,189,248], 'L',       labels);
+  makeChart('chart-paper', 'Paper A4',     paperData, [167,139,250],'paquets', labels);
+  makeChart('chart-clean', 'Neteja',       cleanData, [52,211,153], 'rotllos', labels);
 
   // Combined chart (normalized)
   const maxE = Math.max(...elecData);
@@ -2393,12 +2422,12 @@ function renderCharts() {
     charts['combined'] = new Chart(ctxComb, {
       type: 'line',
       data: {
-        labels: MONTHS_CA,
+        labels: labels,
         datasets: [
-          { label:'⚡ Electricitat', data: normE, borderColor:'#fbbf24', backgroundColor:'rgba(251,191,36,.08)', fill:true, tension:.4, pointRadius:3, pointHoverRadius:6 },
-          { label:'💧 Aigua',        data: normW, borderColor:'#38bdf8', backgroundColor:'rgba(56,189,248,.08)',  fill:true, tension:.4, pointRadius:3, pointHoverRadius:6 },
+          { label:'⚡ Electricity', data: normE, borderColor:'#fbbf24', backgroundColor:'rgba(251,191,36,.08)', fill:true, tension:.4, pointRadius:3, pointHoverRadius:6 },
+          { label:'💧 Water',        data: normW, borderColor:'#38bdf8', backgroundColor:'rgba(56,189,248,.08)',  fill:true, tension:.4, pointRadius:3, pointHoverRadius:6 },
           { label:'📝 Paper',        data: normP, borderColor:'#a78bfa', backgroundColor:'rgba(167,139,250,.08)',fill:true, tension:.4, pointRadius:3, pointHoverRadius:6 },
-          { label:'🧼 Neteja',       data: normC, borderColor:'#34d399', backgroundColor:'rgba(52,211,153,.08)', fill:true, tension:.4, pointRadius:3, pointHoverRadius:6 },
+          { label:'🧼 Cleaning',       data: normC, borderColor:'#34d399', backgroundColor:'rgba(52,211,153,.08)', fill:true, tension:.4, pointRadius:3, pointHoverRadius:6 },
         ]
       },
       options: {
@@ -2442,10 +2471,10 @@ function renderCompareCharts() {
     charts['compare'] = new Chart(ctxC, {
       type: 'bar',
       data: {
-        labels: ['⚡ Elèc (kWh÷10)', '💧 Aigua (kL)', '📝 Paper', '🧼 Neteja'],
+        labels: ['⚡ Elèc (kWh÷10)', '💧 Water (kL)', '📝 Paper', '🧼 Cleaning'],
         datasets: [
-          { label:'Base actual', data:[baseE/10,baseA,baseO,baseN], backgroundColor:'rgba(90,122,150,.5)', borderRadius:5 },
-          { label:'Amb pla −30%', data:[redE/10,redA,redO,redN],   backgroundColor:'rgba(52,211,153,.65)', borderRadius:5 },
+          { label:'Current baseline', data:[baseE/10,baseA,baseO,baseN], backgroundColor:'rgba(90,122,150,.5)', borderRadius:5 },
+          { label:'With −30% plan', data:[redE/10,redA,redO,redN],   backgroundColor:'rgba(52,211,153,.65)', borderRadius:5 },
         ]
       },
       options: {
@@ -2470,16 +2499,16 @@ function renderCompareCharts() {
     charts['savings3y'] = new Chart(ctxS, {
       type: 'line',
       data: {
-        labels: ['Any 1','Any 2','Any 3'],
+        labels: ['Year 1','Year 2','Year 3'],
         datasets: [
-          { label:'Estalvi acumulat (kWh)', data:savingY, borderColor:'#34d399', backgroundColor:'rgba(52,211,153,.12)', fill:true, tension:.3, pointRadius:6, pointBackgroundColor:'#34d399' },
+          { label:'Cumulative savings (kWh)', data:savingY, borderColor:'#34d399', backgroundColor:'rgba(52,211,153,.12)', fill:true, tension:.3, pointRadius:6, pointBackgroundColor:'#34d399' },
         ]
       },
       options: {
         responsive:true, maintainAspectRatio:false,
         plugins:{
           legend:{labels:{color:'#94afc8',font:{size:10},boxWidth:10}},
-          tooltip:{callbacks:{label:c=>` ${c.parsed.y.toLocaleString()} kWh estalviats`}}
+          tooltip:{callbacks:{label:c=>` ${c.parsed.y.toLocaleString()} kWh saved`}}
         },
         scales:{
           x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#5a7a96',font:{size:10}}},
@@ -2514,15 +2543,15 @@ function handleCalc() {
     customFrom = cd.from; customTo = cd.to;
     // Update period label
     const diffDays = Math.round((customTo - customFrom) / 86400000);
-    document.getElementById('kpi-period-label').textContent = `— ${diffDays} dies personalitzats`;
+    document.getElementById('kpi-period-label').textContent = `— ${diffDays} custom days`;
   } else {
-    const labels = { anual:'any complet', curs:'curs escolar', hivern:'hivern' };
+    const labels = { anual:'full year', curs:'academic year', hivern:'winter' };
     document.getElementById('kpi-period-label').textContent = `— ${labels[period]}`;
   }
 
   const result = compute(period, state.isReduction, customFrom, customTo);
   render(result);
-  renderCharts();
+  renderCharts(period, customFrom, customTo);
 }
 
 function activateDemoMode() {
@@ -2566,11 +2595,11 @@ document.getElementById('btn-reduccio').addEventListener('click', () => {
   if (state.isReduction) {
     btn.classList.add('active');
     btn.querySelector('i').className = 'fa-solid fa-check';
-    btn.querySelector('span').textContent = 'Pla Activat (−30%)';
+    btn.querySelector('span').textContent = 'Plan Active (−30%)';
   } else {
     btn.classList.remove('active');
     btn.querySelector('i').className = 'fa-solid fa-power-off';
-    btn.querySelector('span').textContent = 'Activar Reducció (−30%)';
+    btn.querySelector('span').textContent = 'Activate Reduction (−30%)';
   }
   handleCalc();
 });
@@ -2586,7 +2615,12 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
       target.classList.add('active');
       // Lazy render charts when switching to grafics tab
       if (tab.dataset.tab === 'grafics') {
-        setTimeout(renderCharts, 50);
+        setTimeout(() => {
+          const p = document.getElementById('periode-select').value;
+          let cf, ct;
+          if (p === 'custom') { const cd = getCustomDates(); if (cd) { cf = cd.from; ct = cd.to; } }
+          renderCharts(p, cf, ct);
+        }, 50);
       }
       if (tab.dataset.tab === 'pla') {
         setTimeout(updateSimulator, 80);
@@ -2616,129 +2650,508 @@ async function exportPDF() {
   const btn = document.getElementById('btn-pdf');
   if (!btn) return;
   if (!hasPdfLibs()) {
-    alert('No s\'ha pogut generar el PDF perquè la llibreria no s\'ha carregat.');
+    alert('PDF library not loaded. Please check your connection and try again.');
     return;
   }
   const origText = btn.innerHTML;
-  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generant…';
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating…';
   btn.disabled = true;
 
   try {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
-    const W = 210, M = 14;
-    let y = 0;
+    const W = 210, H = 297, M = 16;
+    const CW = W - M * 2; // content width
 
-    // Header
-    doc.setFillColor(8,12,16);
-    doc.rect(0,0,W,30,'F');
-    doc.setFillColor(52,211,153);
-    doc.rect(0,30,W,2,'F');
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(16);
-    doc.setTextColor(226,234,242);
-    doc.text('Calculadora Sostenible · ITB', M, 13);
-    doc.setFontSize(8);
-    doc.setFont('helvetica','normal');
-    doc.setTextColor(90,122,150);
-    doc.text('Informe de Sostenibilitat — Fase 3 Economia Circular · ' + new Date().toLocaleDateString('ca-ES'), M, 21);
-    doc.text(`Generat el ${new Date().toLocaleString('ca-ES')}`, W-M, 21, {align:'right'});
-
-    y = 40;
+    // ── Color palette ──────────────────────────────────────
+    const C = {
+      bg:     [8, 12, 16],
+      bg2:    [14, 20, 25],
+      bg3:    [19, 26, 34],
+      border: [30, 45, 61],
+      green:  [52, 211, 153],
+      blue:   [56, 189, 248],
+      yellow: [251, 191, 36],
+      purple: [167, 139, 250],
+      red:    [248, 113, 113],
+      text:   [226, 234, 242],
+      text2:  [148, 175, 200],
+      muted:  [90, 122, 150],
+      white:  [255, 255, 255],
+    };
 
     const period = document.getElementById('periode-select').value;
-    const periodLabel = {anual:'Any Complet (12 mesos)',curs:'Curs Escolar (Set–Jun)',hivern:'Hivern (Des–Feb)',custom:'Rang Personalitzat'}[period]||period;
+    const periodLabel = {
+      anual:  'Full Year (12 months)',
+      curs:   'Academic Year (Sep–Jun)',
+      hivern: 'Winter (Dec–Feb)',
+      custom: 'Custom Date Range'
+    }[period] || 'Full Year';
 
-    doc.setFillColor(14,20,25);
-    doc.roundedRect(M,y,W-M*2,14,2,2,'F');
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(8);
-    doc.setTextColor(90,122,150);
-    doc.text('PERÍODE:', M+3, y+5);
-    doc.setTextColor(52,211,153);
-    doc.text(periodLabel, M+28, y+5);
-    doc.setTextColor(90,122,150);
-    doc.text('PLA REDUCCIÓ:', M+3, y+10.5);
-    if (state.isReduction) { doc.setTextColor(52,211,153); doc.text('ACTIU (−30%)', M+38, y+10.5); }
-    else { doc.setTextColor(248,113,113); doc.text('INACTIU', M+38, y+10.5); }
-    y += 20;
+    const dateStr = new Date().toLocaleDateString('en-GB', { year:'numeric', month:'long', day:'numeric' });
+    const dateTimeStr = new Date().toLocaleString('en-GB');
 
-    // 8 indicators
-    doc.setFont('helvetica','bold'); doc.setFontSize(10);
-    doc.setTextColor(52,211,153);
-    doc.text('8 INDICADORS DE SOSTENIBILITAT', M, y); y += 6;
+    // ── Helper functions ───────────────────────────────────
+    function setFill(...rgb) { doc.setFillColor(...rgb); }
+    function setStroke(...rgb) { doc.setDrawColor(...rgb); }
+    function setColor(...rgb) { doc.setTextColor(...rgb); }
+    function font(style, size) { doc.setFont('helvetica', style); doc.setFontSize(size); }
 
-    const indicators = [
-      {label:'① Electricitat – Pròxim any',     id:'res-elec-any',      unit:'kWh'},
-      {label:'② Electricitat – Període triat',  id:'res-elec-periode',  unit:'kWh'},
-      {label:'③ Aigua – Pròxim any',             id:'res-aigua-any',     unit:'L'},
-      {label:'④ Aigua – Període triat',          id:'res-aigua-periode', unit:'L'},
-      {label:'⑤ Paper Oficina – Pròxim any',    id:'res-ofi-any',       unit:'paquets A4'},
-      {label:'⑥ Paper Oficina – Període triat', id:'res-ofi-periode',   unit:'paquets A4'},
-      {label:'⑦ Productes Neteja – Pròxim any', id:'res-net-any',       unit:'rotllos'},
-      {label:'⑧ Productes Neteja – Prot. triat',id:'res-net-periode',   unit:'rotllos'},
-    ];
-    const colors=[[251,191,36],[251,191,36],[56,189,248],[56,189,248],[167,139,250],[167,139,250],[52,211,153],[52,211,153]];
+    function rect(x, y, w, h, clr, style='F') {
+      setFill(...clr); doc.rect(x, y, w, h, style);
+    }
+    function rrect(x, y, w, h, clr, r=2, style='F') {
+      setFill(...clr); doc.roundedRect(x, y, w, h, r, r, style);
+    }
+    function line(x1, y1, x2, y2, clr, lw=0.3) {
+      setStroke(...clr); doc.setLineWidth(lw);
+      doc.line(x1, y1, x2, y2);
+    }
+    function txt(text, x, y, opts={}) { doc.text(text, x, y, opts); }
 
-    indicators.forEach((ind,i) => {
-      const val = document.getElementById(ind.id)?.textContent||'–';
-      const old = document.getElementById(ind.id+'-old')?.textContent||'';
-      const [r,g,b] = colors[i];
-      doc.setFillColor(14,20,25);
-      doc.roundedRect(M,y,W-M*2,11,2,2,'F');
-      doc.setFillColor(r,g,b);
-      doc.rect(M,y,2,11,'F');
-      doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(148,175,200);
-      doc.text(ind.label, M+5, y+4.5);
-      doc.setFont('helvetica','bold'); doc.setFontSize(9);
-      if (state.isReduction && old) {
-        doc.setTextColor(90,122,150); doc.text(old, W-M-40, y+4);
-        doc.setTextColor(r,g,b); doc.text(val+' '+ind.unit, W-M-40, y+9);
-      } else {
-        doc.setTextColor(r,g,b); doc.text(val+' '+ind.unit, W-M-40, y+6.5);
-      }
-      y+=13;
-    });
-
-    y+=4;
-
-    // Tips
-    doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(52,211,153);
-    doc.text('COM REDUIR EL CONSUM', M, y); y+=7;
-
-    const tips=[
-      {cat:'ELECTRICITAT',items:['Sensors de presència per a il·luminació','LED de baix consum (−50%)','Panells solars fotovoltaics (−40% factura)']},
-      {cat:'AIGUA',items:['Airejadors a totes les aixetes (−50% cabal)','Cisternes doble descàrrega','Recollida aigües pluvials']},
-      {cat:'PAPER OFICINA',items:['Política "Paper Zero" comunicats interns','Digitalització de tràmits','Impressió doble cara per defecte']},
-      {cat:'NETEJA',items:['Assecadors d\'aire en lloc de paper eixugamans','Productes a granel reutilitzables','Productes ecològics certificats']},
-    ];
-
-    tips.forEach(t => {
-      if(y>260){doc.addPage();y=20;}
-      doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(90,122,150);
-      doc.text(t.cat+':', M, y); y+=5;
-      t.items.forEach(item=>{
-        doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(148,175,200);
-        doc.text('→ '+item, M+4, y); y+=4.5;
-      });
-      y+=3;
-    });
-
-    // Footer all pages
-    const pc = doc.internal.getNumberOfPages();
-    for(let i=1;i<=pc;i++){
-      doc.setPage(i);
-      doc.setFillColor(14,20,25); doc.rect(0,285,W,12,'F');
-      doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(90,122,150);
-      doc.text(`ITB · Calculadora Sostenible · Economia Circular`, M, 292);
-      doc.text(`Pàgina ${i}/${pc}`, W-M, 292, {align:'right'});
+    // Pill / badge
+    function pill(text, x, y, bgClr, textClr, w=null) {
+      font('bold', 6.5);
+      const tw = w || doc.getTextWidth(text) + 6;
+      rrect(x, y-3.5, tw, 5, bgClr, 1.5);
+      setColor(...textClr);
+      txt(text, x + tw/2, y, {align:'center'});
     }
 
-    doc.save(`ITB_Sostenibilitat_${new Date().toISOString().split('T')[0]}.pdf`);
+    // Divider
+    function divider(y, clr=C.border) { line(M, y, W-M, y, clr, 0.2); }
+
+    // Section header
+    function sectionHeader(label, y, clr=C.green) {
+      font('bold', 7);
+      setColor(...clr);
+      txt(label.toUpperCase(), M, y);
+      line(M + doc.getTextWidth(label.toUpperCase()) + 3, y, W-M, y, [...clr, 0.3], 0.25);
+      return y + 6;
+    }
+
+    // Page footer
+    function addFooter(pageNum, total) {
+      rect(0, H-11, W, 11, C.bg2);
+      line(0, H-11, W, H-11, C.border, 0.4);
+      font('normal', 6.5); setColor(...C.muted);
+      txt('ITB · Sustainable Calculator · Circular Economy Phase 3 · 2025–2026', M, H-5.5);
+      txt(`Page ${pageNum} / ${total}`, W-M, H-5.5, {align:'right'});
+      // Green accent dot
+      setFill(...C.green); doc.circle(W/2, H-5.5, 0.8, 'F');
+    }
+
+    // Indicator card row
+    function indicatorRow(label, value, unit, baseValue, clr, y, isReduction) {
+      const rowH = isReduction && baseValue ? 14 : 11;
+      rrect(M, y, CW, rowH, C.bg2, 2);
+      // Color accent bar
+      rect(M, y, 3, rowH, clr);
+      // Label
+      font('normal', 7.5); setColor(...C.text2);
+      txt(label, M+6, y + (isReduction && baseValue ? 5.5 : 4.5));
+      // Value
+      font('bold', isReduction && baseValue ? 8.5 : 9.5);
+      setColor(...clr);
+      const valStr = `${value} ${unit}`;
+      txt(valStr, W-M-3, y + (isReduction && baseValue ? 9.5 : 6.5), {align:'right'});
+      // Baseline (strikethrough)
+      if (isReduction && baseValue) {
+        font('normal', 7); setColor(...C.muted);
+        const bStr = `${baseValue} ${unit}`;
+        const bx = W-M-3 - doc.getTextWidth(bStr);
+        txt(bStr, W-M-3, y+4.5, {align:'right'});
+        // Manual strikethrough
+        const tw = doc.getTextWidth(bStr);
+        line(W-M-3-tw, y+3.5, W-M-3, y+3.5, C.muted, 0.25);
+        // Savings pill
+        pill('−30%', M+6, y+10.5, [52,211,153,0.15], C.green, 14);
+      }
+      return y + rowH + 2;
+    }
+
+    // Mini bar chart (drawn in PDF)
+    function miniBar(label, value, maxVal, clr, y) {
+      font('normal', 7); setColor(...C.muted);
+      txt(label, M, y+3);
+      const trackX = M + 42, trackW = CW - 55, trackH = 5;
+      rrect(trackX, y, trackW, trackH, C.bg3, 1.5);
+      const fillW = Math.max(2, Math.round(value / maxVal * trackW));
+      setFill(...clr); doc.roundedRect(trackX, y, fillW, trackH, 1.5, 1.5, 'F');
+      font('bold', 7); setColor(...clr);
+      const pct = Math.round(value / maxVal * 100);
+      txt(`${pct}%`, W-M, y+3.5, {align:'right'});
+      return y + 8;
+    }
+
+    // ══════════════════════════════════════════════════════
+    //  PAGE 1 — COVER + EXECUTIVE SUMMARY
+    // ══════════════════════════════════════════════════════
+
+    // Full-page dark background
+    rect(0, 0, W, H, C.bg);
+
+    // Top decorative gradient band
+    rect(0, 0, W, 58, C.bg2);
+    // Green accent top border
+    rect(0, 0, W, 3, C.green);
+
+    // Subtle grid pattern (horizontal lines)
+    for (let gy = 8; gy < 58; gy += 8) {
+      line(0, gy, W, gy, [30,45,61,0.4], 0.15);
+    }
+
+    // Logo / Icon area
+    setFill(...C.green); doc.setGState(new doc.GState({opacity: 0.15}));
+    doc.circle(W-22, 29, 18, 'F');
+    doc.setGState(new doc.GState({opacity: 1}));
+    font('normal', 18); setColor(...C.green);
+    txt('🌿', W-30, 34);
+
+    // Title block
+    font('bold', 20); setColor(...C.text);
+    txt('Sustainable Calculator', M, 24);
+    font('normal', 10); setColor(...C.green);
+    txt('Institut de Tecnologia del Bages  ·  ITB', M, 33);
+    font('normal', 7.5); setColor(...C.muted);
+    txt('Real Consumption Analysis  ·  Seasonal Variability  ·  Circular Economy', M, 41);
+
+    // Tags row
+    const tags = [
+      {t:'⚡ 8 Indicators', c:C.yellow},
+      {t:'📊 Charts', c:C.blue},
+      {t:'−30% Reduction', c:C.yellow},
+      {t:'📅 ' + periodLabel, c:C.purple},
+    ];
+    let tx = M;
+    tags.forEach(tag => {
+      font('bold', 6); setColor(...tag.c);
+      const tw = doc.getTextWidth(tag.t) + 8;
+      rrect(tx, 47, tw, 6, tag.c.map(v => Math.round(v * 0.12)), 1.5);
+      txt(tag.t, tx+4, 51.5);
+      tx += tw + 4;
+    });
+
+    // Meta info box
+    rrect(M, 62, CW, 18, C.bg2, 3);
+    line(M, 62, M+CW, 62, C.green, 0.3);
+
+    font('bold', 7); setColor(...C.muted);
+    txt('PERIOD', M+4, 70);
+    txt('REDUCTION PLAN', M+60, 70);
+    txt('GENERATED', M+120, 70);
+
+    font('bold', 8.5); setColor(...C.text);
+    txt(periodLabel, M+4, 76);
+
+    if (state.isReduction) {
+      font('bold', 8.5); setColor(...C.green);
+      txt('ACTIVE (−30%)', M+60, 76);
+    } else {
+      font('bold', 8.5); setColor(...C.red);
+      txt('NOT ACTIVE', M+60, 76);
+    }
+
+    font('normal', 8); setColor(...C.text2);
+    txt(dateStr, M+120, 76);
+
+    let y = 87;
+
+    // ── EXECUTIVE SUMMARY ─────────────────────────────────
+    y = sectionHeader('Executive Summary — KPIs', y, C.green);
+
+    // 4 big KPI cards in a 2×2 grid
+    const kpiData = [
+      { label:'⚡ Electricity', id:'kpi-elec', unit:'kWh/year', clr:C.yellow, sub:'Annual full year' },
+      { label:'💧 Water', id:'kpi-water', unit:'L/year', clr:C.blue, sub:'Annual full year' },
+      { label:'📝 Office Paper', id:'kpi-paper', unit:'A4 packs/year', clr:C.purple, sub:'Annual full year' },
+      { label:'🧼 Cleaning', id:'kpi-clean', unit:'rolls/year', clr:C.green, sub:'Annual full year' },
+    ];
+
+    const kpiW = (CW - 6) / 2;
+    const kpiH = 22;
+    kpiData.forEach((k, i) => {
+      const col = i % 2, row = Math.floor(i / 2);
+      const kx = M + col * (kpiW + 6);
+      const ky = y + row * (kpiH + 4);
+
+      rrect(kx, ky, kpiW, kpiH, C.bg2, 3);
+      // Top accent
+      rect(kx, ky, kpiW, 2, k.clr);
+
+      font('normal', 7); setColor(...C.muted);
+      txt(k.label, kx+5, ky+8);
+
+      const val = document.getElementById(k.id)?.textContent || '–';
+      font('bold', 13); setColor(...k.clr);
+      txt(val, kx+5, ky+17);
+
+      font('normal', 6.5); setColor(...C.muted);
+      txt(k.unit, kx + kpiW - 4, ky+17, {align:'right'});
+    });
+
+    y += kpiH * 2 + 4 * 2 + 6;
+
+    // ── 8 INDICATORS TABLE ────────────────────────────────
+    y = sectionHeader('8 Sustainability Indicators', y, C.blue);
+
+    const indData = [
+      { label:'① Electricity — Next year',        id:'res-elec-any',      oldId:'res-elec-any-old',      unit:'kWh',      clr:C.yellow  },
+      { label:'② Electricity — Selected period',   id:'res-elec-periode',  oldId:'res-elec-periode-old',  unit:'kWh',      clr:C.yellow  },
+      { label:'③ Water — Next year',               id:'res-aigua-any',     oldId:'res-aigua-any-old',     unit:'L',        clr:C.blue    },
+      { label:'④ Water — Selected period',         id:'res-aigua-periode', oldId:'res-aigua-periode-old', unit:'L',        clr:C.blue    },
+      { label:'⑤ Office Paper — Next year',        id:'res-ofi-any',       oldId:'res-ofi-any-old',       unit:'A4 packs', clr:C.purple  },
+      { label:'⑥ Office Paper — Selected period',  id:'res-ofi-periode',   oldId:'res-ofi-periode-old',   unit:'A4 packs', clr:C.purple  },
+      { label:'⑦ Cleaning Products — Next year',   id:'res-net-any',       oldId:'res-net-any-old',       unit:'rolls',    clr:C.green   },
+      { label:'⑧ Cleaning Products — Selected period', id:'res-net-periode', oldId:'res-net-periode-old',  unit:'rolls',    clr:C.green   },
+    ];
+
+    indData.forEach(ind => {
+      if (y > H - 30) { /* overflow guard — shouldn't trigger on p1 */ }
+      const val  = document.getElementById(ind.id)?.textContent || '–';
+      const base = document.getElementById(ind.oldId)?.textContent || '';
+      y = indicatorRow(ind.label, val, ind.unit, base, ind.clr, y, state.isReduction);
+    });
+
+    y += 3;
+
+    // ── RELATIVE IMPACT BARS ──────────────────────────────
+    if (y < H - 60) {
+      y = sectionHeader('Relative Impact by Indicator', y, C.purple);
+      const impData = [
+        { label:'⚡ Electricity year', id:'imp-elec-any', pctId:'imp-elec-any-pct', clr:C.yellow },
+        { label:'⚡ Electricity period', id:'imp-elec-per', pctId:'imp-elec-per-pct', clr:[251,191,36] },
+        { label:'💧 Water year', id:'imp-water-any', pctId:'imp-water-any-pct', clr:C.blue },
+        { label:'📝 Paper year', id:'imp-paper-any', pctId:'imp-paper-any-pct', clr:C.purple },
+        { label:'🧼 Cleaning year', id:'imp-clean-any', pctId:'imp-clean-any-pct', clr:C.green },
+      ];
+      const maxPct = 100;
+      impData.forEach(imp => {
+        const pct = parseInt(document.getElementById(imp.pctId)?.textContent) || 0;
+        y = miniBar(imp.label, pct, maxPct, imp.clr, y);
+      });
+    }
+
+    // Footer page 1
+    addFooter(1, 2);
+
+    // ══════════════════════════════════════════════════════
+    //  PAGE 2 — CHARTS + 3-YEAR PLAN + TIPS
+    // ══════════════════════════════════════════════════════
+    doc.addPage();
+    rect(0, 0, W, H, C.bg);
+    rect(0, 0, W, 3, C.green);
+
+    // Page header
+    rrect(0, 3, W, 16, C.bg2, 0);
+    font('bold', 9); setColor(...C.text);
+    txt('Sustainable Calculator · ITB', M, 14);
+    font('normal', 7); setColor(...C.muted);
+    txt('3-Year Reduction Plan  &  Practical Tips', W-M, 14, {align:'right'});
+
+    y = 25;
+
+    // ── CHARTS CAPTURE ────────────────────────────────────
+    if (typeof html2canvas !== 'undefined') {
+      y = sectionHeader('Monthly Distribution Charts', y, C.yellow);
+      try {
+        const chartIds = ['chart-elec','chart-water','chart-paper','chart-clean'];
+        const chartLabels = ['⚡ Electricity (kWh/month)','💧 Water (L/month)','📝 Office Paper (packs/month)','🧼 Cleaning (rolls/month)'];
+        const chartClrs = [C.yellow, C.blue, C.purple, C.green];
+        const imgW = (CW - 4) / 2, imgH = 32;
+
+        for (let ci = 0; ci < chartIds.length; ci++) {
+          const canvas = document.getElementById(chartIds[ci]);
+          if (!canvas) continue;
+          const col = ci % 2, row = Math.floor(ci / 2);
+          const cx = M + col * (imgW + 4);
+          const cy = y + row * (imgH + 10);
+
+          rrect(cx, cy, imgW, imgH + 8, C.bg2, 2);
+          font('bold', 6.5); setColor(...chartClrs[ci]);
+          txt(chartLabels[ci], cx + 3, cy + 5);
+
+          try {
+            const imgData = await html2canvas(canvas, {
+              backgroundColor: null, scale: 1.5, logging: false,
+              useCORS: true, allowTaint: true
+            });
+            doc.addImage(imgData.toDataURL('image/png'), 'PNG', cx+1, cy+6, imgW-2, imgH);
+          } catch(chartErr) {
+            font('italic', 7); setColor(...C.muted);
+            txt('[Chart not available]', cx + imgW/2, cy + imgH/2, {align:'center'});
+          }
+        }
+        y += (imgH + 10) * 2 + 6;
+      } catch(e) {
+        y += 4;
+      }
+    }
+
+    // ── 3-YEAR REDUCTION PLAN ─────────────────────────────
+    y = sectionHeader('3-Year Reduction Plan', y, C.green);
+
+    const planData = [
+      {
+        resource:'⚡ Electricity', clr:C.yellow,
+        steps:[
+          {yr:'Year 1',phase:'Reduce',   badge:'−10%', desc:'Presence sensors in all classrooms and common areas'},
+          {yr:'Year 2',phase:'Reuse',    badge:'−15%', desc:'Full LED lighting replacement across all facilities'},
+          {yr:'Year 3',phase:'Recycle',  badge:'−15%', desc:'Solar panel expansion +15 kWp · Own renewable energy'},
+        ]
+      },
+      {
+        resource:'💧 Water', clr:C.blue,
+        steps:[
+          {yr:'Year 1',phase:'Reduce',   badge:'−10%', desc:'Aerator installation on all taps in the centre'},
+          {yr:'Year 2',phase:'Reduce',   badge:'−10%', desc:'Dual-flush cisterns in all toilet facilities'},
+          {yr:'Year 3',phase:'Recycle',  badge:'−12%', desc:'Rainwater collection system for garden irrigation'},
+        ]
+      },
+      {
+        resource:'📝 Office Paper', clr:C.purple,
+        steps:[
+          {yr:'Year 1',phase:'Reduce',   badge:'−15%', desc:'Mandatory Zero Paper policy on Moodle & digital comms'},
+          {yr:'Year 2',phase:'Reuse',    badge:'−5%',  desc:'Exclusive purchase of refillable pens and markers'},
+          {yr:'Year 3',phase:'Recycle',  badge:'−12%', desc:'Full digitalisation of admin procedures & cloud archiving'},
+        ]
+      },
+      {
+        resource:'🧼 Cleaning', clr:C.green,
+        steps:[
+          {yr:'Year 1',phase:'Reduce',   badge:'−20%', desc:'Replace paper towels with energy-efficient air dryers'},
+          {yr:'Year 2',phase:'Reuse',    badge:'−8%',  desc:'Bulk soap and products in reusable refillable containers'},
+          {yr:'Year 3',phase:'Recycle',  badge:'−5%',  desc:'Exclusive certified probiotic and ecological cleaning products'},
+        ]
+      },
+    ];
+
+    const phaseClr = { Reduce: C.red, Reuse: C.yellow, Recycle: C.green };
+
+    planData.forEach(resource => {
+      if (y > H - 36) { return; } // skip if no space (safety)
+      rrect(M, y, CW, 8, C.bg2, 2);
+      rect(M, y, 3, 8, resource.clr);
+      font('bold', 8); setColor(...resource.clr);
+      txt(resource.resource, M+6, y+5.5);
+
+      // Progress dots
+      const totalPct = resource.steps.reduce((s,st) => s + parseInt(st.badge), 0);
+      font('bold', 7); setColor(...C.muted);
+      txt(`Total: ${totalPct}%`, W-M-3, y+5.5, {align:'right'});
+      y += 10;
+
+      resource.steps.forEach(step => {
+        if (y > H - 20) return;
+        rrect(M+3, y, CW-3, 9, C.bg3, 1.5);
+        // Year badge
+        font('bold', 6); setColor(...C.muted);
+        txt(step.yr, M+6, y+3.5);
+        // Phase pill
+        const pc2 = phaseClr[step.phase] || C.green;
+        pill(step.phase, M+20, y+4.5, pc2.map(v=>Math.round(v*0.15)), pc2, 18);
+        // Badge
+        font('bold', 7); setColor(...resource.clr);
+        txt(step.badge, M+42, y+5);
+        // Description
+        font('normal', 7); setColor(...C.text2);
+        txt(step.desc, M+54, y+5);
+        y += 11;
+      });
+      y += 3;
+    });
+
+    y += 2;
+
+    // ── PRACTICAL TIPS ────────────────────────────────────
+    if (y < H - 50) {
+      y = sectionHeader('Practical Tips for Reducing Consumption', y, C.blue);
+
+      const tipsData = [
+        {cat:'ELECTRICITY', clr:C.yellow, items:[
+          'Install presence sensors for automatic lighting control',
+          'Replace all lighting with low-consumption LED (−50% lighting)',
+          'Install photovoltaic solar panels on the roof (−40% bill)',
+          'Schedule auto-shutdown of electronics outside school hours',
+        ]},
+        {cat:'WATER', clr:C.blue, items:[
+          'Aerators on all taps — reduces flow by up to 50%',
+          'Replace cisterns with dual-flush models',
+          'Collect rainwater for irrigation of landscaped areas',
+        ]},
+        {cat:'OFFICE PAPER', clr:C.purple, items:[
+          '"Zero Paper" policy for internal communications',
+          'Digitalise all academic and administrative procedures',
+          'Double-sided printing by default on all printers',
+        ]},
+        {cat:'CLEANING', clr:C.green, items:[
+          'Replace paper towels with low-consumption air dryers',
+          'Purchase soaps and products in bulk in reusable containers',
+          'Use exclusively certified ecological cleaning products',
+        ]},
+      ];
+
+      const tipColW = (CW - 4) / 2;
+      let tipCol = 0, tipColY = [y, y];
+
+      tipsData.forEach(t => {
+        const col = tipCol % 2;
+        let ty = tipColY[col];
+        if (ty > H - 25) return;
+
+        const itemH = t.items.length * 5.5 + 14;
+        rrect(M + col*(tipColW+4), ty, tipColW, itemH, C.bg2, 2);
+        rect(M + col*(tipColW+4), ty, tipColW, 2, t.clr);
+        font('bold', 7); setColor(...t.clr);
+        txt(t.cat, M + col*(tipColW+4) + 4, ty+8);
+
+        t.items.forEach((item, ii) => {
+          font('normal', 6.5); setColor(...C.text2);
+          const iy = ty + 13 + ii * 5.5;
+          setColor(...t.clr); txt('→', M + col*(tipColW+4) + 4, iy);
+          setColor(...C.text2); txt(item, M + col*(tipColW+4) + 9, iy, {maxWidth: tipColW - 13});
+        });
+
+        tipColY[col] += itemH + 4;
+        tipCol++;
+      });
+    }
+
+    // Savings summary box (if reduction active)
+    if (state.isReduction) {
+      const boxY = Math.max(...[0,1].map(c => (typeof tipColY !== 'undefined' ? 0 : 0))) ;
+      // Show at bottom of page
+      const sumY = H - 35;
+      if (y < sumY - 5) {
+        rrect(M, sumY, CW, 22, [52,211,153,0.08], 3);
+        rect(M, sumY, CW, 2, C.green);
+        font('bold', 8); setColor(...C.green);
+        txt('Estimated Annual Savings with 30% Reduction Plan', M+4, sumY+8);
+
+        const sE = document.getElementById('res-elec-any-old')?.textContent;
+        const rE = document.getElementById('res-elec-any')?.textContent;
+        if (sE && rE) {
+          const saved = (parseInt(sE.replace(/\D/g,'')) - parseInt(rE.replace(/\D/g,'')));
+          font('normal', 7); setColor(...C.text2);
+          txt(`⚡ ${saved.toLocaleString()} kWh electricity saved`, M+4, sumY+15);
+          txt(`💧 Water −30%  ·  📝 Paper −30%  ·  🧼 Cleaning −30%`, M+4, sumY+20.5);
+        }
+      }
+    }
+
+    // Footer page 2
+    addFooter(2, 2);
+
+    // ── Save ──────────────────────────────────────────────
+    const fname = `ITB_Sustainability_Report_${new Date().toISOString().split('T')[0]}.pdf`;
+    doc.save(fname);
+
   } catch(e) {
-    console.error(e); alert('Error en generar el PDF: '+e.message);
+    console.error(e);
+    alert('Error generating PDF: ' + e.message);
   } finally {
-    btn.innerHTML = origText; btn.disabled = false;
+    btn.innerHTML = origText;
+    btn.disabled = false;
   }
 }
 
@@ -2893,9 +3306,9 @@ function updateSimulator() {
   const total_all = SIM_MEASURES.length;
   const msg = document.getElementById('sim-scenario-text');
   if (msg) {
-    if (total === 0) msg.textContent = `Cap mesura activada. Consum sense canvis.`;
-    else if (total === total_all) msg.textContent = `Totes les mesures actives. Reducció màxima: −${avg}% de mitjana.`;
-    else msg.textContent = `${total} de ${total_all} mesures actives. Reducció mitjana: −${avg}%.`;
+    if (total === 0) msg.textContent = `No measures active. Consumption unchanged.`;
+    else if (total === total_all) msg.textContent = `All measures active. Maximum reduction: −${avg}% average.`;
+    else msg.textContent = `${total} of ${total_all} active measures. Average reduction: −${avg}%.`;
   }
 
   // Update compare charts dynamically
@@ -2921,10 +3334,10 @@ function updateSimCompareCharts(base, reds) {
     charts['compare'] = new Chart(ctxC, {
       type: 'bar',
       data: {
-        labels: ['⚡ Elèc (kWh÷10)', '💧 Aigua (kL)', '📝 Paper', '🧼 Neteja'],
+        labels: ['⚡ Elèc (kWh÷10)', '💧 Water (kL)', '📝 Paper', '🧼 Cleaning'],
         datasets: [
-          { label:'Base actual', data:[Math.round(baseE/10),baseA,baseO,baseN], backgroundColor:'rgba(90,122,150,.5)', borderRadius:5 },
-          { label:'Escenari simulat', data:[Math.round(redE/10),redA,redO,redN], backgroundColor:'rgba(52,211,153,.65)', borderRadius:5 },
+          { label:'Current baseline', data:[Math.round(baseE/10),baseA,baseO,baseN], backgroundColor:'rgba(90,122,150,.5)', borderRadius:5 },
+          { label:'Simulated scenario', data:[Math.round(redE/10),redA,redO,redN], backgroundColor:'rgba(52,211,153,.65)', borderRadius:5 },
         ]
       },
       options: {
@@ -2975,9 +3388,9 @@ function updateSimCompareCharts(base, reds) {
     charts['savings3y'] = new Chart(ctxS, {
       type: 'line',
       data: {
-        labels: ['Any 1','Any 2','Any 3'],
+        labels: ['Year 1','Year 2','Year 3'],
         datasets: [
-          { label:'Estalvi elèctric (kWh)', data:[cumSavingKWh(1),cumSavingKWh(2),cumSavingKWh(3)],
+          { label:'Electrical savings (kWh)', data:[cumSavingKWh(1),cumSavingKWh(2),cumSavingKWh(3)],
             borderColor:'#34d399', backgroundColor:'rgba(52,211,153,.12)', fill:true, tension:.3, pointRadius:6, pointBackgroundColor:'#34d399' },
         ]
       },
@@ -2985,7 +3398,7 @@ function updateSimCompareCharts(base, reds) {
         responsive:true, maintainAspectRatio:false,
         plugins:{
           legend:{labels:{color:'#94afc8',font:{size:10},boxWidth:10}},
-          tooltip:{callbacks:{label:c=>` ${c.parsed.y.toLocaleString('ca-ES')} kWh estalviats`}}
+          tooltip:{callbacks:{label:c=>` ${c.parsed.y.toLocaleString('ca-ES')} kWh saved`}}
         },
         scales:{
           x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#5a7a96',font:{size:10}}},
@@ -3152,11 +3565,11 @@ initSimulator();
   document.querySelectorAll('.nav-tab').forEach(tab => {
     tab.addEventListener('click', () => {
       const labels = {
-        calculadora: '🌿 Calculadora de consums',
-        grafics:     '📊 Visualització de dades',
-        pla:         '🗺️ Pla de reducció',
+        calculadora: "🌿 Consumption Calculator",
+        grafics:     "📊 Data Visualization",
+        pla:         "🗺️ Reduction Plan",
         simulador:   '🔬 Simulador d\'estalvi',
-        consells:    '💡 Consells pràctics',
+        consells:    "💡 Practical Tips",
       };
       const key = tab.dataset.tab;
       if (labels[key]) showToast(labels[key]);
@@ -3167,7 +3580,7 @@ initSimulator();
   const calcBtn = document.querySelector('.btn-primary');
   if (calcBtn) {
     calcBtn.addEventListener('click', () => {
-      showToast('✅ Resultats actualitzats!');
+      showToast('✅ Results updated!');
     });
   }
 })();
