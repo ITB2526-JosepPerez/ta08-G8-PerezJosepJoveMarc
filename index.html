@@ -2400,10 +2400,12 @@ const DATA = {
 
 const DAYS = { ANNUAL: 365, ACADEMIC_YEAR: 304, WINTER: 90 };
 
+// sf (seasonal factor) is always 1.0 — seasonal variation is handled entirely
+// by MONTHLY_FACTORS to prevent period totals from ever exceeding the annual total.
 const PERIOD_CONFIG = {
   anual:  { electricitat:{days:365,sf:1.0},  aigua:{days:365,sf:1.0},   oficina:{months:12,sf:1.0},  neteja:{months:12,sf:1.0}  },
-  curs:   { electricitat:{days:304,sf:1.1},  aigua:{days:304,sf:1.0},   oficina:{months:10,sf:1.2},  neteja:{months:10,sf:1.1}  },
-  hivern: { electricitat:{days:90, sf:1.3},  aigua:{days:90, sf:0.8},   oficina:{months:3, sf:1.1},  neteja:{months:3, sf:1.3}  },
+  curs:   { electricitat:{days:304,sf:1.0},  aigua:{days:304,sf:1.0},   oficina:{months:10,sf:1.0},  neteja:{months:10,sf:1.0}  },
+  hivern: { electricitat:{days:90, sf:1.0},  aigua:{days:90, sf:1.0},   oficina:{months:3, sf:1.0},  neteja:{months:3, sf:1.0}  },
 };
 
 const MONTHLY_FACTORS = {
@@ -2468,16 +2470,23 @@ function avgMonthlyFactor(from, to, factorArr) {
 // ─── COMPUTE ─────────────────────────────────────────────
 function compute(period, isReduction, customFrom, customTo) {
   const d = DATA.dades_base;
-  const V = (key) => getVar(d[key]?.variability_range?.min || .02, d[key]?.variability_range?.max || .05);
+
+  // Generate ONE variability factor per resource per calculation.
+  // Using the same factor for both annual and period totals ensures
+  // elecPer ≤ elecAny always, and the annual KPI is stable/coherent.
+  const vE = getVar(d.electricitat.variability_range.min,  d.electricitat.variability_range.max);
+  const vA = getVar(d.aigua.variability_range.min,          d.aigua.variability_range.max);
+  const vO = getVar(d.consumibles_oficina.variability_range.min, d.consumibles_oficina.variability_range.max);
+  const vN = getVar(d.productes_neteja.variability_range.min,    d.productes_neteja.variability_range.max);
 
   let elecAny, elecPer, aiguaAny, aiguaPer, ofiAny, ofiPer, netAny, netPer;
 
-  // Always compute annual base
-  const ANNUAL = PERIOD_CONFIG.anual;
-  elecAny  = Math.round(d.electricitat.consum_mitja_diari_kWh * 365 * ANNUAL.electricitat.sf * V('electricitat'));
-  aiguaAny = Math.round(d.aigua.consum_mitja_diari_litres * 365 * ANNUAL.aigua.sf * V('aigua'));
-  ofiAny   = Math.round(d.consumibles_oficina.mitjana_mensual.paper_A4_paquets * 12 * ANNUAL.oficina.sf * V('consumibles_oficina'));
-  netAny   = Math.round(d.productes_neteja.mitjana_mensual.paper_higienic_rotllos * 12 * ANNUAL.neteja.sf * V('productes_neteja'));
+  // Annual totals: sum all 12 months using MONTHLY_FACTORS × shared variability factor.
+  // This makes the annual figure the true sum-of-months, coherent with any period subset.
+  elecAny  = Math.round(MONTHLY_FACTORS.electricitat.reduce((s,f,i) => s + d.electricitat.consum_mitja_diari_kWh * DAYS_PER_MONTH[i] * f, 0) * vE);
+  aiguaAny = Math.round(MONTHLY_FACTORS.aigua.reduce((s,f,i)        => s + d.aigua.consum_mitja_diari_litres    * DAYS_PER_MONTH[i] * f, 0) * vA);
+  ofiAny   = Math.round(MONTHLY_FACTORS.oficina.reduce((s,f)        => s + d.consumibles_oficina.mitjana_mensual.paper_A4_paquets      * f, 0) * vO);
+  netAny   = Math.round(MONTHLY_FACTORS.neteja.reduce((s,f)         => s + d.productes_neteja.mitjana_mensual.paper_higienic_rotllos   * f, 0) * vN);
 
   if (period === 'custom' && customFrom && customTo) {
     const days = daysBetween(customFrom, customTo);
@@ -2486,16 +2495,27 @@ function compute(period, isReduction, customFrom, customTo) {
     const rO  = avgMonthlyFactor(customFrom, customTo, MONTHLY_FACTORS.oficina);
     const rN  = avgMonthlyFactor(customFrom, customTo, MONTHLY_FACTORS.neteja);
 
-    elecPer  = Math.round(d.electricitat.consum_mitja_diari_kWh * days * sfE * V('electricitat'));
-    aiguaPer = Math.round(d.aigua.consum_mitja_diari_litres * days * sfA * V('aigua'));
-    ofiPer   = Math.round(d.consumibles_oficina.mitjana_mensual.paper_A4_paquets * rO.months * rO.factor * V('consumibles_oficina'));
-    netPer   = Math.round(d.productes_neteja.mitjana_mensual.paper_higienic_rotllos * rN.months * rN.factor * V('productes_neteja'));
+    // Use the same vE/vA/vO/vN so custom period is scaled consistently with annual
+    elecPer  = Math.round(d.electricitat.consum_mitja_diari_kWh * days * sfE * vE);
+    aiguaPer = Math.round(d.aigua.consum_mitja_diari_litres * days * sfA * vA);
+    ofiPer   = Math.round(d.consumibles_oficina.mitjana_mensual.paper_A4_paquets * rO.months * rO.factor * vO);
+    netPer   = Math.round(d.productes_neteja.mitjana_mensual.paper_higienic_rotllos * rN.months * rN.factor * vN);
   } else {
-    const P = PERIOD_CONFIG[period] || PERIOD_CONFIG.anual;
-    elecPer  = Math.round(d.electricitat.consum_mitja_diari_kWh * P.electricitat.days * P.electricitat.sf * V('electricitat'));
-    aiguaPer = Math.round(d.aigua.consum_mitja_diari_litres * P.aigua.days * P.aigua.sf * V('aigua'));
-    ofiPer   = Math.round(d.consumibles_oficina.mitjana_mensual.paper_A4_paquets * P.oficina.months * P.oficina.sf * V('consumibles_oficina'));
-    netPer   = Math.round(d.productes_neteja.mitjana_mensual.paper_higienic_rotllos * P.neteja.months * P.neteja.sf * V('productes_neteja'));
+    // Period totals: sum only the months in the selected period, using the same vX factor.
+    // This guarantees period ≤ annual and both share the same variability "seed".
+    const periodMonths = {
+      anual:  [0,1,2,3,4,5,6,7,8,9,10,11],
+      curs:   [8,9,10,11,0,1,2,3,4,5],   // Sep–Jun
+      hivern: [11,0,1],                    // Dec–Feb
+    };
+    const mIdx = periodMonths[period] || periodMonths.anual;
+
+    // Electricity & water: sum daily consumption for each month in period
+    elecPer  = Math.round(mIdx.reduce((s,i) => s + d.electricitat.consum_mitja_diari_kWh * DAYS_PER_MONTH[i] * MONTHLY_FACTORS.electricitat[i], 0) * vE);
+    aiguaPer = Math.round(mIdx.reduce((s,i) => s + d.aigua.consum_mitja_diari_litres    * DAYS_PER_MONTH[i] * MONTHLY_FACTORS.aigua[i],        0) * vA);
+    // Paper & cleaning: sum monthly average × monthly factor for each month in period
+    ofiPer   = Math.round(mIdx.reduce((s,i) => s + d.consumibles_oficina.mitjana_mensual.paper_A4_paquets         * MONTHLY_FACTORS.oficina[i], 0) * vO);
+    netPer   = Math.round(mIdx.reduce((s,i) => s + d.productes_neteja.mitjana_mensual.paper_higienic_rotllos      * MONTHLY_FACTORS.neteja[i],  0) * vN);
   }
 
   if (isReduction) {
@@ -2570,20 +2590,21 @@ function render(result) {
   setRow('res-net-any',     'res-net-any-old',     'pill-net-any',     base.netAny,   show.netAny);
   setRow('res-net-periode', 'res-net-periode-old', 'pill-net-periode',  base.netPer,   show.netPer);
 
-  // KPI row — always show ANNUAL values (independent of selected period)
-  animateCount(document.getElementById('kpi-elec'),  show.elecAny);
-  animateCount(document.getElementById('kpi-water'), show.aiguaAny);
-  animateCount(document.getElementById('kpi-paper'), show.ofiAny);
-  animateCount(document.getElementById('kpi-clean'), show.netAny);
+  // KPI row — show PERIOD values so the summary matches the selected period
+  animateCount(document.getElementById('kpi-elec'),  show.elecPer);
+  animateCount(document.getElementById('kpi-water'), show.aiguaPer);
+  animateCount(document.getElementById('kpi-paper'), show.ofiPer);
+  animateCount(document.getElementById('kpi-clean'), show.netPer);
 
-  // KPI sub-labels — scope only to the calculator tab KPIs
+  // KPI sub-labels — reflect the active period
+  const activePeriod = document.getElementById('periode-select').value;
+  const periodSublabel = { anual:'annual', curs:'academic year', hivern:'winter (3 mo)', custom:'custom range' }[activePeriod] || 'annual';
   const calcKpiRow = document.getElementById('kpi-row');
-  if (calcKpiRow) calcKpiRow.querySelectorAll('.kpi-sub').forEach(el => {
-    if (el.textContent.includes('kWh') || el.textContent.includes('full year')) el.textContent = 'kWh · annual';
-    else if (el.textContent.includes('L ·') || el.textContent.includes('L/day')) el.textContent = 'L · annual';
-    else if (el.textContent.includes('packs')) el.textContent = 'A4 packs · annual';
-    else if (el.textContent.includes('rolls')) el.textContent = 'rolls · annual';
-  });
+  if (calcKpiRow) {
+    const subs = calcKpiRow.querySelectorAll('.kpi-sub');
+    const subLabels = [`kWh · ${periodSublabel}`, `L · ${periodSublabel}`, `A4 packs · ${periodSublabel}`, `rolls · ${periodSublabel}`];
+    subs.forEach((el, idx) => { if (subLabels[idx] !== undefined) el.textContent = subLabels[idx]; });
+  }
 
   ['elec','water','paper','clean'].forEach(k => {
     const el = document.getElementById(`kpi-${k}-delta`);
@@ -2758,12 +2779,12 @@ function renderCharts(period, customFrom, customTo) {
 function renderCompareCharts() {
   if (!hasChartLib()) return;
   const d = DATA.dades_base;
-  const p = PERIOD_CONFIG.anual;
 
-  const baseE = Math.round(d.electricitat.consum_mitja_diari_kWh * 365 * p.electricitat.sf);
-  const baseA = Math.round(d.aigua.consum_mitja_diari_litres * 365 * p.aigua.sf / 1000); // kL
-  const baseO = Math.round(d.consumibles_oficina.mitjana_mensual.paper_A4_paquets * 12);
-  const baseN = Math.round(d.productes_neteja.mitjana_mensual.paper_higienic_rotllos * 12);
+  // Use the same monthly-factors method as compute() — NOT simple daily×365 — so bars match displayed values
+  const baseE = Math.round(MONTHLY_FACTORS.electricitat.reduce((s,f,i) => s + d.electricitat.consum_mitja_diari_kWh * DAYS_PER_MONTH[i] * f, 0));
+  const baseA = Math.round(MONTHLY_FACTORS.aigua.reduce((s,f,i)        => s + d.aigua.consum_mitja_diari_litres    * DAYS_PER_MONTH[i] * f, 0) / 1000); // kL
+  const baseO = Math.round(MONTHLY_FACTORS.oficina.reduce((s,f)        => s + d.consumibles_oficina.mitjana_mensual.paper_A4_paquets      * f, 0));
+  const baseN = Math.round(MONTHLY_FACTORS.neteja.reduce((s,f)         => s + d.productes_neteja.mitjana_mensual.paper_higienic_rotllos   * f, 0));
 
   // Exact 30%: saving = round(base * 0.30), reduced = base - saving
   const redE = baseE - Math.round(baseE * 0.30);
@@ -3864,11 +3885,15 @@ function mydComputeAndRender(period, myVals) {
   const paperM = myVals.paperMonthly;
   const cleanM = myVals.cleanMonthly;
 
-  // Annual totals
-  const elecAny  = Math.round(elecD  * 365);
-  const waterAny = Math.round(waterD * 365);
-  const paperAny = Math.round(paperM * 12);
-  const cleanAny = Math.round(cleanM * 12);
+  // Use user-provided factors if available, else fall back to defaults
+  const elecFactors  = Array.isArray(myVals.elecFactors)  ? myVals.elecFactors  : MONTHLY_FACTORS.electricitat;
+  const waterFactors = Array.isArray(myVals.waterFactors) ? myVals.waterFactors : MONTHLY_FACTORS.aigua;
+
+  // Annual totals — use weighted monthly factors (sum over 12 months)
+  const elecAny  = Math.round(elecFactors.reduce((s,f,i)  => s + elecD  * DAYS_PER_MONTH[i] * f, 0));
+  const waterAny = Math.round(waterFactors.reduce((s,f,i) => s + waterD * DAYS_PER_MONTH[i] * f, 0));
+  const paperAny = Math.round(MONTHLY_FACTORS.oficina.reduce((s,f) => s + paperM * f, 0));
+  const cleanAny = Math.round(MONTHLY_FACTORS.neteja.reduce((s,f)  => s + cleanM * f, 0));
 
   // KPI row (always annual)
   document.getElementById('myd-elec-year').textContent  = fmt(elecAny);
@@ -3876,17 +3901,19 @@ function mydComputeAndRender(period, myVals) {
   document.getElementById('myd-paper-year').textContent = fmt(paperAny);
   document.getElementById('myd-clean-year').textContent = fmt(cleanAny);
 
-  // Period-based
-  const P = PERIOD_CONFIG[period] || PERIOD_CONFIG.anual;
+  // Period month indices — same logic as main compute()
+  const periodMonths = {
+    anual:  [0,1,2,3,4,5,6,7,8,9,10,11],
+    curs:   [8,9,10,11,0,1,2,3,4,5],
+    hivern: [11,0,1],
+  };
+  const mIdx = periodMonths[period] || periodMonths.anual;
 
-  // Seasonal factor for electricity & water using provided factors
-  const elecSF  = myVals.elecFactors.reduce((s,v,i) => s + v * DAYS_PER_MONTH[i], 0) / 365;
-  const waterSF = myVals.waterFactors.reduce((s,v,i) => s + v * DAYS_PER_MONTH[i], 0) / 365;
-
-  const elecPer  = Math.round(elecD  * P.electricitat.days * P.electricitat.sf);
-  const waterPer = Math.round(waterD * P.aigua.days         * P.aigua.sf);
-  const paperPer = Math.round(paperM * P.oficina.months     * P.oficina.sf);
-  const cleanPer = Math.round(cleanM * P.neteja.months      * P.neteja.sf);
+  // Period totals — sum only the months that belong to the period
+  const elecPer  = Math.round(mIdx.reduce((s,i) => s + elecD  * DAYS_PER_MONTH[i] * elecFactors[i],             0));
+  const waterPer = Math.round(mIdx.reduce((s,i) => s + waterD * DAYS_PER_MONTH[i] * waterFactors[i],            0));
+  const paperPer = Math.round(mIdx.reduce((s,i) => s + paperM * MONTHLY_FACTORS.oficina[i],                     0));
+  const cleanPer = Math.round(mIdx.reduce((s,i) => s + cleanM * MONTHLY_FACTORS.neteja[i],                      0));
 
   document.getElementById('myd-res-elec-any').textContent  = fmt(elecAny);
   document.getElementById('myd-res-elec-per').textContent  = fmt(elecPer);
@@ -3897,7 +3924,7 @@ function mydComputeAndRender(period, myVals) {
   document.getElementById('myd-res-clean-any').textContent = fmt(cleanAny);
   document.getElementById('myd-res-clean-per').textContent = fmt(cleanPer);
 
-  // −30% savings
+  // −30% savings (always based on annual)
   document.getElementById('myd-save-elec').textContent  = fmt(Math.round(elecAny  * 0.30));
   document.getElementById('myd-save-water').textContent = fmt(Math.round(waterAny * 0.30));
   document.getElementById('myd-save-paper').textContent = fmt(Math.round(paperAny * 0.30));
