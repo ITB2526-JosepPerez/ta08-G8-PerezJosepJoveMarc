@@ -1,48 +1,38 @@
 {
   "centre": "ITB",
-  "configuracio_calculadora": {
-    "descripcio": "Dades base per a 8 càlculs de sostenibilitat amb variabilitat mensual",
-    "unitats": {
-      "energia": "kWh",
-      "aigua": "litres",
-      "oficina": "unitats",
-      "neteja": "unitats"
-    }
-  },
   "dades_base": {
     "electricitat": {
       "consum_mitja_diari_kWh": 261.54,
-      "variability_range": { "min": 0.02, "max": 0.05 },
-      "factors_estacionals": {
-        "curs_escolar_set_juny": 1.1,
-        "anual_global": 1.0
-      }
+      "variability_range": { "min": 0.02, "max": 0.05 }
     },
     "aigua": {
       "consum_mitja_diari_litres": 850,
-      "variability_range": { "min": 0.02, "max": 0.04 },
-      "factors_estacionals": {
-        "curs_escolar_set_juny": 1.0,
-        "anual_global": 0.9
-      }
+      "variability_range": { "min": 0.02, "max": 0.04 }
     },
     "consumibles_oficina": {
       "variability_range": { "min": 0.03, "max": 0.05 },
-      "mitjana_mensual": {
-        "paper_A4_paquets": 22.5
-      },
-      "factors_estacionals": {
-        "curs_escolar_set_juny": 1.2
-      }
+      "mitjana_mensual": { "paper_A4_paquets": 22.5 }
     },
     "productes_neteja": {
       "variability_range": { "min": 0.02, "max": 0.03 },
-      "mitjana_mensual": {
-        "paper_higienic_rotllos": 108
-      },
-      "factors_estacionals": {
-        "mesos_freds_set_marc": 1.3
-      }
+      "mitjana_mensual": { "paper_higienic_rotllos": 108 }
     }
+  },
+  "period_config": {
+    "anual":  { "electricitat": { "days": 365, "sf": 1.0 }, "aigua": { "days": 365, "sf": 1.0 }, "oficina": { "months": 12, "sf": 1.0 }, "neteja": { "months": 12, "sf": 1.0 } },
+    "curs":   { "electricitat": { "days": 304, "sf": 1.1 }, "aigua": { "days": 304, "sf": 1.0 }, "oficina": { "months": 10, "sf": 1.2 }, "neteja": { "months": 10, "sf": 1.1 } },
+    "hivern": { "electricitat": { "days": 90,  "sf": 1.3 }, "aigua": { "days": 90,  "sf": 0.8 }, "oficina": { "months": 3,  "sf": 1.1 }, "neteja": { "months": 3,  "sf": 1.3 } }
+  },
+  "monthly_factors": {
+    "electricitat": [1.15, 1.18, 1.05, 0.92, 0.88, 0.80, 0.75, 0.78, 0.90, 1.02, 1.12, 1.20],
+    "aigua":        [0.80, 0.82, 0.88, 0.95, 1.05, 1.15, 1.20, 1.18, 1.05, 0.95, 0.85, 0.78],
+    "oficina":      [1.20, 1.15, 1.10, 1.10, 1.15, 0.80, 0.40, 0.40, 1.20, 1.25, 1.20, 0.60],
+    "neteja":       [1.30, 1.28, 1.15, 1.05, 0.95, 0.85, 0.80, 0.80, 1.00, 1.10, 1.20, 1.30]
+  },
+  "reduction_factor": 0.70,
+  "days": {
+    "ANNUAL": 365,
+    "ACADEMIC_YEAR": 304,
+    "WINTER": 90
   }
 }
