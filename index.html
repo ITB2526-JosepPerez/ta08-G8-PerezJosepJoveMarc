@@ -1,489 +1,3589 @@
 <!DOCTYPE html>
-<html lang="ca">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Sostenible - ITB</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- Chart.js CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sustainable Calculator · ITB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+/* ══════════════════════════════════════════════
+   TOKENS
+══════════════════════════════════════════════ */
+:root {
+  --bg:       #080c10;
+  --bg2:      #0e1419;
+  --bg3:      #131a22;
+  --surface:  #182028;
+  --border:   #1e2d3d;
+  --border2:  #2a3f55;
+
+  --elec:     #fbbf24;
+  --elec-dim: rgba(251,191,36,.1);
+  --water:    #38bdf8;
+  --water-dim:rgba(56,189,248,.1);
+  --paper:    #a78bfa;
+  --paper-dim:rgba(167,139,250,.1);
+  --clean:    #34d399;
+  --clean-dim:rgba(52,211,153,.1);
+
+  --green:    #34d399;
+  --blue:     #38bdf8;
+  --red:      #f87171;
+  --orange:   #fbbf24;
+  --muted:    #5a7a96;
+  --text:     #e2eaf2;
+  --text2:    #94afc8;
+
+  --radius:   8px;
+  --radius-lg:14px;
+  --radius-xl:20px;
+  --shadow:   0 20px 60px rgba(0,0,0,.6);
+  --t:        .2s cubic-bezier(.4,0,.2,1);
+
+  --nav-h: 60px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Syne', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ══════════════════════════════════════════════
+   GRID BG TEXTURE
+══════════════════════════════════════════════ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(56,189,248,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,189,248,.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ══════════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════════ */
+.site-header {
+  position: relative;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 2rem 2rem 0;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.site-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 120% at 10% 50%, rgba(52,211,153,.07) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 80% at 90% 10%, rgba(56,189,248,.05) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.header-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.header-brand { display: flex; align-items: center; gap: 1.1rem; }
+
+.brand-icon {
+  width: 56px; height: 56px;
+  background: linear-gradient(135deg, rgba(52,211,153,.2) 0%, rgba(56,189,248,.15) 100%);
+  border: 1px solid rgba(52,211,153,.3);
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 0 30px rgba(52,211,153,.15), inset 0 1px 0 rgba(255,255,255,.05);
+  flex-shrink: 0;
+}
+
+.brand-text h1 {
+  font-size: clamp(1.2rem, 3vw, 1.75rem);
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -.02em;
+  line-height: 1.1;
+}
+
+.brand-text p {
+  font-size: .82rem;
+  color: var(--muted);
+  margin-top: .25rem;
+  font-weight: 400;
+}
+
+.header-tags { display: flex; gap: .45rem; flex-wrap: wrap; padding-top: .25rem; }
+
+.tag {
+  font-size: .68rem;
+  font-weight: 700;
+  padding: .2rem .65rem;
+  border-radius: 999px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  font-family: 'JetBrains Mono', monospace;
+}
+.tag-green  { background: rgba(52,211,153,.1);  color: var(--green);  border: 1px solid rgba(52,211,153,.25); }
+.tag-blue   { background: rgba(56,189,248,.1);  color: var(--blue);   border: 1px solid rgba(56,189,248,.25); }
+.tag-yellow { background: rgba(251,191,36,.1);  color: var(--orange); border: 1px solid rgba(251,191,36,.25); }
+.tag-purple { background: rgba(167,139,250,.1); color: var(--paper);  border: 1px solid rgba(167,139,250,.25); }
+
+/* ── NAV TABS ── */
+.nav-tabs {
+  display: flex;
+  gap: 0;
+  margin-top: 1.5rem;
+  position: relative;
+}
+
+.nav-tab {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .75rem 1.4rem;
+  font-family: 'Syne', sans-serif;
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--t);
+  white-space: nowrap;
+  letter-spacing: .02em;
+}
+.nav-tab:hover { color: var(--text2); }
+.nav-tab.active {
+  color: var(--green);
+  border-bottom-color: var(--green);
+}
+.nav-tab i { font-size: .8rem; }
+
+/* ══════════════════════════════════════════════
+   LAYOUT
+══════════════════════════════════════════════ */
+.app {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 1.75rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  width: 100%;
+}
+
+/* ══════════════════════════════════════════════
+   PAGE SECTIONS (tabs)
+══════════════════════════════════════════════ */
+.page-section { display: none; flex-direction: column; gap: 1.75rem; }
+.page-section.active { display: flex; animation: fadeSection .3s ease; }
+@keyframes fadeSection {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════════════════
+   CONTROLS PANEL
+══════════════════════════════════════════════ */
+.controls-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.ctrl-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ctrl-box h2 {
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.ctrl-box h2 i { color: var(--green); font-size: .85rem; }
+
+label.field-lbl {
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  display: block;
+  margin-bottom: .35rem;
+}
+
+.select-row { display: flex; gap: .6rem; align-items: flex-end; }
+.demo-row { margin-top: .6rem; }
+.demo-row .btn { width: 100%; justify-content: center; }
+
+select.itb-select, input.itb-input {
+  flex: 1;
+  background: var(--bg3);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: .65rem .9rem;
+  font-size: .88rem;
+  font-family: 'Syne', sans-serif;
+  cursor: pointer;
+  appearance: none;
+  transition: border-color var(--t), box-shadow var(--t);
+}
+select.itb-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%235a7a96' d='M4.5 6l3.5 3.5L11.5 6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right .7rem center;
+  background-size: 16px;
+  padding-right: 2rem;
+}
+select.itb-select:focus, input.itb-input:focus {
+  outline: none;
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(52,211,153,.15);
+}
+
+.date-range-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .6rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .65rem 1.1rem;
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Syne', sans-serif;
+  font-size: .85rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--t);
+  min-height: 40px;
+  letter-spacing: .02em;
+}
+.btn:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+
+.btn-primary {
+  background: var(--green);
+  color: #040810;
+}
+.btn-primary:hover { background: #2ec788; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(52,211,153,.3); }
+
+.btn-demo {
+  background: rgba(167,139,250,.12);
+  color: var(--paper);
+  border: 1px solid rgba(167,139,250,.28);
+}
+.btn-demo:hover { background: rgba(167,139,250,.2); transform: translateY(-1px); }
+
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text2);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--border2); background: var(--bg3); }
+
+.btn-toggle {
+  width: 100%;
+  justify-content: center;
+  background: var(--surface);
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+.btn-toggle.active {
+  background: rgba(52,211,153,.1);
+  color: var(--green);
+  border-color: rgba(52,211,153,.35);
+}
+
+.btn-pdf {
+  background: rgba(56,189,248,.1);
+  color: var(--blue);
+  border: 1px solid rgba(56,189,248,.25);
+}
+.btn-pdf:hover { background: rgba(56,189,248,.18); transform: translateY(-1px); }
+
+.note-info {
+  font-size: .78rem;
+  color: var(--muted);
+  background: rgba(52,211,153,.05);
+  border: 1px solid rgba(52,211,153,.12);
+  border-radius: var(--radius);
+  padding: .5rem .75rem;
+  display: flex;
+  gap: .4rem;
+  align-items: flex-start;
+}
+.note-info i { color: var(--green); margin-top: .1rem; flex-shrink: 0; }
+
+.savings-banner {
+  background: rgba(52,211,153,.07);
+  border: 1px solid rgba(52,211,153,.2);
+  border-radius: var(--radius);
+  padding: .8rem 1rem;
+  font-size: .82rem;
+  color: #6ee7b7;
+  line-height: 1.7;
+  animation: fadeUp .3s ease;
+}
+.savings-banner strong { color: var(--green); }
+
+/* ══════════════════════════════════════════════
+   KPI SUMMARY ROW
+══════════════════════════════════════════════ */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: .85rem;
+}
+.kpi-row.flash .kpi-card { animation: pulseGlow .9s ease; }
+@keyframes pulseGlow {
+  0%   { box-shadow: 0 0 0 rgba(52,211,153,0); }
+  50%  { box-shadow: 0 0 0 3px rgba(52,211,153,.2), 0 12px 36px rgba(52,211,153,.2); }
+  100% { box-shadow: 0 0 0 rgba(52,211,153,0); }
+}
+
+.kpi-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  animation: fadeUp .4s ease both;
+  transition: transform var(--t), box-shadow var(--t);
+}
+.kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,.3); }
+
+.kpi-label {
+  font-size: .68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: var(--muted);
+}
+
+.kpi-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1;
+  transition: color var(--t);
+}
+.kpi-value.elec  { color: var(--elec); }
+.kpi-value.water { color: var(--water); }
+.kpi-value.paper { color: var(--paper); }
+.kpi-value.clean { color: var(--clean); }
+
+.kpi-sub {
+  font-size: .72rem;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.kpi-delta {
+  font-size: .72rem;
+  font-weight: 700;
+  padding: .1rem .45rem;
+  border-radius: 999px;
+  background: rgba(52,211,153,.1);
+  color: var(--green);
+  border: 1px solid rgba(52,211,153,.2);
+  width: fit-content;
+}
+
+/* ══════════════════════════════════════════════
+   RESULT CARDS
+══════════════════════════════════════════════ */
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(285px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: transform var(--t), box-shadow var(--t);
+}
+.card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,.4); }
+
+.card-top {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: 1.1rem 1.2rem .8rem;
+}
+
+.card-icon {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.icon-elec  { background: var(--elec-dim);  color: var(--elec); }
+.icon-water { background: var(--water-dim); color: var(--water); }
+.icon-paper { background: var(--paper-dim); color: var(--paper); }
+.icon-clean { background: var(--clean-dim); color: var(--clean); }
+
+.card-top h3 { font-size: .95rem; font-weight: 700; flex: 1; letter-spacing: -.01em; }
+
+.unit-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .65rem;
+  background: var(--surface);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: .15rem .5rem;
+  border-radius: 5px;
+}
+
+.card-accent-elec  { border-top: 2px solid var(--elec); }
+.card-accent-water { border-top: 2px solid var(--water); }
+.card-accent-paper { border-top: 2px solid var(--paper); }
+.card-accent-clean { border-top: 2px solid var(--clean); }
+
+.card-body { padding: 0 1.2rem 1.2rem; }
+
+.data-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .5rem;
+  padding: .6rem 0;
+  border-bottom: 1px solid rgba(30,45,61,.8);
+}
+.data-row:last-child { border-bottom: none; }
+
+.row-label { font-size: .8rem; color: var(--muted); padding-top: .2rem; }
+.row-values { display: flex; flex-direction: column; align-items: flex-end; gap: .2rem; }
+
+.val-main {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  transition: color var(--t);
+}
+.val-secondary {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .9rem;
+  font-weight: 400;
+  color: var(--text2);
+}
+.val-old {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .75rem;
+  text-decoration: line-through;
+  color: var(--red);
+  opacity: .7;
+}
+.saving-pill {
+  font-size: .68rem;
+  font-weight: 700;
+  background: rgba(52,211,153,.1);
+  color: #6ee7b7;
+  border: 1px solid rgba(52,211,153,.2);
+  border-radius: 999px;
+  padding: .1rem .45rem;
+  animation: fadeUp .3s ease;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.reduction-on .val-main { color: var(--green); }
+
+/* ══════════════════════════════════════════════
+   SECTION TITLE
+══════════════════════════════════════════════ */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 1rem;
+  letter-spacing: -.01em;
+}
+.section-title i { color: var(--green); }
+.section-title .muted { font-size: .78rem; color: var(--muted); font-weight: 400; margin-left: .3rem; }
+
+/* ══════════════════════════════════════════════
+   CHARTS
+══════════════════════════════════════════════ */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+.chart-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.2rem;
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.chart-header h3 { font-size: .88rem; font-weight: 700; color: var(--text2); }
+.chart-unit { font-family: 'JetBrains Mono', monospace; font-size: .68rem; color: var(--muted); }
+
+.chart-wrap { position: relative; height: 200px; }
+
+/* ── COMBINED CHART ── */
+.chart-combined-wrap { position: relative; height: 300px; }
+
+/* ══════════════════════════════════════════════
+   ROADMAP SECTION
+══════════════════════════════════════════════ */
+.roadmap-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.year-filter {
+  display: flex;
+  gap: .4rem;
+}
+.year-btn {
+  font-family: 'Syne', sans-serif;
+  font-size: .75rem;
+  font-weight: 700;
+  padding: .3rem .8rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all var(--t);
+  letter-spacing: .04em;
+}
+.year-btn:hover { border-color: var(--border2); color: var(--text2); }
+.year-btn.active { background: rgba(52,211,153,.1); color: var(--green); border-color: rgba(52,211,153,.3); }
+
+.roadmap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.rm-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: .85rem;
+}
+
+.rm-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.rm-card-head h3 { font-size: .92rem; font-weight: 700; display: flex; align-items: center; gap: .4rem; }
+.rm-target {
+  font-size: .68rem;
+  font-weight: 700;
+  padding: .18rem .55rem;
+  border-radius: 999px;
+  background: rgba(251,191,36,.1);
+  color: var(--orange);
+  border: 1px solid rgba(251,191,36,.22);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.rm-steps { display: flex; flex-direction: column; gap: .55rem; }
+
+.rm-step {
+  background: var(--bg3);
+  border-radius: var(--radius);
+  padding: .65rem .85rem;
+  border-left: 3px solid var(--border2);
+  display: flex;
+  flex-direction: column;
+  gap: .22rem;
+  transition: opacity var(--t), transform var(--t);
+}
+.rm-step.y1 { border-left-color: var(--red); }
+.rm-step.y2 { border-left-color: var(--orange); }
+.rm-step.y3 { border-left-color: var(--green); }
+.rm-step.dimmed { opacity: .25; transform: scale(.98); }
+
+.step-meta { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; }
+.step-yr {
+  font-size: .65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+.ce-tag {
+  font-size: .65rem;
+  font-weight: 700;
+  padding: .1rem .42rem;
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.ce-r { background: rgba(248,113,113,.1); color: #fca5a5; }
+.ce-u { background: rgba(251,191,36,.1);  color: var(--orange); }
+.ce-c { background: rgba(52,211,153,.1);  color: #6ee7b7; }
+
+.step-desc { font-size: .8rem; color: var(--text2); line-height: 1.4; }
+.step-kpi  { font-size: .73rem; font-style: italic; color: var(--green); }
+
+/* Progress bar on roadmap cards */
+.rm-progress {
+  height: 3px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.rm-progress-bar {
+  height: 100%;
+  border-radius: 999px;
+  transition: width .6s cubic-bezier(.4,0,.2,1);
+}
+
+/* ══════════════════════════════════════════════
+   SIMULATOR STYLES
+══════════════════════════════════════════════ */
+.sim-measure {
+  display: flex;
+  gap: .75rem;
+  align-items: flex-start;
+  background: var(--bg3);
+  border-radius: var(--radius);
+  padding: .7rem .85rem;
+  border-left: 3px solid var(--border2);
+  cursor: pointer;
+  transition: all var(--t);
+  user-select: none;
+}
+.sim-measure:hover { background: #1a2535; }
+.sim-measure.active-elec   { border-left-color: var(--elec)  !important; background: rgba(251,191,36,.05)  !important; }
+.sim-measure.active-water  { border-left-color: var(--water) !important; background: rgba(56,189,248,.05) !important; }
+.sim-measure.active-paper  { border-left-color: var(--paper) !important; background: rgba(167,139,250,.05) !important; }
+.sim-measure.active-clean  { border-left-color: var(--clean) !important; background: rgba(52,211,153,.05)  !important; }
+
+.sim-check-area { position: relative; flex-shrink: 0; padding-top: .15rem; }
+.sim-check-area input[type="checkbox"] { position: absolute; opacity: 0; width: 0; height: 0; }
+.sim-checkmark {
+  display: block;
+  width: 20px; height: 20px;
+  border-radius: 5px;
+  border: 1.5px solid var(--border2);
+  background: var(--bg2);
+  transition: all var(--t);
+  position: relative;
+  flex-shrink: 0;
+}
+.sim-checkmark::after {
+  content: '';
+  position: absolute;
+  left: 5px; top: 2px;
+  width: 6px; height: 10px;
+  border: 2px solid white;
+  border-top: none; border-left: none;
+  transform: rotate(45deg) scale(0);
+  transition: transform .15s ease;
+}
+.sim-check-area input:checked ~ .sim-checkmark {
+  background: var(--green);
+  border-color: var(--green);
+  box-shadow: 0 0 10px rgba(52,211,153,.3);
+}
+.sim-check-area input:checked ~ .sim-checkmark::after { transform: rotate(45deg) scale(1); }
+
+.sim-measure-info { flex: 1; }
+.sim-measure-top { display: flex; align-items: center; justify-content: space-between; gap: .4rem; margin-bottom: .2rem; }
+
+.sim-badge {
+  font-size: .65rem;
+  font-weight: 700;
+  padding: .1rem .45rem;
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  flex-shrink: 0;
+}
+.sim-badge-elec  { background: rgba(251,191,36,.12); color: var(--elec);  border: 1px solid rgba(251,191,36,.25); }
+.sim-badge-water { background: rgba(56,189,248,.12); color: var(--water); border: 1px solid rgba(56,189,248,.25); }
+.sim-badge-paper { background: rgba(167,139,250,.12);color: var(--paper); border: 1px solid rgba(167,139,250,.25); }
+.sim-badge-clean { background: rgba(52,211,153,.12); color: var(--clean); border: 1px solid rgba(52,211,153,.25); }
+
+.sim-mini-row { display: flex; align-items: center; gap: .6rem; }
+.sim-mini-icon { font-size: .9rem; flex-shrink: 0; width: 18px; text-align: center; }
+.sim-abs-row { display: flex; align-items: center; justify-content: space-between; padding: .3rem 0; border-bottom: 1px solid rgba(30,45,61,.7); }
+.sim-abs-row:last-child { border-bottom: none; }
+
+@media (max-width: 860px) {
+  #sim-layout { grid-template-columns: 1fr !important; }
+}
+
+/* ══════════════════════════════════════════════
+   TIPS SECTION
+══════════════════════════════════════════════ */
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.tip-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.2rem;
+}
+
+.tip-card h3 {
+  font-size: .88rem;
+  font-weight: 700;
+  margin-bottom: .85rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.tip-card h3 span { font-size: 1.05rem; }
+
+.tip-list { display: flex; flex-direction: column; gap: .45rem; list-style: none; }
+.tip-list li {
+  font-size: .8rem;
+  color: var(--text2);
+  display: flex;
+  gap: .5rem;
+  align-items: flex-start;
+  line-height: 1.45;
+}
+.tip-list li::before {
+  content: '→';
+  color: var(--green);
+  flex-shrink: 0;
+  font-size: .78rem;
+  margin-top: .1rem;
+}
+
+/* ══════════════════════════════════════════════
+   IMPACT COMPARISON (new section)
+══════════════════════════════════════════════ */
+.impact-bar-list {
+  display: flex;
+  flex-direction: column;
+  gap: .85rem;
+}
+
+.impact-item {
+  display: grid;
+  grid-template-columns: 140px 1fr 90px;
+  align-items: center;
+  gap: .75rem;
+}
+
+.impact-label { font-size: .8rem; color: var(--text2); font-weight: 600; }
+.impact-track {
+  height: 8px;
+  background: var(--bg3);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+.impact-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width .8s cubic-bezier(.4,0,.2,1);
+}
+.impact-pct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .82rem;
+  color: var(--muted);
+  text-align: right;
+}
+
+/* ══════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════ */
+footer {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  text-align: center;
+  padding: 1.2rem;
+  font-size: .75rem;
+  color: var(--muted);
+  margin-top: auto;
+}
+
+/* ══════════════════════════════════════════════
+   ERROR
+══════════════════════════════════════════════ */
+.error-bar {
+  display: flex; align-items: center; gap: .7rem;
+  background: rgba(248,113,113,.08);
+  border: 1px solid rgba(248,113,113,.25);
+  border-radius: var(--radius);
+  padding: .75rem 1rem;
+  color: #fca5a5;
+  font-weight: 600;
+  font-size: .85rem;
+}
+
+[hidden] { display: none !important; }
+
+/* ══════════════════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes countUp {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.card, .ctrl-box, .chart-card, .rm-card, .tip-card, .kpi-card {
+  animation: fadeUp .35s ease both;
+}
+
+/* stagger children */
+.kpi-row .kpi-card:nth-child(1) { animation-delay: .05s; }
+.kpi-row .kpi-card:nth-child(2) { animation-delay: .1s; }
+.kpi-row .kpi-card:nth-child(3) { animation-delay: .15s; }
+.kpi-row .kpi-card:nth-child(4) { animation-delay: .2s; }
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════
+   RESPONSIVE — TABLET (≤ 900px)
+══════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .controls-panel { grid-template-columns: 1fr 1fr; }
+  .results-grid   { grid-template-columns: 1fr 1fr; }
+  .kpi-row        { grid-template-columns: repeat(2, 1fr); }
+  .charts-grid    { grid-template-columns: 1fr; }
+  .roadmap-grid   { grid-template-columns: 1fr 1fr; }
+  .tips-grid      { grid-template-columns: 1fr 1fr; }
+
+  /* Simulator: stack panel below measures on tablet */
+  #sim-layout {
+    grid-template-columns: 1fr !important;
+  }
+  #sim-layout > div:last-child {
+    position: static !important;
+  }
+}
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE — MOBILE (≤ 600px)
+══════════════════════════════════════════════ */
+@media (max-width: 600px) {
+  /* ── Header ── */
+  .site-header { padding: 1rem 1rem 0; }
+  .header-inner { gap: .75rem; }
+  .brand-icon   { width: 44px; height: 44px; font-size: 1.2rem; border-radius: 12px; }
+  .brand-text h1 { font-size: 1.05rem; }
+  .brand-text p  { font-size: .72rem; }
+  .header-tags   { display: none; }
+
+  /* ── Nav tabs: scroll horizontally ── */
+  .nav-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 0;
+    padding-bottom: 1px;
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .nav-tab {
+    padding: .65rem .9rem;
+    font-size: .78rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .nav-tab i { font-size: .75rem; }
+
+  /* ── Layout ── */
+  .app { padding: .85rem .75rem; gap: 1.1rem; }
+
+  /* ── Controls panel ── */
+  .controls-panel { grid-template-columns: 1fr; }
+  .select-row     { flex-direction: column; }
+  .btn-primary    { width: 100%; justify-content: center; }
+  .date-range-row { grid-template-columns: 1fr; }
+  .ctrl-box       { padding: 1rem; }
+
+  /* ── KPI row ── */
+  .kpi-row { grid-template-columns: repeat(2, 1fr); gap: .6rem; }
+  .kpi-card { padding: .85rem .9rem; }
+  .kpi-value { font-size: 1.25rem; }
+  .kpi-label { font-size: .62rem; }
+
+  /* ── Results grid ── */
+  .results-grid { grid-template-columns: 1fr; }
+
+  /* ── Data rows ── */
+  .val-main { font-size: 1rem; }
+
+  /* ── Charts ── */
+  .charts-grid { grid-template-columns: 1fr; }
+  .chart-wrap  { height: 170px; }
+  .chart-combined-wrap { height: 220px; }
+
+  /* ── Roadmap ── */
+  .roadmap-header { flex-direction: column; align-items: flex-start; gap: .6rem; }
+  .roadmap-grid   { grid-template-columns: 1fr; }
+  .year-filter    { flex-wrap: wrap; }
+  .year-btn       { font-size: .7rem; padding: .25rem .65rem; }
+
+  /* ── Tips ── */
+  .tips-grid { grid-template-columns: 1fr; }
+  .tip-card  { padding: 1rem; }
+
+  /* ── Impact bars ── */
+  .impact-item { grid-template-columns: 95px 1fr 55px; gap: .5rem; }
+  .impact-label { font-size: .72rem; }
+  .impact-pct   { font-size: .72rem; }
+
+  /* ── Section title ── */
+  .section-title { font-size: .85rem; }
+
+  /* ── Simulator layout ── */
+  #sim-layout { grid-template-columns: 1fr !important; }
+  #sim-layout > div:last-child { position: static !important; }
+
+  /* Simulator right panel: horizontal mini layout */
+  #sim-layout > div:last-child .rm-card:first-child {
+    order: -1;
+  }
+
+  /* sim donut smaller on mobile */
+  #sim-donut { width: 130px !important; height: 130px !important; }
+  #sim-total-pct { font-size: 1.4rem !important; }
+
+  /* sim measure cards compact */
+  .sim-measure { padding: .6rem .7rem; gap: .6rem; }
+  .sim-checkmark { width: 18px; height: 18px; }
+  .sim-checkmark::after { left: 4px; top: 2px; width: 5px; height: 9px; }
+  .step-desc { font-size: .75rem; }
+  .step-kpi  { font-size: .68rem; }
+  .sim-badge { font-size: .6rem; padding: .08rem .38rem; }
+
+  /* sim right panel: not sticky, full width */
+  .sim-right-panel { position: static !important; }
+
+  /* Donut + mini bars side by side inside the card on mobile */
+  .sim-donut-card-inner {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding: .25rem 0 .5rem !important;
+    gap: 1rem !important;
+    text-align: left !important;
+  }
+  .sim-mini-bars { flex: 1; }
+  .sim-donut-center { flex-shrink: 0; }
+  #sim-donut { width: 110px !important; height: 110px !important; }
+  #sim-total-pct { font-size: 1.2rem !important; }
+
+  /* Hide absolute values card on mobile (mini bars cover it) */
+  .sim-abs-card { display: none; }
+
+  /* Quick action buttons full width */
+  .sim-actions .btn { flex: 1; justify-content: center; }
+
+  /* rm cards */
+  .rm-card  { padding: 1rem; }
+  .rm-step  { padding: .55rem .7rem; }
+
+  /* Buttons full-width on mobile */
+  .btn-pdf { width: 100%; justify-content: center; }
+}
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE — VERY SMALL (≤ 380px)
+══════════════════════════════════════════════ */
+@media (max-width: 380px) {
+  .kpi-row    { grid-template-columns: 1fr 1fr; }
+  .kpi-value  { font-size: 1.1rem; }
+  .nav-tab    { padding: .6rem .7rem; font-size: .72rem; }
+  .brand-text h1 { font-size: .95rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+@media print {
+  .btn, button, .nav-tabs { display: none !important; }
+  body { background: white; color: #000; }
+  .card, .chart-card, .rm-card, .tip-card { border: 1px solid #ccc; break-inside: avoid; }
+}
+
+/* ══════════════════════════════════════════════
+   AMBIENT PARTICLES CANVAS
+══════════════════════════════════════════════ */
+#ambient-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: .7;
+}
+
+/* ══════════════════════════════════════════════
+   ENHANCED KPI HOVER GLOW
+══════════════════════════════════════════════ */
+.kpi-card {
+  position: relative;
+  overflow: hidden;
+}
+.kpi-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  opacity: 0;
+  transition: opacity .4s ease;
+  pointer-events: none;
+}
+.kpi-card:has(.kpi-value.elec)::after  { background: radial-gradient(ellipse at 50% 100%, rgba(251,191,36,.12) 0%, transparent 70%); }
+.kpi-card:has(.kpi-value.water)::after { background: radial-gradient(ellipse at 50% 100%, rgba(56,189,248,.12) 0%, transparent 70%); }
+.kpi-card:has(.kpi-value.paper)::after { background: radial-gradient(ellipse at 50% 100%, rgba(167,139,250,.12) 0%, transparent 70%); }
+.kpi-card:has(.kpi-value.clean)::after { background: radial-gradient(ellipse at 50% 100%, rgba(52,211,153,.12) 0%, transparent 70%); }
+.kpi-card:hover::after { opacity: 1; }
+
+/* ══════════════════════════════════════════════
+   CARD SHIMMER EFFECT ON HOVER
+══════════════════════════════════════════════ */
+.card {
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -75%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255,255,255,.04) 50%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  transition: left .6s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+.card:hover::before { left: 125%; }
+
+/* ══════════════════════════════════════════════
+   BRAND ICON PULSE RING
+══════════════════════════════════════════════ */
+@keyframes brandPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(52,211,153,.4), 0 0 30px rgba(52,211,153,.15), inset 0 1px 0 rgba(255,255,255,.05); }
+  70%  { box-shadow: 0 0 0 10px rgba(52,211,153,0), 0 0 30px rgba(52,211,153,.15), inset 0 1px 0 rgba(255,255,255,.05); }
+  100% { box-shadow: 0 0 0 0 rgba(52,211,153,0), 0 0 30px rgba(52,211,153,.15), inset 0 1px 0 rgba(255,255,255,.05); }
+}
+.brand-icon {
+  animation: brandPulse 3s ease infinite;
+}
+
+/* ══════════════════════════════════════════════
+   NAV TAB ACTIVE INDICATOR GLOW
+══════════════════════════════════════════════ */
+.nav-tab.active {
+  text-shadow: 0 0 20px rgba(52,211,153,.5);
+}
+
+/* ══════════════════════════════════════════════
+   COUNTER ROLL ANIMATION
+══════════════════════════════════════════════ */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.kpi-value {
+  animation: countUp .5s ease both;
+}
+
+/* ══════════════════════════════════════════════
+   FLOATING DATA BADGE (tooltip-like on hover)
+══════════════════════════════════════════════ */
+@keyframes floatBadge {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-4px); }
+}
+.kpi-delta {
+  animation: floatBadge 2.5s ease infinite;
+}
+
+/* ══════════════════════════════════════════════
+   SCAN LINE EFFECT on charts
+══════════════════════════════════════════════ */
+.chart-card {
+  position: relative;
+  overflow: hidden;
+}
+.chart-card::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(52,211,153,.3), transparent);
+  top: -2px;
+  animation: scanLine 4s ease infinite;
+  pointer-events: none;
+}
+@keyframes scanLine {
+  0%   { top: -2px; opacity: 0; }
+  5%   { opacity: 1; }
+  95%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* ══════════════════════════════════════════════
+   TOAST NOTIFICATION
+══════════════════════════════════════════════ */
+#itb-toast {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  background: var(--bg2);
+  border: 1px solid rgba(52,211,153,.3);
+  border-radius: var(--radius-lg);
+  padding: .75rem 1.2rem;
+  font-size: .82rem;
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5), 0 0 20px rgba(52,211,153,.1);
+  z-index: 9999;
+  transform: translateY(120%);
+  transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+  pointer-events: none;
+}
+#itb-toast.show { transform: translateY(0); }
+#itb-toast i { font-size: .9rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  #ambient-canvas { display: none; }
+  .brand-icon { animation: none; }
+  .kpi-delta  { animation: none; }
+  .chart-card::after { display: none; }
+  .card::before { display: none; }
+}
+
+</style>
 </head>
 <body>
 
-    <header class="main-header" role="banner">
-        <div class="header-content">
-            <div class="header-badge">Fase 3 · Economia Circular</div>
-            <h1><i class="fa-solid fa-leaf" aria-hidden="true"></i> Calculadora Energètica ITB</h1>
-            <p>Anàlisi de consums reals amb variabilitat estacional · Pla de reducció 30% · 3 anys</p>
-        </div>
-    </header>
+<!-- AMBIENT PARTICLES -->
+<canvas id="ambient-canvas"></canvas>
 
-    <main class="dashboard" id="main-content">
+<!-- TOAST -->
+<div id="itb-toast"><i class="fa-solid fa-leaf"></i> <span id="toast-msg">Calculating...</span></div>
 
-        <!-- ── CONTROLS ─────────────────────────────────────────────── -->
-        <section class="panel-control" aria-labelledby="heading-periode">
-            <div class="control-box">
-                <h2 id="heading-periode">
-                    <i class="fa-solid fa-sliders" aria-hidden="true"></i> Configuració del Càlcul
-                </h2>
-                <div class="selector-grup">
-                    <label for="periode-select" class="select-label">Període d'anàlisi</label>
-                    <select id="periode-select" class="modern-select">
-                        <option value="anual">Pròxim Any Complet (12 mesos)</option>
-                        <option value="curs">Curs Escolar (Setembre–Juny · 10 mesos)</option>
-                        <option value="hivern">Període d'Hivern (Desembre–Febrer · 3 mesos)</option>
-                    </select>
-                    <button id="btn-calcular" class="btn-primari"
-                            aria-label="Recalcular el consum amb nova variabilitat">
-                        <i class="fa-solid fa-rotate" aria-hidden="true"></i>
-                        <span>Recalcular</span>
-                    </button>
-                </div>
-                <p class="variability-note">
-                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-                    Cada càlcul aplica una <strong>variabilitat aleatòria ±2–5%</strong> per simular fluctuacions reals.
-                </p>
-            </div>
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="brand-icon">🌿</div>
+      <div class="brand-text">
+        <h1>Sustainable Calculator · ITB</h1>
+        <p>Real Consumption Analysis · Seasonal Variability · Circular Economy</p>
+      </div>
+    </div>
+    <div class="header-tags">
+      <span class="tag tag-green">⚡ 8 Indicators</span>
+      <span class="tag tag-blue">📊 Charts</span>
+      <span class="tag tag-yellow">−30% Reduction</span>
+      <span class="tag tag-purple">📅 Date Range</span>
+    </div>
+  </div>
 
-            <div class="control-box reduccio-box" aria-labelledby="heading-pla">
-                <h2 id="heading-pla">
-                    <i class="fa-solid fa-recycle" aria-hidden="true"></i> Pla d'Acció Circular
-                </h2>
-                <p class="reduccio-desc">
-                    Activa les millores projectades a 3 anys.<br>
-                    Veuràs l'estalvi real respecte al consum base.
-                </p>
-                <button id="btn-reduccio" class="btn-inactiu"
-                        aria-pressed="false"
-                        aria-label="Activar el Pla de Reducció del 30%">
-                    <i class="fa-solid fa-power-off" aria-hidden="true"></i>
-                    <span>Activar Reducció (−30%)</span>
-                </button>
-                <!-- Live saving summary injected by JS -->
-                <div id="saving-summary" class="saving-summary" hidden aria-live="polite"></div>
-            </div>
-        </section>
+  <!-- NAV TABS -->
+  <nav class="nav-tabs" role="tablist">
+    <button class="nav-tab active" data-tab="calculadora" role="tab">
+      <i class="fa-solid fa-calculator"></i> <span>Calculator</span>
+    </button>
+    <button class="nav-tab" data-tab="grafics" role="tab">
+      <i class="fa-solid fa-chart-line"></i> <span>Charts</span>
+    </button>
+    <button class="nav-tab" data-tab="pla" role="tab">
+      <i class="fa-solid fa-road"></i> <span>3-Year Plan</span>
+    </button>
+    <button class="nav-tab" data-tab="consells" role="tab">
+      <i class="fa-solid fa-lightbulb"></i> <span>Tips</span>
+    </button>
+  </nav>
+</header>
 
-        <!-- ── RESULTS — 10 calculations (5 resources × 2 periods) ───── -->
-        <section class="resultats-grid" aria-labelledby="heading-resultats"
-                 aria-live="polite" aria-atomic="true">
-            <h2 id="heading-resultats" class="visually-hidden">Resultats del Càlcul</h2>
+<div class="app" id="app-root">
 
-            <!-- ELECTRICITY -->
-            <article class="card card-electricitat" data-resource="elec">
-                <div class="card-header">
-                    <div class="card-icon" aria-hidden="true"><i class="fa-solid fa-bolt"></i></div>
-                    <h3>Electricitat</h3>
-                    <span class="unit-badge">kWh</span>
-                </div>
-                <div class="dades">
-                    <div class="dada-row">
-                        <span class="dada-label">Pròxim any</span>
-                        <div class="dada-values">
-                            <span id="res-elec-any-original" class="numero original-value">–</span>
-                            <span id="res-elec-any" class="numero numero-principal">–</span>
-                            <span id="badge-elec-any" class="saving-badge" hidden></span>
-                        </div>
-                    </div>
-                    <div class="dada-row">
-                        <span class="dada-label">Període triat</span>
-                        <div class="dada-values">
-                            <span id="res-elec-periode-original" class="numero-secundari original-value">–</span>
-                            <span id="res-elec-periode" class="numero-secundari">–</span>
-                            <span id="badge-elec-periode" class="saving-badge saving-badge--sm" hidden></span>
-                        </div>
-                    </div>
-                </div>
-            </article>
+  <!-- ERROR -->
+  <div id="error-banner" class="error-bar" role="alert" hidden>
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <span id="error-msg">Error loading data.</span>
+  </div>
 
-            <!-- WATER -->
-            <article class="card card-aigua" data-resource="aigua">
-                <div class="card-header">
-                    <div class="card-icon" aria-hidden="true"><i class="fa-solid fa-droplet"></i></div>
-                    <h3>Aigua</h3>
-                    <span class="unit-badge">L</span>
-                </div>
-                <div class="dades">
-                    <div class="dada-row">
-                        <span class="dada-label">Pròxim any</span>
-                        <div class="dada-values">
-                            <span id="res-aigua-any-original" class="numero original-value">–</span>
-                            <span id="res-aigua-any" class="numero numero-principal">–</span>
-                            <span id="badge-aigua-any" class="saving-badge" hidden></span>
-                        </div>
-                    </div>
-                    <div class="dada-row">
-                        <span class="dada-label">Període triat</span>
-                        <div class="dada-values">
-                            <span id="res-aigua-periode-original" class="numero-secundari original-value">–</span>
-                            <span id="res-aigua-periode" class="numero-secundari">–</span>
-                            <span id="badge-aigua-periode" class="saving-badge saving-badge--sm" hidden></span>
-                        </div>
-                    </div>
-                </div>
-            </article>
+  <!-- ══════════════════════════════════════════
+       TAB 1: CALCULADORA
+  ══════════════════════════════════════════ -->
+  <div id="tab-calculadora" class="page-section active">
 
-            <!-- OFFICE SUPPLIES -->
-            <article class="card card-oficina" data-resource="ofi">
-                <div class="card-header">
-                    <div class="card-icon" aria-hidden="true"><i class="fa-solid fa-paperclip"></i></div>
-                    <h3>Consumibles Oficina</h3>
-                    <span class="unit-badge">uts</span>
-                </div>
-                <div class="dades">
-                    <div class="dada-row">
-                        <span class="dada-label">Pròxim any</span>
-                        <div class="dada-values">
-                            <span id="res-ofi-any-original" class="numero original-value">–</span>
-                            <span id="res-ofi-any" class="numero numero-principal">–</span>
-                            <span id="badge-ofi-any" class="saving-badge" hidden></span>
-                        </div>
-                    </div>
-                    <div class="dada-row">
-                        <span class="dada-label">Període triat</span>
-                        <div class="dada-values">
-                            <span id="res-ofi-periode-original" class="numero-secundari original-value">–</span>
-                            <span id="res-ofi-periode" class="numero-secundari">–</span>
-                            <span id="badge-ofi-periode" class="saving-badge saving-badge--sm" hidden></span>
-                        </div>
-                    </div>
-                </div>
-            </article>
+    <!-- Controls -->
+    <div class="controls-panel">
 
-            <!-- CLEANING -->
-            <article class="card card-neteja" data-resource="net">
-                <div class="card-header">
-                    <div class="card-icon" aria-hidden="true"><i class="fa-solid fa-soap"></i></div>
-                    <h3>Productes Neteja</h3>
-                    <span class="unit-badge">uts</span>
-                </div>
-                <div class="dades">
-                    <div class="dada-row">
-                        <span class="dada-label">Pròxim any</span>
-                        <div class="dada-values">
-                            <span id="res-net-any-original" class="numero original-value">–</span>
-                            <span id="res-net-any" class="numero numero-principal">–</span>
-                            <span id="badge-net-any" class="saving-badge" hidden></span>
-                        </div>
-                    </div>
-                    <div class="dada-row">
-                        <span class="dada-label">Període triat</span>
-                        <div class="dada-values">
-                            <span id="res-net-periode-original" class="numero-secundari original-value">–</span>
-                            <span id="res-net-periode" class="numero-secundari">–</span>
-                            <span id="badge-net-periode" class="saving-badge saving-badge--sm" hidden></span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- ── 5ª TARGETA: MANTENIMENT I RESIDUS ──────────────────── -->
-            <!-- Nova categoria: costos de manteniment i gestió de residus en €  -->
-            <article class="card card-manteniment" data-resource="mant">
-                <div class="card-header">
-                    <div class="card-icon" aria-hidden="true"><i class="fa-solid fa-wrench"></i></div>
-                    <h3>Manteniment i Residus</h3>
-                    <span class="unit-badge">€</span>
-                </div>
-                <div class="dades">
-                    <!-- Calc 9: cost anual de manteniment i residus -->
-                    <div class="dada-row">
-                        <span class="dada-label">Pròxim any</span>
-                        <div class="dada-values">
-                            <span id="res-mant-any-original" class="numero original-value">–</span>
-                            <span id="res-mant-any" class="numero numero-principal">–</span>
-                            <span id="badge-mant-any" class="saving-badge" hidden></span>
-                        </div>
-                    </div>
-                    <!-- Calc 10: cost pel període triat -->
-                    <div class="dada-row">
-                        <span class="dada-label">Període triat</span>
-                        <div class="dada-values">
-                            <span id="res-mant-periode-original" class="numero-secundari original-value">–</span>
-                            <span id="res-mant-periode" class="numero-secundari">–</span>
-                            <span id="badge-mant-periode" class="saving-badge saving-badge--sm" hidden></span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-        </section>
-
-        <!-- ── GRÀFIC DE CICLES ESTACIONALS ──────────────────────────── -->
-        <!--
-            Secció analítica amb Chart.js.
-            Mostra dues línies mensuals (Electricitat i Aigua) per justificar
-            la variabilitat estacional de la rúbrica:
-              · Electricitat puja a l'hivern (dic–feb) i baixa a l'estiu.
-              · Aigua puja a l'estiu (jun–ago) i baixa a l'hivern.
-        -->
-        <section class="chart-section" aria-labelledby="heading-grafic">
-            <div class="chart-header">
-                <h2 id="heading-grafic">
-                    <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
-                    Cicles Estacionals · Electricitat vs Aigua (12 mesos)
-                </h2>
-                <p class="subtitol-seccio">
-                    Comparació del consum mensual base vs. projecció amb plans de reducció actius.
-                    <br>Observa com l'electricitat puja a l'hivern i l'aigua creix a l'estiu.
-                </p>
-                <!-- Legend chips -->
-                <div class="chart-legend-chips" aria-hidden="true">
-                    <span class="legend-chip legend-elec">
-                        <span class="legend-dot"></span> Electricitat (kWh/dia · mig)
-                    </span>
-                    <span class="legend-chip legend-aigua">
-                        <span class="legend-dot"></span> Aigua (L/dia · mitja)
-                    </span>
-                </div>
-            </div>
-            <div class="chart-wrapper">
-                <canvas id="seasonal-chart" role="img"
-                        aria-label="Gràfic de línies amb els cicles estacionals d'electricitat i aigua"></canvas>
-            </div>
-        </section>
-
-        <!-- ── 3-YEAR CIRCULAR ECONOMY ROADMAP ───────────────────────── -->
-        <section class="roadmap-section" aria-labelledby="heading-roadmap">
-            <div class="roadmap-header">
-                <h2 id="heading-roadmap">
-                    <i class="fa-solid fa-arrows-spin" aria-hidden="true"></i>
-                    Pla d'Economia Circular · 3 Anys · −30%
-                </h2>
-                <p class="subtitol-seccio">
-                    Cada acció segueix els principis de l'economia circular:
-                    <strong>Reduir → Reutilitzar → Reciclar</strong>.
-                    Els indicadors d'èxit són mesurables i temporitzats.
-                </p>
-
-                <!-- CE Principles legend -->
-                <div class="ce-legend" aria-label="Llegenda de principis d'economia circular">
-                    <span class="ce-pill ce-reduce">♻ Reduir</span>
-                    <span class="ce-pill ce-reuse">↩ Reutilitzar</span>
-                    <span class="ce-pill ce-recycle">🔄 Reciclar</span>
-                </div>
-            </div>
-
-            <!-- Year timeline strip -->
-            <div class="year-strip" aria-label="Línia de temps dels tres anys">
-                <div class="year-marker year-1">Any 1 · Curt termini</div>
-                <div class="year-connector" aria-hidden="true"></div>
-                <div class="year-marker year-2">Any 2 · Mig termini</div>
-                <div class="year-connector" aria-hidden="true"></div>
-                <div class="year-marker year-3">Any 3 · Llarg termini</div>
-            </div>
-
-            <!-- Resource roadmap cards -->
-            <div class="roadmap-grid">
-
-                <!-- ELECTRICITY CARD -->
-                <div class="roadmap-card roadmap-electricitat">
-                    <div class="roadmap-card-title">
-                        <span class="roadmap-icon">⚡</span>
-                        <strong>Electricitat</strong>
-                        <span class="target-badge">Objectiu: −30% xarxa</span>
-                    </div>
-                    <div class="roadmap-kpis">
-                        <span class="kpi-chip">
-                            <i class="fa-solid fa-bullseye" aria-hidden="true"></i>
-                            KPI: &lt;100 kWh/dia de xarxa
-                        </span>
-                        <span class="kpi-chip kpi-measurable">
-                            <i class="fa-solid fa-chart-simple" aria-hidden="true"></i>
-                            Mesura: Comptador intel·ligent mensual
-                        </span>
-                    </div>
-                    <ol class="roadmap-steps">
-                        <li class="step step-y1">
-                            <span class="step-year">Any 1</span>
-                            <span class="ce-tag ce-reduce">♻ Reduir</span>
-                            <p>Auditoria de standby · Termòstats 19°C/25°C</p>
-                            <em class="step-indicator">Indicador: −5% en factura trimestral</em>
-                        </li>
-                        <li class="step step-y2">
-                            <span class="step-year">Any 2</span>
-                            <span class="ce-tag ce-reuse">↩ Reutilitzar</span>
-                            <p>Substitució fluorescents per LEDs intel·ligents amb sensor de presència</p>
-                            <em class="step-indicator">Indicador: −15% consum il·luminació</em>
-                        </li>
-                        <li class="step step-y3">
-                            <span class="step-year">Any 3</span>
-                            <span class="ce-tag ce-recycle">🔄 Reciclar</span>
-                            <p>Ampliació panells solars +15 kWp · Energia renovable pròpia</p>
-                            <em class="step-indicator">Indicador: 40% autosuficiència elèctrica</em>
-                        </li>
-                    </ol>
-                </div>
-
-                <!-- WATER CARD -->
-                <div class="roadmap-card roadmap-aigua">
-                    <div class="roadmap-card-title">
-                        <span class="roadmap-icon">💧</span>
-                        <strong>Aigua</strong>
-                        <span class="target-badge">Objectiu: −30% consum</span>
-                    </div>
-                    <div class="roadmap-kpis">
-                        <span class="kpi-chip">
-                            <i class="fa-solid fa-bullseye" aria-hidden="true"></i>
-                            KPI: Pic &lt;400 L/hora (ara 600)
-                        </span>
-                        <span class="kpi-chip kpi-measurable">
-                            <i class="fa-solid fa-chart-simple" aria-hidden="true"></i>
-                            Mesura: Comptador digital setmanal
-                        </span>
-                    </div>
-                    <ol class="roadmap-steps">
-                        <li class="step step-y1">
-                            <span class="step-year">Any 1</span>
-                            <span class="ce-tag ce-reduce">♻ Reduir</span>
-                            <p>Instal·lació d'airejadors a totes les aixetes del centre</p>
-                            <em class="step-indicator">Indicador: −10% litres/mes en 6 mesos</em>
-                        </li>
-                        <li class="step step-y2">
-                            <span class="step-year">Any 2</span>
-                            <span class="ce-tag ce-reduce">♻ Reduir</span>
-                            <p>Cisternes de doble descàrrega a tots els WC</p>
-                            <em class="step-indicator">Indicador: −8 L per cicle WC</em>
-                        </li>
-                        <li class="step step-y3">
-                            <span class="step-year">Any 3</span>
-                            <span class="ce-tag ce-recycle">🔄 Reciclar</span>
-                            <p>Sistema de recollida d'aigües pluvials per reg de jardins</p>
-                            <em class="step-indicator">Indicador: 100% reg extern amb aigua reciclada</em>
-                        </li>
-                    </ol>
-                </div>
-
-                <!-- OFFICE CARD -->
-                <div class="roadmap-card roadmap-oficina">
-                    <div class="roadmap-card-title">
-                        <span class="roadmap-icon">📝</span>
-                        <strong>Consumibles Oficina</strong>
-                        <span class="target-badge">Objectiu: −30% paper</span>
-                    </div>
-                    <div class="roadmap-kpis">
-                        <span class="kpi-chip">
-                            <i class="fa-solid fa-bullseye" aria-hidden="true"></i>
-                            KPI: &lt;5 paquets paper/mes
-                        </span>
-                        <span class="kpi-chip kpi-measurable">
-                            <i class="fa-solid fa-chart-simple" aria-hidden="true"></i>
-                            Mesura: Registre de comandes mensual
-                        </span>
-                    </div>
-                    <ol class="roadmap-steps">
-                        <li class="step step-y1">
-                            <span class="step-year">Any 1</span>
-                            <span class="ce-tag ce-reduce">♻ Reduir</span>
-                            <p>Política "Zero Paper" obligatòria a Moodle i comunicats digitals</p>
-                            <em class="step-indicator">Indicador: 0 fotocòpies d'avisos interns</em>
-                        </li>
-                        <li class="step step-y2">
-                            <span class="step-year">Any 2</span>
-                            <span class="ce-tag ce-reuse">↩ Reutilitzar</span>
-                            <p>Compra exclusiva de retoladors i bolígrafs recarregables</p>
-                            <em class="step-indicator">Indicador: −100% residus de plàstic d'un sol ús</em>
-                        </li>
-                        <li class="step step-y3">
-                            <span class="step-year">Any 3</span>
-                            <span class="ce-tag ce-recycle">🔄 Reciclar</span>
-                            <p>Digitalització total de tràmits administratius i arxiu en núvol</p>
-                            <em class="step-indicator">Indicador: 0 expedients físics nous</em>
-                        </li>
-                    </ol>
-                </div>
-
-                <!-- CLEANING CARD -->
-                <div class="roadmap-card roadmap-neteja">
-                    <div class="roadmap-card-title">
-                        <span class="roadmap-icon">🧼</span>
-                        <strong>Productes Neteja</strong>
-                        <span class="target-badge">Objectiu: −30% residus</span>
-                    </div>
-                    <div class="roadmap-kpis">
-                        <span class="kpi-chip">
-                            <i class="fa-solid fa-bullseye" aria-hidden="true"></i>
-                            KPI: 0 plàstics d'un sol ús
-                        </span>
-                        <span class="kpi-chip kpi-measurable">
-                            <i class="fa-solid fa-chart-simple" aria-hidden="true"></i>
-                            Mesura: Auditoria de residus trimestral
-                        </span>
-                    </div>
-                    <ol class="roadmap-steps">
-                        <li class="step step-y1">
-                            <span class="step-year">Any 1</span>
-                            <span class="ce-tag ce-reduce">♻ Reduir</span>
-                            <p>Substitució de paper eixugamans per assecadors d'aire de baix consum</p>
-                            <em class="step-indicator">Indicador: −90% compra de paper eixugamans</em>
-                        </li>
-                        <li class="step step-y2">
-                            <span class="step-year">Any 2</span>
-                            <span class="ce-tag ce-reuse">↩ Reutilitzar</span>
-                            <p>Compra de sabó i productes a granel en dipòsits reutilitzables</p>
-                            <em class="step-indicator">Indicador: −80% envasos plàstics comprats</em>
-                        </li>
-                        <li class="step step-y3">
-                            <span class="step-year">Any 3</span>
-                            <span class="ce-tag ce-recycle">🔄 Reciclar</span>
-                            <p>Ús exclusiu de productes de neteja probiòtics i ecològics certificats</p>
-                            <em class="step-indicator">Indicador: Certificació ISO 14001 del centre</em>
-                        </li>
-                    </ol>
-                </div>
-
-                <!-- MAINTENANCE & WASTE ROADMAP CARD -->
-                <div class="roadmap-card roadmap-manteniment">
-                    <div class="roadmap-card-title">
-                        <span class="roadmap-icon">🔧</span>
-                        <strong>Manteniment i Residus</strong>
-                        <span class="target-badge">Objectiu: −30% cost</span>
-                    </div>
-                    <div class="roadmap-kpis">
-                        <span class="kpi-chip">
-                            <i class="fa-solid fa-bullseye" aria-hidden="true"></i>
-                            KPI: Reducció cost residus &lt;800 €/mes
-                        </span>
-                        <span class="kpi-chip kpi-measurable">
-                            <i class="fa-solid fa-chart-simple" aria-hidden="true"></i>
-                            Mesura: Factures de gestió mensual
-                        </span>
-                    </div>
-                    <ol class="roadmap-steps">
-                        <li class="step step-y1">
-                            <span class="step-year">Any 1</span>
-                            <span class="ce-tag ce-reduce">♻ Reduir</span>
-                            <p>Implantació de contenidors de separació selectiva en cada aula</p>
-                            <em class="step-indicator">Indicador: −20% residus barrejats</em>
-                        </li>
-                        <li class="step step-y2">
-                            <span class="step-year">Any 2</span>
-                            <span class="ce-tag ce-reuse">↩ Reutilitzar</span>
-                            <p>Programa de reparació d'equips i mobiliari en lloc de substitució</p>
-                            <em class="step-indicator">Indicador: −40% cost de reposició d'equips</em>
-                        </li>
-                        <li class="step step-y3">
-                            <span class="step-year">Any 3</span>
-                            <span class="ce-tag ce-recycle">🔄 Reciclar</span>
-                            <p>Gestió de residus electrònics (RAEE) amb empresa certificada</p>
-                            <em class="step-indicator">Indicador: 100% RAEE gestionats correctament</em>
-                        </li>
-                    </ol>
-                </div>
-
-            </div><!-- /.roadmap-grid -->
-        </section>
-
-        <!-- Error banner -->
-        <div id="error-banner" class="error-banner" role="alert" aria-live="assertive" hidden>
-            <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
-            <span id="error-message">S'ha produït un error en carregar les dades.</span>
+      <div class="ctrl-box">
+        <h2><i class="fa-solid fa-sliders"></i> Calculation Settings</h2>
+        <div>
+          <label class="field-lbl" for="periode-select">Predefined period</label>
+          <div class="select-row">
+            <select id="periode-select" class="itb-select">
+              <option value="anual">Next Full Year (12 months)</option>
+              <option value="curs">Academic Year (Sep–Jun · 10 months)</option>
+              <option value="hivern">Winter (Dec–Feb · 3 months)</option>
+              <option value="custom">Custom date range…</option>
+            </select>
+            <button id="btn-calcular" class="btn btn-primary">
+              <i class="fa-solid fa-rotate"></i> Calculate
+            </button>
+          </div>
+          <div class="demo-row">
+            <button id="btn-demo" class="btn btn-demo" type="button" title="Load a visual demonstration scenario">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Demo Mode
+            </button>
+          </div>
         </div>
 
-    </main>
-    <script src="js/script.js"></script>
+        <!-- Custom date range (shown only when "custom" selected) -->
+        <div id="custom-date-block" hidden>
+          <label class="field-lbl">Custom date range</label>
+          <div class="date-range-row">
+            <div>
+              <label class="field-lbl" for="date-from" style="font-size:.65rem">From</label>
+              <input type="date" id="date-from" class="itb-input" />
+            </div>
+            <div>
+              <label class="field-lbl" for="date-to" style="font-size:.65rem">To</label>
+              <input type="date" id="date-to" class="itb-input" />
+            </div>
+          </div>
+          <p class="note-info" style="margin-top:.5rem">
+            <i class="fa-solid fa-circle-info"></i>
+            The system interpolates seasonal factors for the selected range.
+          </p>
+        </div>
+
+        <p class="note-info">
+          <i class="fa-solid fa-circle-info"></i>
+          Each calculation applies <strong>random variability ±2–5%</strong> to simulate real fluctuations.
+        </p>
+      </div>
+
+      <div class="ctrl-box">
+        <h2><i class="fa-solid fa-recycle"></i> Circular Action Plan</h2>
+        <p style="font-size:.82rem;color:var(--muted);">Activate the 3-year projected improvements to see real savings versus baseline consumption.</p>
+        <button id="btn-reduccio" class="btn btn-toggle" aria-pressed="false">
+          <i class="fa-solid fa-power-off"></i>
+          <span>Activate Reduction (−30%)</span>
+        </button>
+        <div id="saving-summary" class="savings-banner" hidden aria-live="polite"></div>
+      </div>
+
+      <div class="ctrl-box">
+        <h2><i class="fa-solid fa-file-pdf"></i> Export</h2>
+        <p style="font-size:.82rem;color:var(--muted);">Export the full report with all indicators and reduction plan.</p>
+        <button id="btn-pdf" class="btn btn-pdf" onclick="exportPDF()">
+          <i class="fa-solid fa-download"></i> Export PDF
+        </button>
+        <p class="note-info" style="margin-top:.5rem">
+          <i class="fa-solid fa-circle-info"></i>
+          The PDF includes the 8 indicators, monthly charts and the reduction plan.
+        </p>
+      </div>
+    </div>
+
+    <!-- KPI Summary Row -->
+    <div>
+      <div class="section-title">
+        <i class="fa-solid fa-gauge-high"></i> Executive Summary
+        <span class="muted" id="kpi-period-label">— full year</span>
+      </div>
+      <div class="kpi-row" id="kpi-row">
+        <div class="kpi-card">
+          <span class="kpi-label">⚡ Electricity</span>
+          <span class="kpi-value elec" id="kpi-elec">–</span>
+          <span class="kpi-sub">kWh · full year</span>
+          <span class="kpi-delta" id="kpi-elec-delta" hidden></span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">💧 Water</span>
+          <span class="kpi-value water" id="kpi-water">–</span>
+          <span class="kpi-sub">L · full year</span>
+          <span class="kpi-delta" id="kpi-water-delta" hidden></span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">📝 Office Paper</span>
+          <span class="kpi-value paper" id="kpi-paper">–</span>
+          <span class="kpi-sub">A4 packs · year</span>
+          <span class="kpi-delta" id="kpi-paper-delta" hidden></span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">🧼 Cleaning</span>
+          <span class="kpi-value clean" id="kpi-clean">–</span>
+          <span class="kpi-sub">rolls · year</span>
+          <span class="kpi-delta" id="kpi-clean-delta" hidden></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8 Indicators -->
+    <div>
+      <div class="section-title">
+        <i class="fa-solid fa-chart-bar"></i> 8 Sustainability Indicators
+        <span class="muted">— projections with seasonality and variability</span>
+      </div>
+      <div class="results-grid" id="results-grid">
+
+        <div class="card card-accent-elec">
+          <div class="card-top">
+            <div class="card-icon icon-elec"><i class="fa-solid fa-bolt"></i></div>
+            <h3>Electricity</h3>
+            <span class="unit-tag">kWh</span>
+          </div>
+          <div class="card-body">
+            <div class="data-row">
+              <span class="row-label">① Next year</span>
+              <div class="row-values">
+                <span id="res-elec-any-old" class="val-old" hidden></span>
+                <span id="res-elec-any" class="val-main">–</span>
+                <span id="pill-elec-any" class="saving-pill" hidden></span>
+              </div>
+            </div>
+            <div class="data-row">
+              <span class="row-label">② Selected period</span>
+              <div class="row-values">
+                <span id="res-elec-periode-old" class="val-old" hidden></span>
+                <span id="res-elec-periode" class="val-secondary">–</span>
+                <span id="pill-elec-periode" class="saving-pill" hidden></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-accent-water">
+          <div class="card-top">
+            <div class="card-icon icon-water"><i class="fa-solid fa-droplet"></i></div>
+            <h3>Water</h3>
+            <span class="unit-tag">L</span>
+          </div>
+          <div class="card-body">
+            <div class="data-row">
+              <span class="row-label">③ Next year</span>
+              <div class="row-values">
+                <span id="res-aigua-any-old" class="val-old" hidden></span>
+                <span id="res-aigua-any" class="val-main">–</span>
+                <span id="pill-aigua-any" class="saving-pill" hidden></span>
+              </div>
+            </div>
+            <div class="data-row">
+              <span class="row-label">④ Selected period</span>
+              <div class="row-values">
+                <span id="res-aigua-periode-old" class="val-old" hidden></span>
+                <span id="res-aigua-periode" class="val-secondary">–</span>
+                <span id="pill-aigua-periode" class="saving-pill" hidden></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-accent-paper">
+          <div class="card-top">
+            <div class="card-icon icon-paper"><i class="fa-solid fa-file-alt"></i></div>
+            <h3>Office Supplies</h3>
+            <span class="unit-tag">A4 packs</span>
+          </div>
+          <div class="card-body">
+            <div class="data-row">
+              <span class="row-label">⑤ Next year</span>
+              <div class="row-values">
+                <span id="res-ofi-any-old" class="val-old" hidden></span>
+                <span id="res-ofi-any" class="val-main">–</span>
+                <span id="pill-ofi-any" class="saving-pill" hidden></span>
+              </div>
+            </div>
+            <div class="data-row">
+              <span class="row-label">⑥ Selected period</span>
+              <div class="row-values">
+                <span id="res-ofi-periode-old" class="val-old" hidden></span>
+                <span id="res-ofi-periode" class="val-secondary">–</span>
+                <span id="pill-ofi-periode" class="saving-pill" hidden></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-accent-clean">
+          <div class="card-top">
+            <div class="card-icon icon-clean"><i class="fa-solid fa-soap"></i></div>
+            <h3>Cleaning Products</h3>
+            <span class="unit-tag">rolls</span>
+          </div>
+          <div class="card-body">
+            <div class="data-row">
+              <span class="row-label">⑦ Next year</span>
+              <div class="row-values">
+                <span id="res-net-any-old" class="val-old" hidden></span>
+                <span id="res-net-any" class="val-main">–</span>
+                <span id="pill-net-any" class="saving-pill" hidden></span>
+              </div>
+            </div>
+            <div class="data-row">
+              <span class="row-label">⑧ Selected period</span>
+              <div class="row-values">
+                <span id="res-net-periode-old" class="val-old" hidden></span>
+                <span id="res-net-periode" class="val-secondary">–</span>
+                <span id="pill-net-periode" class="saving-pill" hidden></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Impact comparison bars -->
+    <div>
+      <div class="section-title">
+        <i class="fa-solid fa-arrows-left-right"></i> Relative Impact per Indicator
+        <span class="muted">— % of annual baseline consumption</span>
+      </div>
+      <div class="chart-card">
+        <div class="impact-bar-list" id="impact-bars">
+          <div class="impact-item">
+            <span class="impact-label">⚡ Electricity any</span>
+            <div class="impact-track"><div class="impact-fill" id="imp-elec-any" style="width:0%;background:var(--elec)"></div></div>
+            <span class="impact-pct" id="imp-elec-any-pct">–</span>
+          </div>
+          <div class="impact-item">
+            <span class="impact-label">⚡ Electricity per.</span>
+            <div class="impact-track"><div class="impact-fill" id="imp-elec-per" style="width:0%;background:var(--elec);opacity:.6"></div></div>
+            <span class="impact-pct" id="imp-elec-per-pct">–</span>
+          </div>
+          <div class="impact-item">
+            <span class="impact-label">💧 Water any</span>
+            <div class="impact-track"><div class="impact-fill" id="imp-water-any" style="width:0%;background:var(--water)"></div></div>
+            <span class="impact-pct" id="imp-water-any-pct">–</span>
+          </div>
+          <div class="impact-item">
+            <span class="impact-label">💧 Water per.</span>
+            <div class="impact-track"><div class="impact-fill" id="imp-water-per" style="width:0%;background:var(--water);opacity:.6"></div></div>
+            <span class="impact-pct" id="imp-water-per-pct">–</span>
+          </div>
+          <div class="impact-item">
+            <span class="impact-label">📝 Paper year</span>
+            <div class="impact-track"><div class="impact-fill" id="imp-paper-any" style="width:0%;background:var(--paper)"></div></div>
+            <span class="impact-pct" id="imp-paper-any-pct">–</span>
+          </div>
+          <div class="impact-item">
+            <span class="impact-label">🧼 Cleaning any</span>
+            <div class="impact-track"><div class="impact-fill" id="imp-clean-any" style="width:0%;background:var(--clean)"></div></div>
+            <span class="impact-pct" id="imp-clean-any-pct">–</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-calculadora -->
+
+  <!-- ══════════════════════════════════════════
+       TAB 2: GRÀFICS
+  ══════════════════════════════════════════ -->
+  <div id="tab-grafics" class="page-section">
+
+    <!-- Combined chart -->
+    <div>
+      <div class="section-title">
+        <i class="fa-solid fa-chart-area"></i> Combined Monthly View
+        <span class="muted">— all indicators normalized (% of maximum)</span>
+      </div>
+      <div class="chart-card">
+        <div class="chart-combined-wrap">
+          <canvas id="chart-combined"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Individual charts -->
+    <div>
+      <div class="section-title">
+        <i class="fa-solid fa-chart-column"></i> Seasonal Monthly Distribution
+        <span class="muted">— estimated consumption per month (full year)</span>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>⚡ Electricity</h3>
+            <span class="chart-unit">kWh/month</span>
+          </div>
+          <div class="chart-wrap"><canvas id="chart-elec"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>💧 Water</h3>
+            <span class="chart-unit">L/month</span>
+          </div>
+          <div class="chart-wrap"><canvas id="chart-water"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>📝 Office Paper</h3>
+            <span class="chart-unit">packs/month</span>
+          </div>
+          <div class="chart-wrap"><canvas id="chart-paper"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>🧼 Cleaning</h3>
+            <span class="chart-unit">rolls/month</span>
+          </div>
+          <div class="chart-wrap"><canvas id="chart-clean"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-grafics -->
+
+  <!-- ══════════════════════════════════════════
+       TAB 3: 3-YEAR PLAN — INTERACTIVE SIMULATOR
+  ══════════════════════════════════════════ -->
+  <div id="tab-pla" class="page-section">
+
+    <!-- Intro -->
+    <div class="section-title">
+      <i class="fa-solid fa-sliders"></i> Reduction Plan Simulator
+      <span class="muted">— enable/disable measures and see the impact in real time</span>
+    </div>
+
+    <!-- SIMULATOR LAYOUT -->
+    <div style="display:grid;grid-template-columns:1fr 340px;gap:1.25rem;align-items:start;" id="sim-layout">
+
+      <!-- LEFT: Measures panel -->
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+
+        <!-- ELECTRICITAT -->
+        <div class="rm-card" style="border-top:2px solid var(--elec)">
+          <div class="rm-card-head">
+            <h3><span>⚡</span> Electricitat</h3>
+            <span class="rm-target" id="sim-elec-pct">−0%</span>
+          </div>
+          <div class="rm-progress"><div class="rm-progress-bar" id="sim-elec-bar" style="width:0%;background:var(--elec);transition:width .5s ease"></div></div>
+          <div class="rm-steps" style="gap:.5rem">
+
+            <label class="sim-measure" data-resource="elec" data-pct="10">
+              <div class="sim-check-area">
+                <input type="checkbox" class="sim-cb" id="cb-sensors" checked>
+                <span class="sim-checkmark"></span>
+              </div>
+              <div class="sim-measure-info">
+                <div class="sim-measure-top">
+                  <span class="step-yr">Year 1 · ♻ Reduce</span>
+                  <span class="sim-badge sim-badge-elec">−10%</span>
+                </div>
+                <p class="step-desc">Presence sensors in all classrooms and common areas</p>
+                <em class="step-kpi">KPI: −10% electricity consumption in 6 months</em>
+              </div>
+            </label>
+
+            <label class="sim-measure" data-resource="elec" data-pct="15">
+              <div class="sim-check-area">
+                <input type="checkbox" class="sim-cb" id="cb-led" checked>
+                <span class="sim-checkmark"></span>
+              </div>
+              <div class="sim-measure-info">
+                <div class="sim-measure-top">
+                  <span class="step-yr">Year 2 · ↩ Reuse</span>
+                  <span class="sim-badge sim-badge-elec">−15%</span>
+                </div>
+                <p class="step-desc">Replacement of all lighting with LED technology</p>
+                <em class="step-kpi">KPI: −15% lighting consumption</em>
+              </div>
+            </label>
+
+            <label class="sim-measure" data-resource="elec" data-pct="15">
+              <div class="sim-check-area">
+                <input type="checkbox" class="sim-cb" id="cb-solar" checked>
+                <span class="sim-checkmark"></span>
+              </div>
+              <div class="sim-measure-info">
+                <div class="sim-measure-top">
+                  <span class="step-yr">Year 3 · 🔄 Recycle</span>
+                  <span class="sim-badge sim-badge-elec">−15%</span>
+                </div>
+                <p class="step-desc">Solar panel expansion +15 kWp · Own renewable energy</p>
+                <em class="step-kpi">KPI: 40% electrical self-sufficiency</em>
+              </div>
+            </label>
+
+          </div>
+        </div>
+
+        <!-- AIGUA -->
+        <div class="rm-card" style="border-top:2px solid var(--water)">
+          <div class="rm-card-head">
+            <h3><span>💧</span> Aigua</h3>
+            <span class="rm-target" id="sim-water-pct">−0%</span>
+          </div>
+          <div class="rm-progress"><div class="rm-progress-bar" id="sim-water-bar" style="width:0%;background:var(--water);transition:width .5s ease"></div></div>
+          <div class="rm-steps" style="gap:.5rem">
+
+            <label class="sim-measure" data-resource="water" data-pct="10">
+              <div class="sim-check-area">
+                <input type="checkbox" class="sim-cb" id="cb-airejadors" checked>
+                <span class="sim-checkmark"></span>
+              </div>
+              <div class="sim-measure-info">
+                <div class="sim-measure-top">
+                  <span class="step-yr">Year 1 · ♻ Reduce</span>
+                  <span class="sim-badge sim-badge-water">−10%</span>
+                </div>
+                <p class="step-desc">Installation of aerators on all taps in the centre</p>
+                <em class="step-kpi">KPI: −10% litres/month in 6 months</em>
+              </div>
+            </label>
+
+            <label class="sim-measure" data-resource="water" data-pct="10">
+              <div class="sim-check-area">
+                <input type="checkbox" class="sim-cb" id="cb-cisternes" checked>
+                <span class="sim-checkmark"></span>
+              </div>
+              <div class="sim-measure-info">
+                <div class="sim-measure-top">
+                  <span class="step-yr">Any 2 · ♻ Reduir</span>
+                  <span class="sim-badge sim-badge-water">−10%</span>
+                </div>
+                <p class="step-desc">Dual-flush cisterns in all toilets</p>
+                <em class="step-kpi">KPI: −8 L per toilet cycle</em>
+              </div>
+            </label>
+
+            <label class="sim-measure" data-resource="water" data-pct="12">
+              <div class="sim-check-area">
+                <input type="checkbox" class="sim-cb" id="cb-pluvials" checked>
+                <span class="sim-checkmark"></span>
+              </div>
+              <div class="sim-measure-info">
+                <div class="sim-measure-top">
+                  <span class="step-yr">Year 3 · 🔄 Recycle</span>
+                  <span class="sim-badge sim-badge-water">−12%</span>
+                </div>
+                <p class="step-desc">Rainwater collection system for garden irrigation</p>
+                <em class="step-kpi">KPI: 100% external irrigation with recycled water</em>
+              </div>
+            </label>
+
+          </div>
+        </div>
+
+        <!-- PAPER -->
+        <div class="rm-card" style="border-top:2px solid var(--paper)">
+          <div class="rm-card-head">
+            <h3><span>📝</span> Office Supplies</h3>
+            <span class="rm-target" id="sim-paper-pct">−0%</span>
+          </div>
+          <div class="rm-progress"><div class="rm-progress-bar" id="sim-paper-bar" style="width:0%;background:var(--paper);transition:width .5s ease"></div></div>
+          <div class="rm-steps" style="gap:.5rem">
+
+            <label class="sim-measure" data-resource="paper" data-pct="15">
+              <div class="sim-check-area">
+                <input type="checkbox" class="sim-cb" id="cb-zeropaper" checked>
+                <span class="sim-checkmark"></span>
+              </div>
+              <div class="sim-measure-info">
+                <div class="sim-measure-top">
+                  <span class="step-yr">Year 1 · ♻ Reduce</span>
+                  <span class="sim-badge sim-badge-paper">−15%</span>
+                </div>
+                <p class="step-desc">Mandatory "Zero Paper" policy on Moodle and digital communications</p>
+                <em class="step-kpi">KPI: 0 photocopies of internal notices</em>
+              </div>
+            </label>
+
+            <label class="sim-measure" data-resource="paper" data-pct="5">
+              <div class="sim-check-area">
+                <input type="checkbox" class="sim-cb" id="cb-recarregables" checked>
+                <span class="sim-checkmark"></span>
+              </div>
+              <div class="sim-measure-info">
+                <div class="sim-measure-top">
+                  <span class="step-yr">Year 2 · ↩ Reuse</span>
+                  <span class="sim-badge sim-badge-paper">−5%</span>
+                </div>
+                <p class="step-desc">Exclusive purchase of refillable markers and pens</p>
+                <em class="step-kpi">KPI: −100% single-use plastic waste</em>
+              </div>
+            </label>
+
+            <label class="sim-measure" data-resource="paper" data-pct="12">
+              <div class="sim-check-area">
+                <input type="checkbox" class="sim-cb" id="cb-digitalitzacio" checked>
+                <span class="sim-checkmark"></span>
+              </div>
+              <div class="sim-measure-info">
+                <div class="sim-measure-top">
+                  <span class="step-yr">Year 3 · 🔄 Recycle</span>
+                  <span class="sim-badge sim-badge-paper">−12%</span>
+                </div>
+                <p class="step-desc">Full digitalisation of administrative procedures and cloud archiving</p>
+                <em class="step-kpi">KPI: 0 new physical files</em>
+              </div>
+            </label>
+
+          </div>
+        </div>
+
+        <!-- NETEJA -->
+        <div class="rm-card" style="border-top:2px solid var(--clean)">
+          <div class="rm-card-head">
+            <h3><span>🧼</span> Cleaning Products</h3>
+            <span class="rm-target" id="sim-clean-pct">−0%</span>
+          </div>
+          <div class="rm-progress"><div class="rm-progress-bar" id="sim-clean-bar" style="width:0%;background:var(--clean);transition:width .5s ease"></div></div>
+          <div class="rm-steps" style="gap:.5rem">
+
+            <label class="sim-measure" data-resource="clean" data-pct="20">
+              <div class="sim-check-area">
+                <input type="checkbox" class="sim-cb" id="cb-assecadors" checked>
+                <span class="sim-checkmark"></span>
+              </div>
+              <div class="sim-measure-info">
+                <div class="sim-measure-top">
+                  <span class="step-yr">Year 1 · ♻ Reduce</span>
+                  <span class="sim-badge sim-badge-clean">−20%</span>
+                </div>
+                <p class="step-desc">Replacement of paper towels with air dryers</p>
+                <em class="step-kpi">KPI: −90% paper towel purchases</em>
+              </div>
+            </label>
+
+            <label class="sim-measure" data-resource="clean" data-pct="8">
+              <div class="sim-check-area">
+                <input type="checkbox" class="sim-cb" id="cb-granel" checked>
+                <span class="sim-checkmark"></span>
+              </div>
+              <div class="sim-measure-info">
+                <div class="sim-measure-top">
+                  <span class="step-yr">Year 2 · ↩ Reuse</span>
+                  <span class="sim-badge sim-badge-clean">−8%</span>
+                </div>
+                <p class="step-desc">Purchase of soap and products in bulk in reusable containers</p>
+                <em class="step-kpi">KPI: −80% plastic containers purchased</em>
+              </div>
+            </label>
+
+            <label class="sim-measure" data-resource="clean" data-pct="5">
+              <div class="sim-check-area">
+                <input type="checkbox" class="sim-cb" id="cb-ecologics" checked>
+                <span class="sim-checkmark"></span>
+              </div>
+              <div class="sim-measure-info">
+                <div class="sim-measure-top">
+                  <span class="step-yr">Year 3 · 🔄 Recycle</span>
+                  <span class="sim-badge sim-badge-clean">−5%</span>
+                </div>
+                <p class="step-desc">Exclusive use of certified probiotic and ecological cleaning products</p>
+                <em class="step-kpi">KPI: ISO 14001 certification for the centre</em>
+              </div>
+            </label>
+
+          </div>
+        </div>
+
+      </div><!-- /left -->
+
+      <!-- RIGHT: Live impact panel -->
+      <div class="sim-right-panel" style="position:sticky;top:1rem;display:flex;flex-direction:column;gap:1rem;">
+
+        <!-- Total reduction summary -->
+        <div class="rm-card" style="border-top:2px solid var(--green)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+            <h3 style="font-size:.9rem;display:flex;align-items:center;gap:.4rem"><i class="fa-solid fa-chart-pie" style="color:var(--green)"></i> Total Impact</h3>
+            <span style="font-size:.7rem;color:var(--muted);font-family:'JetBrains Mono',monospace">LIVE SIMULATION</span>
+          </div>
+
+          <!-- Donut / big number -->
+          <div class="sim-donut-card-inner" style="text-align:center;padding:.5rem 0 1rem;display:flex;align-items:center;justify-content:center;gap:.5rem">
+            <div class="sim-donut-center" style="position:relative;display:inline-block;flex-shrink:0">
+              <canvas id="sim-donut" width="160" height="160"></canvas>
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">
+                <span id="sim-total-pct" style="font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;color:var(--green);line-height:1">0%</span>
+                <span style="font-size:.65rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase">reduction</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Per-resource mini bars -->
+          <div class="sim-mini-bars" style="display:flex;flex-direction:column;gap:.6rem">
+            <div class="sim-mini-row">
+              <span class="sim-mini-icon" style="color:var(--elec)">⚡</span>
+              <div style="flex:1">
+                <div style="display:flex;justify-content:space-between;margin-bottom:.2rem">
+                  <span style="font-size:.75rem;color:var(--text2)">Electricitat</span>
+                  <span id="sim-mini-elec-pct" style="font-size:.75rem;font-family:'JetBrains Mono',monospace;color:var(--elec)">0%</span>
+                </div>
+                <div class="impact-track"><div id="sim-mini-elec-bar" class="impact-fill" style="background:var(--elec);width:0%"></div></div>
+              </div>
+            </div>
+            <div class="sim-mini-row">
+              <span class="sim-mini-icon" style="color:var(--water)">💧</span>
+              <div style="flex:1">
+                <div style="display:flex;justify-content:space-between;margin-bottom:.2rem">
+                  <span style="font-size:.75rem;color:var(--text2)">Aigua</span>
+                  <span id="sim-mini-water-pct" style="font-size:.75rem;font-family:'JetBrains Mono',monospace;color:var(--water)">0%</span>
+                </div>
+                <div class="impact-track"><div id="sim-mini-water-bar" class="impact-fill" style="background:var(--water);width:0%"></div></div>
+              </div>
+            </div>
+            <div class="sim-mini-row">
+              <span class="sim-mini-icon" style="color:var(--paper)">📝</span>
+              <div style="flex:1">
+                <div style="display:flex;justify-content:space-between;margin-bottom:.2rem">
+                  <span style="font-size:.75rem;color:var(--text2)">Paper</span>
+                  <span id="sim-mini-paper-pct" style="font-size:.75rem;font-family:'JetBrains Mono',monospace;color:var(--paper)">0%</span>
+                </div>
+                <div class="impact-track"><div id="sim-mini-paper-bar" class="impact-fill" style="background:var(--paper);width:0%"></div></div>
+              </div>
+            </div>
+            <div class="sim-mini-row">
+              <span class="sim-mini-icon" style="color:var(--clean)">🧼</span>
+              <div style="flex:1">
+                <div style="display:flex;justify-content:space-between;margin-bottom:.2rem">
+                  <span style="font-size:.75rem;color:var(--text2)">Neteja</span>
+                  <span id="sim-mini-clean-pct" style="font-size:.75rem;font-family:'JetBrains Mono',monospace;color:var(--clean)">0%</span>
+                </div>
+                <div class="impact-track"><div id="sim-mini-clean-bar" class="impact-fill" style="background:var(--clean);width:0%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Absolute values card -->
+        <div class="rm-card sim-abs-card" style="border-top:2px solid var(--border2)">
+          <h3 style="font-size:.82rem;color:var(--text2);margin-bottom:.85rem;display:flex;align-items:center;gap:.4rem">
+            <i class="fa-solid fa-calculator" style="color:var(--muted)"></i> Annual Absolute Values
+          </h3>
+          <div style="display:flex;flex-direction:column;gap:.55rem">
+            <div class="sim-abs-row">
+              <span style="font-size:.78rem;color:var(--muted)">⚡ Electricity</span>
+              <div style="text-align:right">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:.88rem;color:var(--elec)" id="sim-abs-elec">—</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted)" id="sim-abs-elec-save"></div>
+              </div>
+            </div>
+            <div class="sim-abs-row">
+              <span style="font-size:.78rem;color:var(--muted)">💧 Water</span>
+              <div style="text-align:right">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:.88rem;color:var(--water)" id="sim-abs-water">—</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted)" id="sim-abs-water-save"></div>
+              </div>
+            </div>
+            <div class="sim-abs-row">
+              <span style="font-size:.78rem;color:var(--muted)">📝 Paper</span>
+              <div style="text-align:right">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:.88rem;color:var(--paper)" id="sim-abs-paper">—</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted)" id="sim-abs-paper-save"></div>
+              </div>
+            </div>
+            <div class="sim-abs-row">
+              <span style="font-size:.78rem;color:var(--muted)">🧼 Cleaning</span>
+              <div style="text-align:right">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:.88rem;color:var(--clean)" id="sim-abs-clean">—</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted)" id="sim-abs-clean-save"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick actions -->
+        <div class="sim-actions" style="display:flex;gap:.5rem">
+          <button class="btn btn-secondary" onclick="simSetAll(true)" style="flex:1;font-size:.78rem;padding:.5rem .75rem">
+            <i class="fa-solid fa-check-double"></i> All
+          </button>
+          <button class="btn btn-secondary" onclick="simSetAll(false)" style="flex:1;font-size:.78rem;padding:.5rem .75rem">
+            <i class="fa-solid fa-xmark"></i> None
+          </button>
+        </div>
+
+        <!-- Scenario message -->
+        <div id="sim-scenario-msg" class="note-info" style="flex-direction:column;gap:.25rem;align-items:flex-start">
+          <strong style="font-size:.75rem;color:var(--green)"><i class="fa-solid fa-circle-info"></i> Current scenario</strong>
+          <span id="sim-scenario-text" style="font-size:.75rem"></span>
+        </div>
+
+      </div><!-- /right sticky -->
+
+    </div><!-- /sim-layout -->
+
+    <!-- Bottom compare charts -->
+    <div>
+      <div class="section-title">
+        <i class="fa-solid fa-scale-balanced"></i> Visualisation: Baseline vs. Simulated Scenario
+        <span class="muted">— updates in real time</span>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header"><h3>Annual Comparison by Indicator</h3><span class="chart-unit">absolute values</span></div>
+          <div class="chart-wrap"><canvas id="chart-compare"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header"><h3>3-Year Cumulative Savings</h3><span class="chart-unit">projection</span></div>
+          <div class="chart-wrap"><canvas id="chart-savings3y"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-pla -->
+
+  <!-- ══════════════════════════════════════════
+       TAB 4: TIPS
+  ══════════════════════════════════════════ -->
+  <div id="tab-consells" class="page-section">
+
+    <div class="section-title">
+      <i class="fa-solid fa-lightbulb"></i> How to Reduce Consumption for Each Indicator
+    </div>
+
+    <div class="tips-grid">
+      <div class="tip-card">
+        <h3><span>⚡</span> Electricitat</h3>
+        <ul class="tip-list">
+          <li>Install presence sensors to automatically switch off lighting</li>
+          <li>Replace all lighting with low-consumption LED (−50% lighting)</li>
+          <li>Install photovoltaic solar panels on the roof (−40% bill)</li>
+          <li>Schedule automatic shutdown of electronic equipment outside school hours</li>
+          <li>Review maintenance of air conditioning units and boilers every year</li>
+          <li>Implement intelligent energy management (Building Management System)</li>
+        </ul>
+      </div>
+      <div class="tip-card">
+        <h3><span>💧</span> Aigua</h3>
+        <ul class="tip-list">
+          <li>Install aerators on all taps (reduces flow by up to 50%)</li>
+          <li>Replace conventional cisterns with dual-flush cisterns</li>
+          <li>Collect rainwater for irrigation of landscaped areas</li>
+          <li>Detect and repair leaks periodically with digital meters</li>
+          <li>Raise student awareness with campaigns on responsible use</li>
+        </ul>
+      </div>
+      <div class="tip-card">
+        <h3><span>📝</span> Office Supplies</h3>
+        <ul class="tip-list">
+          <li>"Zero Paper" policy for internal communications and administrative documents</li>
+          <li>Digitise all academic and administrative procedures in the cloud</li>
+          <li>Use refillable pens and markers instead of single-use ones</li>
+          <li>Double-sided printing by default on all printers</li>
+          <li>Reuse paper printed on one side as drafts</li>
+          <li>Purchase consumables with certified eco-label</li>
+        </ul>
+      </div>
+      <div class="tip-card">
+        <h3><span>🧼</span> Cleaning Products</h3>
+        <ul class="tip-list">
+          <li>Replace paper towels with low-consumption air dryers</li>
+          <li>Purchase soaps and products in bulk in reusable containers</li>
+          <li>Use exclusively certified probiotic and ecological cleaning products</li>
+          <li>Eliminate single-use plastic containers in all spaces</li>
+          <li>Evaluate environmental impact when selecting cleaning suppliers</li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- /tab-consells -->
+
+</div><!-- /.app -->
+
+<footer>
+  <p>Sustainable Calculator · Institut de Tecnologia del Bages · Circular Economy Phase 3 · 2025–2026</p>
+</footer>
+
+<!-- ══════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════ -->
+<script>
+'use strict';
+
+// ─── DATA ────────────────────────────────────────────────
+const DATA = {
+  centre: "ITB",
+  dades_base: {
+    electricitat: {
+      consum_mitja_diari_kWh: 261.54,
+      variability_range: { min: 0.02, max: 0.05 },
+    },
+    aigua: {
+      consum_mitja_diari_litres: 850,
+      variability_range: { min: 0.02, max: 0.04 },
+    },
+    consumibles_oficina: {
+      variability_range: { min: 0.03, max: 0.05 },
+      mitjana_mensual: { paper_A4_paquets: 22.5 },
+    },
+    productes_neteja: {
+      variability_range: { min: 0.02, max: 0.03 },
+      mitjana_mensual: { paper_higienic_rotllos: 108 },
+    }
+  }
+};
+
+const DAYS = { ANNUAL: 365, ACADEMIC_YEAR: 304, WINTER: 90 };
+
+const PERIOD_CONFIG = {
+  anual:  { electricitat:{days:365,sf:1.0},  aigua:{days:365,sf:0.9},   oficina:{months:12,sf:1.0},  neteja:{months:12,sf:1.0}  },
+  curs:   { electricitat:{days:304,sf:1.1},  aigua:{days:304,sf:1.0},   oficina:{months:10,sf:1.2},  neteja:{months:10,sf:1.1}  },
+  hivern: { electricitat:{days:90, sf:1.3},  aigua:{days:90, sf:0.8},   oficina:{months:3, sf:1.1},  neteja:{months:3, sf:1.3}  },
+};
+
+const MONTHLY_FACTORS = {
+  electricitat: [1.15,1.18,1.05,0.92,0.88,0.80,0.75,0.78,0.90,1.02,1.12,1.20],
+  aigua:        [0.80,0.82,0.88,0.95,1.05,1.15,1.20,1.18,1.05,0.95,0.85,0.78],
+  oficina:      [1.20,1.15,1.10,1.10,1.15,0.80,0.40,0.40,1.20,1.25,1.20,0.60],
+  neteja:       [1.30,1.28,1.15,1.05,0.95,0.85,0.80,0.80,1.00,1.10,1.20,1.30],
+};
+
+const MONTHS_CA = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DAYS_PER_MONTH = [31,28,31,30,31,30,31,31,30,31,30,31];
+const REDUCTION = 0.70;
+
+function hasChartLib() {
+  return typeof window.Chart !== 'undefined';
+}
+
+function hasPdfLibs() {
+  return !!(window.jspdf && typeof window.jspdf.jsPDF === 'function');
+}
+
+function toLocalISODate(date) {
+  const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return local.toISOString().split('T')[0];
+}
+
+// ─── VARIABILITY ─────────────────────────────────────────
+function getVar(min, max) {
+  const r=(Math.random()+Math.random()+Math.random()+Math.random())/4;
+  const mag=min+r*(max-min);
+  return 1+(Math.random()<.5?1:-1)*mag;
+}
+
+// ─── CUSTOM DATE RANGE HELPERS ────────────────────────────
+function daysBetween(from, to) {
+  return Math.max(1, Math.round((to - from) / 86400000));
+}
+
+function avgSeasonalFactor(from, to, factorArr) {
+  // weighted average of monthly factors for the date range
+  let total = 0, count = 0;
+  const cur = new Date(from);
+  while (cur <= to) {
+    const m = cur.getMonth();
+    total += factorArr[m];
+    count++;
+    cur.setDate(cur.getDate() + 7); // sample weekly
+  }
+  return count ? total / count : 1;
+}
+
+function avgMonthlyFactor(from, to, factorArr) {
+  const months = Math.max(1, (to.getFullYear()-from.getFullYear())*12 + to.getMonth() - from.getMonth() + 1);
+  let total = 0;
+  for (let i = 0; i < months; i++) {
+    const m = (from.getMonth() + i) % 12;
+    total += factorArr[m];
+  }
+  return { factor: total/months, months };
+}
+
+// ─── COMPUTE ─────────────────────────────────────────────
+function compute(period, isReduction, customFrom, customTo) {
+  const d = DATA.dades_base;
+  const V = (key) => getVar(d[key]?.variability_range?.min || .02, d[key]?.variability_range?.max || .05);
+
+  let elecAny, elecPer, aiguaAny, aiguaPer, ofiAny, ofiPer, netAny, netPer;
+
+  // Always compute annual base
+  const ANNUAL = PERIOD_CONFIG.anual;
+  elecAny  = Math.round(d.electricitat.consum_mitja_diari_kWh * 365 * ANNUAL.electricitat.sf * V('electricitat'));
+  aiguaAny = Math.round(d.aigua.consum_mitja_diari_litres * 365 * ANNUAL.aigua.sf * V('aigua'));
+  ofiAny   = Math.round(d.consumibles_oficina.mitjana_mensual.paper_A4_paquets * 12 * ANNUAL.oficina.sf * V('consumibles_oficina'));
+  netAny   = Math.round(d.productes_neteja.mitjana_mensual.paper_higienic_rotllos * 12 * ANNUAL.neteja.sf * V('productes_neteja'));
+
+  if (period === 'custom' && customFrom && customTo) {
+    const days = daysBetween(customFrom, customTo);
+    const sfE = avgSeasonalFactor(customFrom, customTo, MONTHLY_FACTORS.electricitat);
+    const sfA = avgSeasonalFactor(customFrom, customTo, MONTHLY_FACTORS.aigua);
+    const rO  = avgMonthlyFactor(customFrom, customTo, MONTHLY_FACTORS.oficina);
+    const rN  = avgMonthlyFactor(customFrom, customTo, MONTHLY_FACTORS.neteja);
+
+    elecPer  = Math.round(d.electricitat.consum_mitja_diari_kWh * days * sfE * V('electricitat'));
+    aiguaPer = Math.round(d.aigua.consum_mitja_diari_litres * days * sfA * V('aigua'));
+    ofiPer   = Math.round(d.consumibles_oficina.mitjana_mensual.paper_A4_paquets * rO.months * rO.factor * V('consumibles_oficina'));
+    netPer   = Math.round(d.productes_neteja.mitjana_mensual.paper_higienic_rotllos * rN.months * rN.factor * V('productes_neteja'));
+  } else {
+    const P = PERIOD_CONFIG[period] || PERIOD_CONFIG.anual;
+    elecPer  = Math.round(d.electricitat.consum_mitja_diari_kWh * P.electricitat.days * P.electricitat.sf * V('electricitat'));
+    aiguaPer = Math.round(d.aigua.consum_mitja_diari_litres * P.aigua.days * P.aigua.sf * V('aigua'));
+    ofiPer   = Math.round(d.consumibles_oficina.mitjana_mensual.paper_A4_paquets * P.oficina.months * P.oficina.sf * V('consumibles_oficina'));
+    netPer   = Math.round(d.productes_neteja.mitjana_mensual.paper_higienic_rotllos * P.neteja.months * P.neteja.sf * V('productes_neteja'));
+  }
+
+  if (isReduction) {
+    return {
+      base: { elecAny, elecPer, aiguaAny, aiguaPer, ofiAny, ofiPer, netAny, netPer },
+      reduced: {
+        elecAny:  Math.round(elecAny  * REDUCTION),
+        elecPer:  Math.round(elecPer  * REDUCTION),
+        aiguaAny: Math.round(aiguaAny * REDUCTION),
+        aiguaPer: Math.round(aiguaPer * REDUCTION),
+        ofiAny:   Math.round(ofiAny   * REDUCTION),
+        ofiPer:   Math.round(ofiPer   * REDUCTION),
+        netAny:   Math.round(netAny   * REDUCTION),
+        netPer:   Math.round(netPer   * REDUCTION),
+      }
+    };
+  }
+  return { base: { elecAny, elecPer, aiguaAny, aiguaPer, ofiAny, ofiPer, netAny, netPer }, reduced: null };
+}
+
+// ─── ANIMATED COUNTER ─────────────────────────────────────
+function animateCount(el, target) {
+  const str = target.toLocaleString('ca-ES');
+  if (!el) return;
+  const start = Date.now();
+  const dur = 600;
+  const from = parseFloat(el.textContent.replace(/[^\d.-]/g,'')) || 0;
+  const tick = () => {
+    const prog = Math.min((Date.now()-start)/dur, 1);
+    const ease = prog < .5 ? 2*prog*prog : -1+(4-2*prog)*prog;
+    const cur = Math.round(from + (target-from)*ease);
+    el.textContent = cur.toLocaleString('ca-ES');
+    if (prog < 1) requestAnimationFrame(tick);
+    else el.textContent = str;
+  };
+  requestAnimationFrame(tick);
+}
+
+// ─── RENDER ──────────────────────────────────────────────
+function fmt(n) { return n.toLocaleString('ca-ES'); }
+
+function render(result) {
+  const { base, reduced } = result;
+  const isR = !!reduced;
+  const show = reduced || base;
+
+  const grid = document.getElementById('results-grid');
+  if (isR) grid.classList.add('reduction-on'); else grid.classList.remove('reduction-on');
+
+  function setRow(idMain, idOld, idPill, baseVal, showVal) {
+    const elMain = document.getElementById(idMain);
+    const elOld  = document.getElementById(idOld);
+    const elPill = document.getElementById(idPill);
+    animateCount(elMain, showVal);
+    if (isR && elOld) { elOld.textContent = fmt(baseVal); elOld.hidden = false; }
+    else if (elOld)   { elOld.hidden = true; }
+    if (isR && elPill) {
+      elPill.textContent = `−${(30).toFixed(0)}%`;
+      elPill.hidden = false;
+    } else if (elPill) { elPill.hidden = true; }
+  }
+
+  setRow('res-elec-any',    'res-elec-any-old',    'pill-elec-any',    base.elecAny,  show.elecAny);
+  setRow('res-elec-periode','res-elec-periode-old','pill-elec-periode', base.elecPer,  show.elecPer);
+  setRow('res-aigua-any',   'res-aigua-any-old',   'pill-aigua-any',   base.aiguaAny, show.aiguaAny);
+  setRow('res-aigua-periode','res-aigua-periode-old','pill-aigua-periode',base.aiguaPer,show.aiguaPer);
+  setRow('res-ofi-any',     'res-ofi-any-old',     'pill-ofi-any',     base.ofiAny,   show.ofiAny);
+  setRow('res-ofi-periode', 'res-ofi-periode-old', 'pill-ofi-periode',  base.ofiPer,   show.ofiPer);
+  setRow('res-net-any',     'res-net-any-old',     'pill-net-any',     base.netAny,   show.netAny);
+  setRow('res-net-periode', 'res-net-periode-old', 'pill-net-periode',  base.netPer,   show.netPer);
+
+  // KPI row — show period values so they match the selected date range
+  animateCount(document.getElementById('kpi-elec'),  show.elecPer);
+  animateCount(document.getElementById('kpi-water'), show.aiguaPer);
+  animateCount(document.getElementById('kpi-paper'), show.ofiPer);
+  animateCount(document.getElementById('kpi-clean'), show.netPer);
+
+  ['elec','water','paper','clean'].forEach(k => {
+    const el = document.getElementById(`kpi-${k}-delta`);
+    if (!el) return;
+    if (isR) { el.textContent = '−30% active'; el.hidden = false; }
+    else el.hidden = true;
+  });
+
+  // Savings banner
+  const banner = document.getElementById('saving-summary');
+  if (isR) {
+    banner.hidden = false;
+    const sE = base.elecAny - show.elecAny;
+    const sA = base.aiguaAny - show.aiguaAny;
+    banner.innerHTML = `
+      <strong>Estimated annual savings with −30% plan:</strong><br>
+      ⚡ <strong>${fmt(sE)} kWh</strong> less electricity<br>
+      💧 <strong>${fmt(sA)} L</strong> less water<br>
+      📝 <strong>${fmt(base.ofiAny - show.ofiAny)} A4 packs</strong> less paper<br>
+      🧼 <strong>${fmt(base.netAny - show.netAny)} rolls</strong> less cleaning paper
+    `;
+  } else { banner.hidden = true; }
+
+  // Impact bars — normalize to annual base as 100%
+  const maxVal = base.elecAny; // electricity annual is always biggest reference
+  function setBar(fillId, pctId, val, refMax) {
+    const pct = Math.min(100, Math.round(val / refMax * 100));
+    const fill = document.getElementById(fillId);
+    const lbl  = document.getElementById(pctId);
+    if (fill) fill.style.width = pct + '%';
+    if (lbl)  lbl.textContent = pct + '%';
+  }
+  setBar('imp-elec-any',  'imp-elec-any-pct',  show.elecAny,  base.elecAny);
+  setBar('imp-elec-per',  'imp-elec-per-pct',  show.elecPer,  base.elecAny);
+  setBar('imp-water-any', 'imp-water-any-pct', show.aiguaAny, base.elecAny);
+  setBar('imp-water-per', 'imp-water-per-pct', show.aiguaPer, base.elecAny);
+  setBar('imp-paper-any', 'imp-paper-any-pct', show.ofiAny * 100, base.elecAny); // scale up for visibility
+  setBar('imp-clean-any', 'imp-clean-any-pct', show.netAny * 80, base.elecAny);
+}
+
+// ─── CHARTS ──────────────────────────────────────────────
+const charts = {};
+
+function buildMonthlyKWh(dailyAvg, mfArr) {
+  return DAYS_PER_MONTH.map((d,i) => Math.round(dailyAvg * d * mfArr[i] * getVar(.02,.04)));
+}
+function buildMonthlyUnits(monthAvg, mfArr) {
+  return MONTHS_CA.map((_,i) => Math.round(monthAvg * mfArr[i] * getVar(.02,.04)));
+}
+
+function makeChart(canvasId, label, data, color, unit, labels) {
+  if (!hasChartLib()) return;
+  const ctx = document.getElementById(canvasId)?.getContext('2d');
+  if (!ctx) return;
+  if (charts[canvasId]) { charts[canvasId].destroy(); }
+  const [r,g,b] = color;
+  const chartLabels = labels || MONTHS_CA;
+  charts[canvasId] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: chartLabels,
+      datasets: [{
+        label,
+        data,
+        backgroundColor: `rgba(${r},${g},${b},.65)`,
+        hoverBackgroundColor: `rgba(${r},${g},${b},.85)`,
+        borderRadius: 5,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => `${ctx.parsed.y.toLocaleString('ca-ES')} ${unit}` } }
+      },
+      scales: {
+        x: { grid:{color:'rgba(255,255,255,.04)'}, ticks:{color:'#5a7a96',font:{size:10}} },
+        y: {
+          grid:{color:'rgba(255,255,255,.04)'},
+          ticks:{color:'#5a7a96',font:{size:10,family:'JetBrains Mono'},
+            callback:v=>v>=1000?(v/1000).toFixed(1)+'k':v}
+        }
+      }
+    }
+  });
+}
+
+// Returns { labels, elecData, waterData, paperData, cleanData } filtered to the active period
+function buildChartDataForPeriod(period, customFrom, customTo) {
+  const d = DATA.dades_base;
+  // Determine which months to include
+  let monthIndices;
+  if (period === 'custom' && customFrom && customTo) {
+    // Collect every month index spanned by the custom range
+    const seen = new Set();
+    const cur = new Date(customFrom);
+    while (cur <= customTo) {
+      seen.add(cur.getMonth());
+      cur.setDate(cur.getDate() + 1);
+    }
+    monthIndices = [...seen].sort((a,b) => a-b);
+  } else if (period === 'curs') {
+    // Academic year: Sep(8)–Jun(5)
+    monthIndices = [8,9,10,11,0,1,2,3,4,5];
+  } else if (period === 'hivern') {
+    monthIndices = [11,0,1];
+  } else {
+    // anual or fallback: all 12 months
+    monthIndices = [0,1,2,3,4,5,6,7,8,9,10,11];
+  }
+
+  const labels    = monthIndices.map(i => MONTHS_CA[i]);
+  const elecData  = monthIndices.map(i => Math.round(d.electricitat.consum_mitja_diari_kWh * DAYS_PER_MONTH[i] * MONTHLY_FACTORS.electricitat[i] * getVar(.02,.04)));
+  const waterData = monthIndices.map(i => Math.round(d.aigua.consum_mitja_diari_litres    * DAYS_PER_MONTH[i] * MONTHLY_FACTORS.aigua[i]        * getVar(.02,.04)));
+  const paperData = monthIndices.map(i => Math.round(d.consumibles_oficina.mitjana_mensual.paper_A4_paquets        * MONTHLY_FACTORS.oficina[i] * getVar(.02,.04)));
+  const cleanData = monthIndices.map(i => Math.round(d.productes_neteja.mitjana_mensual.paper_higienic_rotllos    * MONTHLY_FACTORS.neteja[i]  * getVar(.02,.04)));
+  return { labels, elecData, waterData, paperData, cleanData };
+}
+
+function renderCharts(period, customFrom, customTo) {
+  if (!hasChartLib()) return;
+  const { labels, elecData, waterData, paperData, cleanData } = buildChartDataForPeriod(period, customFrom, customTo);
+
+  makeChart('chart-elec',  'Electricitat', elecData,  [251,191,36], 'kWh',     labels);
+  makeChart('chart-water', 'Aigua',        waterData, [56,189,248], 'L',       labels);
+  makeChart('chart-paper', 'Paper A4',     paperData, [167,139,250],'paquets', labels);
+  makeChart('chart-clean', 'Neteja',       cleanData, [52,211,153], 'rotllos', labels);
+
+  // Combined chart (normalized)
+  const maxE = Math.max(...elecData);
+  const maxW = Math.max(...waterData);
+  const maxP = Math.max(...paperData);
+  const maxC = Math.max(...cleanData);
+  const normE = elecData.map(v=>+(v/maxE*100).toFixed(1));
+  const normW = waterData.map(v=>+(v/maxW*100).toFixed(1));
+  const normP = paperData.map(v=>+(v/maxP*100).toFixed(1));
+  const normC = cleanData.map(v=>+(v/maxC*100).toFixed(1));
+
+  const ctxComb = document.getElementById('chart-combined')?.getContext('2d');
+  if (ctxComb) {
+    if (charts['combined']) charts['combined'].destroy();
+    charts['combined'] = new Chart(ctxComb, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          { label:'⚡ Electricity', data: normE, borderColor:'#fbbf24', backgroundColor:'rgba(251,191,36,.08)', fill:true, tension:.4, pointRadius:3, pointHoverRadius:6 },
+          { label:'💧 Water',        data: normW, borderColor:'#38bdf8', backgroundColor:'rgba(56,189,248,.08)',  fill:true, tension:.4, pointRadius:3, pointHoverRadius:6 },
+          { label:'📝 Paper',        data: normP, borderColor:'#a78bfa', backgroundColor:'rgba(167,139,250,.08)',fill:true, tension:.4, pointRadius:3, pointHoverRadius:6 },
+          { label:'🧼 Cleaning',       data: normC, borderColor:'#34d399', backgroundColor:'rgba(52,211,153,.08)', fill:true, tension:.4, pointRadius:3, pointHoverRadius:6 },
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode:'index', intersect:false },
+        plugins: {
+          legend: { labels:{ color:'#94afc8', font:{size:11}, boxWidth:12, padding:16 } },
+          tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${c.parsed.y}%` } }
+        },
+        scales: {
+          x: { grid:{color:'rgba(255,255,255,.04)'}, ticks:{color:'#5a7a96',font:{size:10}} },
+          y: { grid:{color:'rgba(255,255,255,.04)'}, ticks:{color:'#5a7a96',font:{size:10,family:'JetBrains Mono'}, callback:v=>v+'%'}, min:0, max:110 }
+        }
+      }
+    });
+  }
+
+  // Compare chart
+  renderCompareCharts();
+}
+
+function renderCompareCharts() {
+  if (!hasChartLib()) return;
+  const d = DATA.dades_base;
+  const p = PERIOD_CONFIG.anual;
+
+  const baseE = Math.round(d.electricitat.consum_mitja_diari_kWh * 365 * p.electricitat.sf);
+  const baseA = Math.round(d.aigua.consum_mitja_diari_litres * 365 * p.aigua.sf / 1000); // kL
+  const baseO = Math.round(d.consumibles_oficina.mitjana_mensual.paper_A4_paquets * 12);
+  const baseN = Math.round(d.productes_neteja.mitjana_mensual.paper_higienic_rotllos * 12);
+
+  const redE = Math.round(baseE * REDUCTION);
+  const redA = Math.round(baseA * REDUCTION);
+  const redO = Math.round(baseO * REDUCTION);
+  const redN = Math.round(baseN * REDUCTION);
+
+  // Comparison bar chart
+  const ctxC = document.getElementById('chart-compare')?.getContext('2d');
+  if (ctxC) {
+    if (charts['compare']) charts['compare'].destroy();
+    charts['compare'] = new Chart(ctxC, {
+      type: 'bar',
+      data: {
+        labels: ['⚡ Elèc (kWh÷10)', '💧 Water (kL)', '📝 Paper', '🧼 Cleaning'],
+        datasets: [
+          { label:'Current baseline', data:[baseE/10,baseA,baseO,baseN], backgroundColor:'rgba(90,122,150,.5)', borderRadius:5 },
+          { label:'With −30% plan', data:[redE/10,redA,redO,redN],   backgroundColor:'rgba(52,211,153,.65)', borderRadius:5 },
+        ]
+      },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        plugins:{
+          legend:{labels:{color:'#94afc8',font:{size:10},boxWidth:10}},
+          tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y.toLocaleString()}`}}
+        },
+        scales:{
+          x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#5a7a96',font:{size:10}}},
+          y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#5a7a96',font:{size:10,family:'JetBrains Mono'}}}
+        }
+      }
+    });
+  }
+
+  // Savings over 3 years
+  const ctxS = document.getElementById('chart-savings3y')?.getContext('2d');
+  if (ctxS) {
+    if (charts['savings3y']) charts['savings3y'].destroy();
+    const savingY = [baseE*0.10, baseE*0.20, baseE*0.30].map(Math.round);
+    charts['savings3y'] = new Chart(ctxS, {
+      type: 'line',
+      data: {
+        labels: ['Year 1','Year 2','Year 3'],
+        datasets: [
+          { label:'Cumulative savings (kWh)', data:savingY, borderColor:'#34d399', backgroundColor:'rgba(52,211,153,.12)', fill:true, tension:.3, pointRadius:6, pointBackgroundColor:'#34d399' },
+        ]
+      },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        plugins:{
+          legend:{labels:{color:'#94afc8',font:{size:10},boxWidth:10}},
+          tooltip:{callbacks:{label:c=>` ${c.parsed.y.toLocaleString()} kWh saved`}}
+        },
+        scales:{
+          x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#5a7a96',font:{size:10}}},
+          y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#5a7a96',font:{size:10,family:'JetBrains Mono'},callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v}}
+        }
+      }
+    });
+  }
+}
+
+// ─── STATE ───────────────────────────────────────────────
+const state = { isReduction: false };
+
+function getCustomDates() {
+  const from = document.getElementById('date-from').value;
+  const to   = document.getElementById('date-to').value;
+  if (from && to) return { from: new Date(from), to: new Date(to) };
+  return null;
+}
+
+function handleCalc() {
+  const period = document.getElementById('periode-select').value;
+
+  // Show/hide custom date block
+  const customBlock = document.getElementById('custom-date-block');
+  customBlock.hidden = (period !== 'custom');
+
+  let customFrom, customTo;
+  if (period === 'custom') {
+    const cd = getCustomDates();
+    if (!cd) { customBlock.hidden = false; return; }
+    customFrom = cd.from; customTo = cd.to;
+    // Update period label
+    const diffDays = Math.round((customTo - customFrom) / 86400000);
+    document.getElementById('kpi-period-label').textContent = `— ${diffDays} custom days`;
+  } else {
+    const labels = { anual:'full year', curs:'academic year', hivern:'winter' };
+    document.getElementById('kpi-period-label').textContent = `— ${labels[period]}`;
+  }
+
+  const result = compute(period, state.isReduction, customFrom, customTo);
+  render(result);
+  renderCharts(period, customFrom, customTo);
+}
+
+function activateDemoMode() {
+  const periodSelect = document.getElementById('periode-select');
+  if (periodSelect) periodSelect.value = 'anual';
+
+  if (!state.isReduction) {
+    const toggleBtn = document.getElementById('btn-reduccio');
+    if (toggleBtn) toggleBtn.click();
+  } else {
+    handleCalc();
+  }
+
+  const featuredMeasures = ['cb-sensors','cb-led','cb-solar','cb-airejadors','cb-cisternes','cb-zeropaper','cb-assecadors','cb-ecologics'];
+  document.querySelectorAll('.sim-cb').forEach(cb => {
+    cb.checked = featuredMeasures.includes(cb.id);
+  });
+  updateSimulator();
+
+  const kpiRow = document.getElementById('kpi-row');
+  if (kpiRow) {
+    kpiRow.classList.remove('flash');
+    void kpiRow.offsetWidth;
+    kpiRow.classList.add('flash');
+    setTimeout(() => kpiRow.classList.remove('flash'), 1000);
+    kpiRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+// ─── EVENTS ──────────────────────────────────────────────
+document.getElementById('btn-calcular').addEventListener('click', handleCalc);
+document.getElementById('btn-demo').addEventListener('click', activateDemoMode);
+document.getElementById('periode-select').addEventListener('change', handleCalc);
+document.getElementById('date-from').addEventListener('change', handleCalc);
+document.getElementById('date-to').addEventListener('change', handleCalc);
+
+document.getElementById('btn-reduccio').addEventListener('click', () => {
+  state.isReduction = !state.isReduction;
+  const btn = document.getElementById('btn-reduccio');
+  btn.setAttribute('aria-pressed', String(state.isReduction));
+  if (state.isReduction) {
+    btn.classList.add('active');
+    btn.querySelector('i').className = 'fa-solid fa-check';
+    btn.querySelector('span').textContent = 'Plan Active (−30%)';
+  } else {
+    btn.classList.remove('active');
+    btn.querySelector('i').className = 'fa-solid fa-power-off';
+    btn.querySelector('span').textContent = 'Activate Reduction (−30%)';
+  }
+  handleCalc();
+});
+
+// ─── TAB NAVIGATION ──────────────────────────────────────
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+    tab.classList.add('active');
+    const target = document.getElementById('tab-' + tab.dataset.tab);
+    if (target) {
+      target.classList.add('active');
+      // Lazy render charts when switching to grafics tab
+      if (tab.dataset.tab === 'grafics') {
+        setTimeout(() => {
+          const p = document.getElementById('periode-select').value;
+          let cf, ct;
+          if (p === 'custom') { const cd = getCustomDates(); if (cd) { cf = cd.from; ct = cd.to; } }
+          renderCharts(p, cf, ct);
+        }, 50);
+      }
+      if (tab.dataset.tab === 'pla') {
+        setTimeout(updateSimulator, 80);
+      }
+    }
+  });
+});
+
+// ─── YEAR FILTER (roadmap) ────────────────────────────────
+document.querySelectorAll('.year-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const year = btn.dataset.year;
+    document.querySelectorAll('.rm-step').forEach(step => {
+      if (year === 'all' || step.dataset.year === year) {
+        step.classList.remove('dimmed');
+      } else {
+        step.classList.add('dimmed');
+      }
+    });
+  });
+});
+
+// ─── PDF EXPORT ──────────────────────────────────────────
+async function exportPDF() {
+  const btn = document.getElementById('btn-pdf');
+  if (!btn) return;
+  if (!hasPdfLibs()) {
+    alert('PDF library not loaded. Please check your connection and try again.');
+    return;
+  }
+  const origText = btn.innerHTML;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating…';
+  btn.disabled = true;
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+    const W = 210, H = 297, M = 16;
+    const CW = W - M * 2; // content width
+
+    // ── Color palette ──────────────────────────────────────
+    const C = {
+      bg:     [8, 12, 16],
+      bg2:    [14, 20, 25],
+      bg3:    [19, 26, 34],
+      border: [30, 45, 61],
+      green:  [52, 211, 153],
+      blue:   [56, 189, 248],
+      yellow: [251, 191, 36],
+      purple: [167, 139, 250],
+      red:    [248, 113, 113],
+      text:   [226, 234, 242],
+      text2:  [148, 175, 200],
+      muted:  [90, 122, 150],
+      white:  [255, 255, 255],
+    };
+
+    const period = document.getElementById('periode-select').value;
+    const periodLabel = {
+      anual:  'Full Year (12 months)',
+      curs:   'Academic Year (Sep–Jun)',
+      hivern: 'Winter (Dec–Feb)',
+      custom: 'Custom Date Range'
+    }[period] || 'Full Year';
+
+    const dateStr = new Date().toLocaleDateString('en-GB', { year:'numeric', month:'long', day:'numeric' });
+    const dateTimeStr = new Date().toLocaleString('en-GB');
+
+    // ── Helper functions ───────────────────────────────────
+    function setFill(...rgb) { doc.setFillColor(...rgb); }
+    function setStroke(...rgb) { doc.setDrawColor(...rgb); }
+    function setColor(...rgb) { doc.setTextColor(...rgb); }
+    function font(style, size) { doc.setFont('helvetica', style); doc.setFontSize(size); }
+
+    function rect(x, y, w, h, clr, style='F') {
+      setFill(...clr); doc.rect(x, y, w, h, style);
+    }
+    function rrect(x, y, w, h, clr, r=2, style='F') {
+      setFill(...clr); doc.roundedRect(x, y, w, h, r, r, style);
+    }
+    function line(x1, y1, x2, y2, clr, lw=0.3) {
+      setStroke(...clr); doc.setLineWidth(lw);
+      doc.line(x1, y1, x2, y2);
+    }
+    function txt(text, x, y, opts={}) { doc.text(text, x, y, opts); }
+
+    // Pill / badge
+    function pill(text, x, y, bgClr, textClr, w=null) {
+      font('bold', 6.5);
+      const tw = w || doc.getTextWidth(text) + 6;
+      rrect(x, y-3.5, tw, 5, bgClr, 1.5);
+      setColor(...textClr);
+      txt(text, x + tw/2, y, {align:'center'});
+    }
+
+    // Divider
+    function divider(y, clr=C.border) { line(M, y, W-M, y, clr, 0.2); }
+
+    // Section header
+    function sectionHeader(label, y, clr=C.green) {
+      font('bold', 7);
+      setColor(...clr);
+      txt(label.toUpperCase(), M, y);
+      line(M + doc.getTextWidth(label.toUpperCase()) + 3, y, W-M, y, [...clr, 0.3], 0.25);
+      return y + 6;
+    }
+
+    // Page footer
+    function addFooter(pageNum, total) {
+      rect(0, H-11, W, 11, C.bg2);
+      line(0, H-11, W, H-11, C.border, 0.4);
+      font('normal', 6.5); setColor(...C.muted);
+      txt('ITB · Sustainable Calculator · Circular Economy Phase 3 · 2025–2026', M, H-5.5);
+      txt(`Page ${pageNum} / ${total}`, W-M, H-5.5, {align:'right'});
+      // Green accent dot
+      setFill(...C.green); doc.circle(W/2, H-5.5, 0.8, 'F');
+    }
+
+    // Indicator card row
+    function indicatorRow(label, value, unit, baseValue, clr, y, isReduction) {
+      const rowH = isReduction && baseValue ? 14 : 11;
+      rrect(M, y, CW, rowH, C.bg2, 2);
+      // Color accent bar
+      rect(M, y, 3, rowH, clr);
+      // Label
+      font('normal', 7.5); setColor(...C.text2);
+      txt(label, M+6, y + (isReduction && baseValue ? 5.5 : 4.5));
+      // Value
+      font('bold', isReduction && baseValue ? 8.5 : 9.5);
+      setColor(...clr);
+      const valStr = `${value} ${unit}`;
+      txt(valStr, W-M-3, y + (isReduction && baseValue ? 9.5 : 6.5), {align:'right'});
+      // Baseline (strikethrough)
+      if (isReduction && baseValue) {
+        font('normal', 7); setColor(...C.muted);
+        const bStr = `${baseValue} ${unit}`;
+        const bx = W-M-3 - doc.getTextWidth(bStr);
+        txt(bStr, W-M-3, y+4.5, {align:'right'});
+        // Manual strikethrough
+        const tw = doc.getTextWidth(bStr);
+        line(W-M-3-tw, y+3.5, W-M-3, y+3.5, C.muted, 0.25);
+        // Savings pill
+        pill('−30%', M+6, y+10.5, [52,211,153,0.15], C.green, 14);
+      }
+      return y + rowH + 2;
+    }
+
+    // Mini bar chart (drawn in PDF)
+    function miniBar(label, value, maxVal, clr, y) {
+      font('normal', 7); setColor(...C.muted);
+      txt(label, M, y+3);
+      const trackX = M + 42, trackW = CW - 55, trackH = 5;
+      rrect(trackX, y, trackW, trackH, C.bg3, 1.5);
+      const fillW = Math.max(2, Math.round(value / maxVal * trackW));
+      setFill(...clr); doc.roundedRect(trackX, y, fillW, trackH, 1.5, 1.5, 'F');
+      font('bold', 7); setColor(...clr);
+      const pct = Math.round(value / maxVal * 100);
+      txt(`${pct}%`, W-M, y+3.5, {align:'right'});
+      return y + 8;
+    }
+
+    // ══════════════════════════════════════════════════════
+    //  PAGE 1 — COVER + EXECUTIVE SUMMARY
+    // ══════════════════════════════════════════════════════
+
+    // Full-page dark background
+    rect(0, 0, W, H, C.bg);
+
+    // Top decorative gradient band
+    rect(0, 0, W, 58, C.bg2);
+    // Green accent top border
+    rect(0, 0, W, 3, C.green);
+
+    // Subtle grid pattern (horizontal lines)
+    for (let gy = 8; gy < 58; gy += 8) {
+      line(0, gy, W, gy, [30,45,61,0.4], 0.15);
+    }
+
+    // Logo / Icon area
+    setFill(...C.green); doc.setGState(new doc.GState({opacity: 0.15}));
+    doc.circle(W-22, 29, 18, 'F');
+    doc.setGState(new doc.GState({opacity: 1}));
+    font('normal', 18); setColor(...C.green);
+    txt('🌿', W-30, 34);
+
+    // Title block
+    font('bold', 20); setColor(...C.text);
+    txt('Sustainable Calculator', M, 24);
+    font('normal', 10); setColor(...C.green);
+    txt('Institut de Tecnologia del Bages  ·  ITB', M, 33);
+    font('normal', 7.5); setColor(...C.muted);
+    txt('Real Consumption Analysis  ·  Seasonal Variability  ·  Circular Economy', M, 41);
+
+    // Tags row
+    const tags = [
+      {t:'⚡ 8 Indicators', c:C.yellow},
+      {t:'📊 Charts', c:C.blue},
+      {t:'−30% Reduction', c:C.yellow},
+      {t:'📅 ' + periodLabel, c:C.purple},
+    ];
+    let tx = M;
+    tags.forEach(tag => {
+      font('bold', 6); setColor(...tag.c);
+      const tw = doc.getTextWidth(tag.t) + 8;
+      rrect(tx, 47, tw, 6, tag.c.map(v => Math.round(v * 0.12)), 1.5);
+      txt(tag.t, tx+4, 51.5);
+      tx += tw + 4;
+    });
+
+    // Meta info box
+    rrect(M, 62, CW, 18, C.bg2, 3);
+    line(M, 62, M+CW, 62, C.green, 0.3);
+
+    font('bold', 7); setColor(...C.muted);
+    txt('PERIOD', M+4, 70);
+    txt('REDUCTION PLAN', M+60, 70);
+    txt('GENERATED', M+120, 70);
+
+    font('bold', 8.5); setColor(...C.text);
+    txt(periodLabel, M+4, 76);
+
+    if (state.isReduction) {
+      font('bold', 8.5); setColor(...C.green);
+      txt('ACTIVE (−30%)', M+60, 76);
+    } else {
+      font('bold', 8.5); setColor(...C.red);
+      txt('NOT ACTIVE', M+60, 76);
+    }
+
+    font('normal', 8); setColor(...C.text2);
+    txt(dateStr, M+120, 76);
+
+    let y = 87;
+
+    // ── EXECUTIVE SUMMARY ─────────────────────────────────
+    y = sectionHeader('Executive Summary — KPIs', y, C.green);
+
+    // 4 big KPI cards in a 2×2 grid
+    const kpiData = [
+      { label:'⚡ Electricity', id:'kpi-elec', unit:'kWh/year', clr:C.yellow, sub:'Annual full year' },
+      { label:'💧 Water', id:'kpi-water', unit:'L/year', clr:C.blue, sub:'Annual full year' },
+      { label:'📝 Office Paper', id:'kpi-paper', unit:'A4 packs/year', clr:C.purple, sub:'Annual full year' },
+      { label:'🧼 Cleaning', id:'kpi-clean', unit:'rolls/year', clr:C.green, sub:'Annual full year' },
+    ];
+
+    const kpiW = (CW - 6) / 2;
+    const kpiH = 22;
+    kpiData.forEach((k, i) => {
+      const col = i % 2, row = Math.floor(i / 2);
+      const kx = M + col * (kpiW + 6);
+      const ky = y + row * (kpiH + 4);
+
+      rrect(kx, ky, kpiW, kpiH, C.bg2, 3);
+      // Top accent
+      rect(kx, ky, kpiW, 2, k.clr);
+
+      font('normal', 7); setColor(...C.muted);
+      txt(k.label, kx+5, ky+8);
+
+      const val = document.getElementById(k.id)?.textContent || '–';
+      font('bold', 13); setColor(...k.clr);
+      txt(val, kx+5, ky+17);
+
+      font('normal', 6.5); setColor(...C.muted);
+      txt(k.unit, kx + kpiW - 4, ky+17, {align:'right'});
+    });
+
+    y += kpiH * 2 + 4 * 2 + 6;
+
+    // ── 8 INDICATORS TABLE ────────────────────────────────
+    y = sectionHeader('8 Sustainability Indicators', y, C.blue);
+
+    const indData = [
+      { label:'① Electricity — Next year',        id:'res-elec-any',      oldId:'res-elec-any-old',      unit:'kWh',      clr:C.yellow  },
+      { label:'② Electricity — Selected period',   id:'res-elec-periode',  oldId:'res-elec-periode-old',  unit:'kWh',      clr:C.yellow  },
+      { label:'③ Water — Next year',               id:'res-aigua-any',     oldId:'res-aigua-any-old',     unit:'L',        clr:C.blue    },
+      { label:'④ Water — Selected period',         id:'res-aigua-periode', oldId:'res-aigua-periode-old', unit:'L',        clr:C.blue    },
+      { label:'⑤ Office Paper — Next year',        id:'res-ofi-any',       oldId:'res-ofi-any-old',       unit:'A4 packs', clr:C.purple  },
+      { label:'⑥ Office Paper — Selected period',  id:'res-ofi-periode',   oldId:'res-ofi-periode-old',   unit:'A4 packs', clr:C.purple  },
+      { label:'⑦ Cleaning Products — Next year',   id:'res-net-any',       oldId:'res-net-any-old',       unit:'rolls',    clr:C.green   },
+      { label:'⑧ Cleaning Products — Selected period', id:'res-net-periode', oldId:'res-net-periode-old',  unit:'rolls',    clr:C.green   },
+    ];
+
+    indData.forEach(ind => {
+      if (y > H - 30) { /* overflow guard — shouldn't trigger on p1 */ }
+      const val  = document.getElementById(ind.id)?.textContent || '–';
+      const base = document.getElementById(ind.oldId)?.textContent || '';
+      y = indicatorRow(ind.label, val, ind.unit, base, ind.clr, y, state.isReduction);
+    });
+
+    y += 3;
+
+    // ── RELATIVE IMPACT BARS ──────────────────────────────
+    if (y < H - 60) {
+      y = sectionHeader('Relative Impact by Indicator', y, C.purple);
+      const impData = [
+        { label:'⚡ Electricity year', id:'imp-elec-any', pctId:'imp-elec-any-pct', clr:C.yellow },
+        { label:'⚡ Electricity period', id:'imp-elec-per', pctId:'imp-elec-per-pct', clr:[251,191,36] },
+        { label:'💧 Water year', id:'imp-water-any', pctId:'imp-water-any-pct', clr:C.blue },
+        { label:'📝 Paper year', id:'imp-paper-any', pctId:'imp-paper-any-pct', clr:C.purple },
+        { label:'🧼 Cleaning year', id:'imp-clean-any', pctId:'imp-clean-any-pct', clr:C.green },
+      ];
+      const maxPct = 100;
+      impData.forEach(imp => {
+        const pct = parseInt(document.getElementById(imp.pctId)?.textContent) || 0;
+        y = miniBar(imp.label, pct, maxPct, imp.clr, y);
+      });
+    }
+
+    // Footer page 1
+    addFooter(1, 2);
+
+    // ══════════════════════════════════════════════════════
+    //  PAGE 2 — CHARTS + 3-YEAR PLAN + TIPS
+    // ══════════════════════════════════════════════════════
+    doc.addPage();
+    rect(0, 0, W, H, C.bg);
+    rect(0, 0, W, 3, C.green);
+
+    // Page header
+    rrect(0, 3, W, 16, C.bg2, 0);
+    font('bold', 9); setColor(...C.text);
+    txt('Sustainable Calculator · ITB', M, 14);
+    font('normal', 7); setColor(...C.muted);
+    txt('3-Year Reduction Plan  &  Practical Tips', W-M, 14, {align:'right'});
+
+    y = 25;
+
+    // ── CHARTS CAPTURE ────────────────────────────────────
+    if (typeof html2canvas !== 'undefined') {
+      y = sectionHeader('Monthly Distribution Charts', y, C.yellow);
+      try {
+        const chartIds = ['chart-elec','chart-water','chart-paper','chart-clean'];
+        const chartLabels = ['⚡ Electricity (kWh/month)','💧 Water (L/month)','📝 Office Paper (packs/month)','🧼 Cleaning (rolls/month)'];
+        const chartClrs = [C.yellow, C.blue, C.purple, C.green];
+        const imgW = (CW - 4) / 2, imgH = 32;
+
+        for (let ci = 0; ci < chartIds.length; ci++) {
+          const canvas = document.getElementById(chartIds[ci]);
+          if (!canvas) continue;
+          const col = ci % 2, row = Math.floor(ci / 2);
+          const cx = M + col * (imgW + 4);
+          const cy = y + row * (imgH + 10);
+
+          rrect(cx, cy, imgW, imgH + 8, C.bg2, 2);
+          font('bold', 6.5); setColor(...chartClrs[ci]);
+          txt(chartLabels[ci], cx + 3, cy + 5);
+
+          try {
+            const imgData = await html2canvas(canvas, {
+              backgroundColor: null, scale: 1.5, logging: false,
+              useCORS: true, allowTaint: true
+            });
+            doc.addImage(imgData.toDataURL('image/png'), 'PNG', cx+1, cy+6, imgW-2, imgH);
+          } catch(chartErr) {
+            font('italic', 7); setColor(...C.muted);
+            txt('[Chart not available]', cx + imgW/2, cy + imgH/2, {align:'center'});
+          }
+        }
+        y += (imgH + 10) * 2 + 6;
+      } catch(e) {
+        y += 4;
+      }
+    }
+
+    // ── 3-YEAR REDUCTION PLAN ─────────────────────────────
+    y = sectionHeader('3-Year Reduction Plan', y, C.green);
+
+    const planData = [
+      {
+        resource:'⚡ Electricity', clr:C.yellow,
+        steps:[
+          {yr:'Year 1',phase:'Reduce',   badge:'−10%', desc:'Presence sensors in all classrooms and common areas'},
+          {yr:'Year 2',phase:'Reuse',    badge:'−15%', desc:'Full LED lighting replacement across all facilities'},
+          {yr:'Year 3',phase:'Recycle',  badge:'−15%', desc:'Solar panel expansion +15 kWp · Own renewable energy'},
+        ]
+      },
+      {
+        resource:'💧 Water', clr:C.blue,
+        steps:[
+          {yr:'Year 1',phase:'Reduce',   badge:'−10%', desc:'Aerator installation on all taps in the centre'},
+          {yr:'Year 2',phase:'Reduce',   badge:'−10%', desc:'Dual-flush cisterns in all toilet facilities'},
+          {yr:'Year 3',phase:'Recycle',  badge:'−12%', desc:'Rainwater collection system for garden irrigation'},
+        ]
+      },
+      {
+        resource:'📝 Office Paper', clr:C.purple,
+        steps:[
+          {yr:'Year 1',phase:'Reduce',   badge:'−15%', desc:'Mandatory Zero Paper policy on Moodle & digital comms'},
+          {yr:'Year 2',phase:'Reuse',    badge:'−5%',  desc:'Exclusive purchase of refillable pens and markers'},
+          {yr:'Year 3',phase:'Recycle',  badge:'−12%', desc:'Full digitalisation of admin procedures & cloud archiving'},
+        ]
+      },
+      {
+        resource:'🧼 Cleaning', clr:C.green,
+        steps:[
+          {yr:'Year 1',phase:'Reduce',   badge:'−20%', desc:'Replace paper towels with energy-efficient air dryers'},
+          {yr:'Year 2',phase:'Reuse',    badge:'−8%',  desc:'Bulk soap and products in reusable refillable containers'},
+          {yr:'Year 3',phase:'Recycle',  badge:'−5%',  desc:'Exclusive certified probiotic and ecological cleaning products'},
+        ]
+      },
+    ];
+
+    const phaseClr = { Reduce: C.red, Reuse: C.yellow, Recycle: C.green };
+
+    planData.forEach(resource => {
+      if (y > H - 36) { return; } // skip if no space (safety)
+      rrect(M, y, CW, 8, C.bg2, 2);
+      rect(M, y, 3, 8, resource.clr);
+      font('bold', 8); setColor(...resource.clr);
+      txt(resource.resource, M+6, y+5.5);
+
+      // Progress dots
+      const totalPct = resource.steps.reduce((s,st) => s + parseInt(st.badge), 0);
+      font('bold', 7); setColor(...C.muted);
+      txt(`Total: ${totalPct}%`, W-M-3, y+5.5, {align:'right'});
+      y += 10;
+
+      resource.steps.forEach(step => {
+        if (y > H - 20) return;
+        rrect(M+3, y, CW-3, 9, C.bg3, 1.5);
+        // Year badge
+        font('bold', 6); setColor(...C.muted);
+        txt(step.yr, M+6, y+3.5);
+        // Phase pill
+        const pc2 = phaseClr[step.phase] || C.green;
+        pill(step.phase, M+20, y+4.5, pc2.map(v=>Math.round(v*0.15)), pc2, 18);
+        // Badge
+        font('bold', 7); setColor(...resource.clr);
+        txt(step.badge, M+42, y+5);
+        // Description
+        font('normal', 7); setColor(...C.text2);
+        txt(step.desc, M+54, y+5);
+        y += 11;
+      });
+      y += 3;
+    });
+
+    y += 2;
+
+    // ── PRACTICAL TIPS ────────────────────────────────────
+    if (y < H - 50) {
+      y = sectionHeader('Practical Tips for Reducing Consumption', y, C.blue);
+
+      const tipsData = [
+        {cat:'ELECTRICITY', clr:C.yellow, items:[
+          'Install presence sensors for automatic lighting control',
+          'Replace all lighting with low-consumption LED (−50% lighting)',
+          'Install photovoltaic solar panels on the roof (−40% bill)',
+          'Schedule auto-shutdown of electronics outside school hours',
+        ]},
+        {cat:'WATER', clr:C.blue, items:[
+          'Aerators on all taps — reduces flow by up to 50%',
+          'Replace cisterns with dual-flush models',
+          'Collect rainwater for irrigation of landscaped areas',
+        ]},
+        {cat:'OFFICE PAPER', clr:C.purple, items:[
+          '"Zero Paper" policy for internal communications',
+          'Digitalise all academic and administrative procedures',
+          'Double-sided printing by default on all printers',
+        ]},
+        {cat:'CLEANING', clr:C.green, items:[
+          'Replace paper towels with low-consumption air dryers',
+          'Purchase soaps and products in bulk in reusable containers',
+          'Use exclusively certified ecological cleaning products',
+        ]},
+      ];
+
+      const tipColW = (CW - 4) / 2;
+      let tipCol = 0, tipColY = [y, y];
+
+      tipsData.forEach(t => {
+        const col = tipCol % 2;
+        let ty = tipColY[col];
+        if (ty > H - 25) return;
+
+        const itemH = t.items.length * 5.5 + 14;
+        rrect(M + col*(tipColW+4), ty, tipColW, itemH, C.bg2, 2);
+        rect(M + col*(tipColW+4), ty, tipColW, 2, t.clr);
+        font('bold', 7); setColor(...t.clr);
+        txt(t.cat, M + col*(tipColW+4) + 4, ty+8);
+
+        t.items.forEach((item, ii) => {
+          font('normal', 6.5); setColor(...C.text2);
+          const iy = ty + 13 + ii * 5.5;
+          setColor(...t.clr); txt('→', M + col*(tipColW+4) + 4, iy);
+          setColor(...C.text2); txt(item, M + col*(tipColW+4) + 9, iy, {maxWidth: tipColW - 13});
+        });
+
+        tipColY[col] += itemH + 4;
+        tipCol++;
+      });
+    }
+
+    // Savings summary box (if reduction active)
+    if (state.isReduction) {
+      const boxY = Math.max(...[0,1].map(c => (typeof tipColY !== 'undefined' ? 0 : 0))) ;
+      // Show at bottom of page
+      const sumY = H - 35;
+      if (y < sumY - 5) {
+        rrect(M, sumY, CW, 22, [52,211,153,0.08], 3);
+        rect(M, sumY, CW, 2, C.green);
+        font('bold', 8); setColor(...C.green);
+        txt('Estimated Annual Savings with 30% Reduction Plan', M+4, sumY+8);
+
+        const sE = document.getElementById('res-elec-any-old')?.textContent;
+        const rE = document.getElementById('res-elec-any')?.textContent;
+        if (sE && rE) {
+          const saved = (parseInt(sE.replace(/\D/g,'')) - parseInt(rE.replace(/\D/g,'')));
+          font('normal', 7); setColor(...C.text2);
+          txt(`⚡ ${saved.toLocaleString()} kWh electricity saved`, M+4, sumY+15);
+          txt(`💧 Water −30%  ·  📝 Paper −30%  ·  🧼 Cleaning −30%`, M+4, sumY+20.5);
+        }
+      }
+    }
+
+    // Footer page 2
+    addFooter(2, 2);
+
+    // ── Save ──────────────────────────────────────────────
+    const fname = `ITB_Sustainability_Report_${new Date().toISOString().split('T')[0]}.pdf`;
+    doc.save(fname);
+
+  } catch(e) {
+    console.error(e);
+    alert('Error generating PDF: ' + e.message);
+  } finally {
+    btn.innerHTML = origText;
+    btn.disabled = false;
+  }
+}
+
+// ─── SIMULATOR ───────────────────────────────────────────
+const SIM_MEASURES = [
+  { id:'cb-sensors',       resource:'elec',  pct:10 },
+  { id:'cb-led',           resource:'elec',  pct:15 },
+  { id:'cb-solar',         resource:'elec',  pct:15 },
+  { id:'cb-airejadors',    resource:'water', pct:10 },
+  { id:'cb-cisternes',     resource:'water', pct:10 },
+  { id:'cb-pluvials',      resource:'water', pct:12 },
+  { id:'cb-zeropaper',     resource:'paper', pct:15 },
+  { id:'cb-recarregables', resource:'paper', pct:5  },
+  { id:'cb-digitalitzacio',resource:'paper', pct:12 },
+  { id:'cb-assecadors',    resource:'clean', pct:20 },
+  { id:'cb-granel',        resource:'clean', pct:8  },
+  { id:'cb-ecologics',     resource:'clean', pct:5  },
+];
+
+// Base annual values (no variability for simulator clarity)
+function getSimBase() {
+  const d = DATA.dades_base;
+  const p = PERIOD_CONFIG.anual;
+  return {
+    elec:  Math.round(d.electricitat.consum_mitja_diari_kWh * 365 * p.electricitat.sf),
+    water: Math.round(d.aigua.consum_mitja_diari_litres * 365 * p.aigua.sf),
+    paper: Math.round(d.consumibles_oficina.mitjana_mensual.paper_A4_paquets * 12 * p.oficina.sf),
+    clean: Math.round(d.productes_neteja.mitjana_mensual.paper_higienic_rotllos * 12 * p.neteja.sf),
+  };
+}
+
+let simDonutChart = null;
+
+function initSimDonut() {
+  if (!hasChartLib()) return;
+  const ctx = document.getElementById('sim-donut')?.getContext('2d');
+  if (!ctx) return;
+  simDonutChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      datasets: [{
+        data: [0, 100],
+        backgroundColor: ['rgba(52,211,153,.85)', 'rgba(30,45,61,.5)'],
+        borderWidth: 0,
+        borderRadius: 4,
+        hoverOffset: 0,
+      }]
+    },
+    options: {
+      responsive: false,
+      cutout: '72%',
+      animation: { duration: 400 },
+      plugins: { legend: { display: false }, tooltip: { enabled: false } },
+    }
+  });
+}
+
+function calcSimReductions() {
+  const reductions = { elec: 0, water: 0, paper: 0, clean: 0 };
+  // Use compound reduction: each measure applies to remaining consumption
+  const remaining = { elec: 1, water: 1, paper: 1, clean: 1 };
+  SIM_MEASURES.forEach(m => {
+    const cb = document.getElementById(m.id);
+    if (cb && cb.checked) {
+      remaining[m.resource] *= (1 - m.pct / 100);
+    }
+  });
+  Object.keys(reductions).forEach(k => {
+    reductions[k] = Math.round((1 - remaining[k]) * 100);
+  });
+  return reductions;
+}
+
+function updateSimMeasureStyles() {
+  document.querySelectorAll('.sim-measure').forEach(lbl => {
+    const cb = lbl.querySelector('.sim-cb');
+    const res = lbl.dataset.resource;
+    if (cb && cb.checked) {
+      lbl.classList.add(`active-${res}`);
+    } else {
+      ['active-elec','active-water','active-paper','active-clean'].forEach(c => lbl.classList.remove(c));
+    }
+  });
+}
+
+function updateSimulator() {
+  updateSimMeasureStyles();
+  const reds = calcSimReductions();
+  const base = getSimBase();
+  const avg = Math.round((reds.elec + reds.water + reds.paper + reds.clean) / 4);
+
+  // Update donut
+  if (simDonutChart) {
+    const col = avg >= 25 ? 'rgba(52,211,153,.85)' : avg >= 15 ? 'rgba(251,191,36,.85)' : 'rgba(248,113,113,.65)';
+    simDonutChart.data.datasets[0].data = [avg, 100 - avg];
+    simDonutChart.data.datasets[0].backgroundColor[0] = col;
+    simDonutChart.update('active');
+  }
+
+  // Update total pct label
+  const totalEl = document.getElementById('sim-total-pct');
+  if (totalEl) totalEl.textContent = `−${avg}%`;
+
+  // Per-resource progress bars in left cards
+  ['elec','water','paper','clean'].forEach(key => {
+    const pct = reds[key];
+    const bar = document.getElementById(`sim-${key === 'elec' ? 'elec' : key === 'water' ? 'water' : key}-bar`);
+    const lbl = document.getElementById(`sim-${key === 'elec' ? 'elec' : key === 'water' ? 'water' : key}-pct`);
+    if (bar) bar.style.width = pct + '%';
+    if (lbl) lbl.textContent = `−${pct}%`;
+  });
+  // fix naming
+  ['elec','water','paper','clean'].forEach(key => {
+    const bar = document.getElementById(`sim-${key}-bar`);
+    const lbl = document.getElementById(`sim-${key}-pct`);
+    if (bar) bar.style.width = reds[key] + '%';
+    if (lbl) lbl.textContent = `−${reds[key]}%`;
+  });
+
+  // Mini bars on right panel
+  ['elec','water','paper','clean'].forEach(key => {
+    const pct = reds[key];
+    const bar = document.getElementById(`sim-mini-${key}-bar`);
+    const lbl = document.getElementById(`sim-mini-${key}-pct`);
+    if (bar) bar.style.width = Math.min(100, pct) + '%';
+    if (lbl) lbl.textContent = `−${pct}%`;
+  });
+
+  // Absolute values
+  const units = { elec:'kWh', water:'L', paper:'paquets', clean:'rotllos' };
+  ['elec','water','paper','clean'].forEach(key => {
+    const baseVal = base[key];
+    const reduction = reds[key] / 100;
+    const newVal = Math.round(baseVal * (1 - reduction));
+    const saved  = baseVal - newVal;
+    const absEl  = document.getElementById(`sim-abs-${key}`);
+    const saveEl = document.getElementById(`sim-abs-${key}-save`);
+    if (absEl) absEl.textContent = `${newVal.toLocaleString('ca-ES')} ${units[key]}`;
+    if (saveEl) {
+      if (saved > 0) {
+        saveEl.textContent = `−${saved.toLocaleString('ca-ES')} estalviats`;
+        saveEl.style.color = 'var(--green)';
+      } else {
+        saveEl.textContent = `sense canvis`;
+        saveEl.style.color = 'var(--muted)';
+      }
+    }
+  });
+
+  // Scenario message
+  const total = SIM_MEASURES.filter(m => document.getElementById(m.id)?.checked).length;
+  const total_all = SIM_MEASURES.length;
+  const msg = document.getElementById('sim-scenario-text');
+  if (msg) {
+    if (total === 0) msg.textContent = `No measures active. Consumption unchanged.`;
+    else if (total === total_all) msg.textContent = `All measures active. Maximum reduction: −${avg}% average.`;
+    else msg.textContent = `${total} of ${total_all} active measures. Average reduction: −${avg}%.`;
+  }
+
+  // Update compare charts dynamically
+  updateSimCompareCharts(base, reds);
+}
+
+function updateSimCompareCharts(base, reds) {
+  if (!hasChartLib()) return;
+  const baseE = base.elec;
+  const baseA = Math.round(base.water / 1000); // kL
+  const baseO = base.paper;
+  const baseN = base.clean;
+
+  const redE = Math.round(baseE * (1 - reds.elec / 100));
+  const redA = Math.round(baseA * (1 - reds.water / 100));
+  const redO = Math.round(baseO * (1 - reds.paper / 100));
+  const redN = Math.round(baseN * (1 - reds.clean / 100));
+
+  // Compare chart
+  const ctxC = document.getElementById('chart-compare')?.getContext('2d');
+  if (ctxC) {
+    if (charts['compare']) charts['compare'].destroy();
+    charts['compare'] = new Chart(ctxC, {
+      type: 'bar',
+      data: {
+        labels: ['⚡ Elèc (kWh÷10)', '💧 Water (kL)', '📝 Paper', '🧼 Cleaning'],
+        datasets: [
+          { label:'Current baseline', data:[Math.round(baseE/10),baseA,baseO,baseN], backgroundColor:'rgba(90,122,150,.5)', borderRadius:5 },
+          { label:'Simulated scenario', data:[Math.round(redE/10),redA,redO,redN], backgroundColor:'rgba(52,211,153,.65)', borderRadius:5 },
+        ]
+      },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        plugins:{
+          legend:{labels:{color:'#94afc8',font:{size:10},boxWidth:10}},
+          tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y.toLocaleString()}`}}
+        },
+        scales:{
+          x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#5a7a96',font:{size:10}}},
+          y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#5a7a96',font:{size:10,family:'JetBrains Mono'}}}
+        }
+      }
+    });
+  }
+
+  // 3-year savings line
+  const ctxS = document.getElementById('chart-savings3y')?.getContext('2d');
+  if (ctxS) {
+    if (charts['savings3y']) charts['savings3y'].destroy();
+    // Year 1: only y1 measures, Year 2: y1+y2, Year 3: all
+    const y1Ids = ['cb-sensors','cb-airejadors','cb-zeropaper','cb-assecadors'];
+    const y2Ids = ['cb-led','cb-cisternes','cb-recarregables','cb-granel'];
+    const y3Ids = ['cb-solar','cb-pluvials','cb-digitalitzacio','cb-ecologics'];
+
+    function yearSavingKWh(yearIds) {
+      let rem = 1;
+      [...y1Ids,...y2Ids,...y3Ids].slice(0, yearIds.length).forEach(id => {
+        const m = SIM_MEASURES.find(x=>x.id===id);
+        const cb = document.getElementById(id);
+        if (m && cb && cb.checked) rem *= (1 - m.pct/100);
+      });
+      return Math.round(baseE * (1 - rem));
+    }
+
+    // simpler approach: cumulative per year
+    function cumSavingKWh(year) {
+      const ids = year===1 ? y1Ids : year===2 ? [...y1Ids,...y2Ids] : [...y1Ids,...y2Ids,...y3Ids];
+      let rem = 1;
+      ids.forEach(id => {
+        const m = SIM_MEASURES.find(x=>x.id===id);
+        const cb = document.getElementById(id);
+        if (m && cb && cb.checked && m.resource==='elec') rem *= (1 - m.pct/100);
+      });
+      return Math.round(baseE * (1 - rem));
+    }
+
+    charts['savings3y'] = new Chart(ctxS, {
+      type: 'line',
+      data: {
+        labels: ['Year 1','Year 2','Year 3'],
+        datasets: [
+          { label:'Electrical savings (kWh)', data:[cumSavingKWh(1),cumSavingKWh(2),cumSavingKWh(3)],
+            borderColor:'#34d399', backgroundColor:'rgba(52,211,153,.12)', fill:true, tension:.3, pointRadius:6, pointBackgroundColor:'#34d399' },
+        ]
+      },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        plugins:{
+          legend:{labels:{color:'#94afc8',font:{size:10},boxWidth:10}},
+          tooltip:{callbacks:{label:c=>` ${c.parsed.y.toLocaleString('ca-ES')} kWh saved`}}
+        },
+        scales:{
+          x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#5a7a96',font:{size:10}}},
+          y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#5a7a96',font:{size:10,family:'JetBrains Mono'},callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v},min:0}
+        }
+      }
+    });
+  }
+}
+
+function simSetAll(state) {
+  document.querySelectorAll('.sim-cb').forEach(cb => { cb.checked = state; });
+  updateSimulator();
+}
+
+// Attach events to all checkboxes
+function initSimulator() {
+  initSimDonut();
+  document.querySelectorAll('.sim-cb').forEach(cb => {
+    cb.addEventListener('change', updateSimulator);
+  });
+  updateSimulator();
+}
+
+// ─── INIT ────────────────────────────────────────────────
+// Set default dates for custom range
+const today = new Date();
+const sixMonths = new Date(today); sixMonths.setMonth(sixMonths.getMonth()+6);
+document.getElementById('date-from').value = toLocalISODate(today);
+document.getElementById('date-to').value   = toLocalISODate(sixMonths);
+
+handleCalc();
+initSimulator();
+
+// ─── AMBIENT PARTICLE SYSTEM ─────────────────────────────
+(function() {
+  const canvas = document.getElementById('ambient-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  let W, H, particles = [];
+
+  const TYPES = [
+    { color: 'rgba(251,191,36,',  symbol: '⚡', size: [6,11],  speed: [.18,.4],  count: 6  },
+    { color: 'rgba(56,189,248,',  symbol: '💧', size: [4,9],   speed: [.12,.28], count: 9  },
+    { color: 'rgba(167,139,250,', symbol: '○',  size: [3,7],   speed: [.1,.22],  count: 8  },
+    { color: 'rgba(52,211,153,',  symbol: '✦',  size: [4,10],  speed: [.14,.32], count: 7  },
+  ];
+
+  function rand(a, b) { return a + Math.random() * (b - a); }
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function createParticle(type, force) {
+    return {
+      type,
+      x: rand(0, W),
+      y: force ? rand(0, H) : H + rand(10, 50),
+      size: rand(type.size[0], type.size[1]),
+      speed: rand(type.speed[0], type.speed[1]),
+      opacity: rand(.12, .35),
+      drift: rand(-.3, .3),
+      wobble: rand(0, Math.PI * 2),
+      wobbleSpeed: rand(.005, .018),
+      life: 0,
+      maxLife: rand(280, 520),
+    };
+  }
+
+  function initParticles() {
+    particles = [];
+    TYPES.forEach(t => {
+      for (let i = 0; i < t.count; i++) {
+        particles.push(createParticle(t, true));
+      }
+    });
+  }
+
+  function drawParticle(p) {
+    const fade = Math.min(1, Math.min(p.life / 40, (p.maxLife - p.life) / 40));
+    ctx.save();
+    ctx.globalAlpha = p.opacity * fade;
+    ctx.font = `${p.size}px serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    // For symbols use text, for circles draw shape
+    if (p.type.symbol === '○') {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
+      ctx.strokeStyle = p.type.color + '.6)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    } else if (p.type.symbol === '✦') {
+      // draw a 4-point star
+      const s = p.size / 2;
+      ctx.fillStyle = p.type.color + '.8)';
+      ctx.beginPath();
+      for (let i = 0; i < 8; i++) {
+        const angle = (i * Math.PI) / 4;
+        const r = i % 2 === 0 ? s : s * .4;
+        if (i === 0) ctx.moveTo(p.x + r * Math.cos(angle), p.y + r * Math.sin(angle));
+        else ctx.lineTo(p.x + r * Math.cos(angle), p.y + r * Math.sin(angle));
+      }
+      ctx.closePath();
+      ctx.fill();
+    } else {
+      ctx.fillText(p.type.symbol, p.x, p.y);
+    }
+    ctx.restore();
+  }
+
+  let raf;
+  function tick() {
+    ctx.clearRect(0, 0, W, H);
+
+    particles.forEach((p, i) => {
+      p.wobble += p.wobbleSpeed;
+      p.x += p.drift + Math.sin(p.wobble) * .4;
+      p.y -= p.speed;
+      p.life++;
+
+      drawParticle(p);
+
+      if (p.life >= p.maxLife || p.y < -30) {
+        const t = TYPES[Math.floor(Math.random() * TYPES.length)];
+        particles[i] = createParticle(t, false);
+      }
+    });
+
+    raf = requestAnimationFrame(tick);
+  }
+
+  window.addEventListener('resize', () => { resize(); initParticles(); });
+  resize();
+  initParticles();
+  tick();
+
+  // Pause when tab not visible
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) cancelAnimationFrame(raf);
+    else tick();
+  });
+})();
+
+// ─── TOAST SYSTEM ───────────────────────────────────────
+(function() {
+  const toast = document.getElementById('itb-toast');
+  const msg   = document.getElementById('toast-msg');
+  let timer;
+
+  function showToast(text, duration = 2800) {
+    if (!toast) return;
+    msg.textContent = text;
+    toast.classList.add('show');
+    clearTimeout(timer);
+    timer = setTimeout(() => toast.classList.remove('show'), duration);
+  }
+
+  // Show toast on tab switch
+  document.querySelectorAll('.nav-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const labels = {
+        calculadora: "🌿 Consumption Calculator",
+        grafics:     "📊 Data Visualization",
+        pla:         "🗺️ Reduction Plan",
+        simulador:   '🔬 Simulador d\'estalvi',
+        consells:    "💡 Practical Tips",
+      };
+      const key = tab.dataset.tab;
+      if (labels[key]) showToast(labels[key]);
+    });
+  });
+
+  // Show toast on calc button
+  const calcBtn = document.querySelector('.btn-primary');
+  if (calcBtn) {
+    calcBtn.addEventListener('click', () => {
+      showToast('✅ Results updated!');
+    });
+  }
+})();
+</script>
 </body>
 </html>
