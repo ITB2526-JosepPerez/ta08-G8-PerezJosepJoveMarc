@@ -254,7 +254,8 @@ label.field-lbl {
   margin-bottom: .35rem;
 }
 
-.select-row { display: flex; gap: .6rem; align-items: flex-end; }
+.select-row { display: flex; gap: .6rem; align-items: flex-end; flex-wrap: wrap; }
+.select-row .btn { flex-shrink: 0; }
 .demo-row { margin-top: .6rem; }
 .demo-row .btn { width: 100%; justify-content: center; }
 
@@ -1076,6 +1077,65 @@ footer {
   }
 }
 
+/* ══════════════════════════════════════════════
+   MY DATA STYLES
+══════════════════════════════════════════════ */
+.mydata-input-row {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.mydata-input {
+  flex: 1;
+  transition: border-color var(--t), box-shadow var(--t);
+}
+.mydata-input.is-valid {
+  border-color: rgba(52,211,153,.5);
+  box-shadow: 0 0 0 2px rgba(52,211,153,.1);
+}
+.mydata-input.is-error {
+  border-color: rgba(248,113,113,.6);
+  box-shadow: 0 0 0 2px rgba(248,113,113,.1);
+}
+.mydata-unit {
+  font-size: .78rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 60px;
+}
+.mydata-range-hint {
+  font-size: .7rem;
+  color: var(--muted);
+  margin-top: .3rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+.mydata-err {
+  font-size: .75rem;
+  color: var(--red);
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  margin-top: .35rem;
+  animation: fadeUp .2s ease;
+}
+.mydata-default-pill {
+  font-size: .72rem;
+  font-family: 'JetBrains Mono', monospace;
+  border: 1px solid;
+  border-radius: 999px;
+  padding: .18rem .7rem;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  opacity: .8;
+}
+.mydata-field-wrap { display: flex; flex-direction: column; gap: 0; }
+.mydata-card { transition: box-shadow var(--t); }
+.mydata-card:focus-within { box-shadow: 0 0 0 1px rgba(52,211,153,.2), 0 8px 30px rgba(0,0,0,.3); }
+
 @media print {
   .btn, button, .nav-tabs { display: none !important; }
   body { background: white; color: #000; }
@@ -1281,6 +1341,9 @@ footer {
     </button>
     <button class="nav-tab" data-tab="consells" role="tab">
       <i class="fa-solid fa-lightbulb"></i> <span>Tips</span>
+    </button>
+    <button class="nav-tab" data-tab="mydata" role="tab">
+      <i class="fa-solid fa-pen-to-square"></i> <span>My Data</span>
     </button>
   </nav>
 </header>
@@ -2068,7 +2131,239 @@ footer {
 
   </div><!-- /tab-consells -->
 
-</div><!-- /.app -->
+  <!-- ══════════════════════════════════════════
+       TAB 5: MY DATA (custom inputs)
+  ══════════════════════════════════════════ -->
+  <div id="tab-mydata" class="page-section">
+
+    <div class="section-title">
+      <i class="fa-solid fa-pen-to-square"></i> Enter Your Own Consumption Data
+      <span class="muted">— replace the default dataset with your real values</span>
+    </div>
+
+    <!-- Info banner -->
+    <div style="font-size:.85rem;color:var(--text2);background:rgba(56,189,248,.06);border:1px solid rgba(56,189,248,.18);border-radius:var(--radius-lg);padding:.9rem 1.1rem;display:flex;gap:.6rem;align-items:flex-start;">
+      <i class="fa-solid fa-circle-info" style="color:var(--blue);margin-top:.2rem;flex-shrink:0;font-size:1rem"></i>
+      <span>Enter your real data in the fields below, then click <strong style="color:var(--green)">Apply &amp; Calculate</strong>. The calculator will immediately update all 8 indicators with your numbers. Leaving a field blank keeps the original default value.</span>
+    </div>
+
+    <!-- 4 input cards -->
+    <div class="controls-panel" style="grid-template-columns:repeat(auto-fit,minmax(270px,1fr))">
+
+      <!-- ELECTRICITY -->
+      <div class="ctrl-box mydata-card" id="card-elec" style="border-top:3px solid var(--elec);gap:.8rem">
+        <h2 style="font-size:.82rem"><i class="fa-solid fa-bolt" style="color:var(--elec)"></i> Electricity</h2>
+        <div class="mydata-field-wrap">
+          <label class="field-lbl" for="my-elec-daily">Daily average consumption</label>
+          <div class="mydata-input-row">
+            <input type="number" id="my-elec-daily" class="itb-input mydata-input" placeholder="261.54"
+              min="1" max="5000" step="0.01" data-unit="kWh/day" data-default="261.54" data-max="5000" />
+            <span class="mydata-unit" style="color:var(--elec)">kWh/day</span>
+          </div>
+          <div class="mydata-range-hint">Valid range: <strong>1 – 5,000 kWh/day</strong></div>
+          <div class="mydata-err" id="err-elec" hidden><i class="fa-solid fa-triangle-exclamation"></i> <span></span></div>
+        </div>
+        <div class="mydata-default-pill" style="border-color:rgba(251,191,36,.2);color:var(--elec)">
+          <i class="fa-solid fa-database" style="font-size:.7rem"></i> Default: 261.54 kWh/day
+        </div>
+      </div>
+
+      <!-- WATER -->
+      <div class="ctrl-box mydata-card" id="card-water" style="border-top:3px solid var(--water);gap:.8rem">
+        <h2 style="font-size:.82rem"><i class="fa-solid fa-droplet" style="color:var(--water)"></i> Water</h2>
+        <div class="mydata-field-wrap">
+          <label class="field-lbl" for="my-water-daily">Daily average consumption</label>
+          <div class="mydata-input-row">
+            <input type="number" id="my-water-daily" class="itb-input mydata-input" placeholder="850"
+              min="10" max="50000" step="1" data-unit="L/day" data-default="850" data-max="50000" />
+            <span class="mydata-unit" style="color:var(--water)">L/day</span>
+          </div>
+          <div class="mydata-range-hint">Valid range: <strong>10 – 50,000 L/day</strong></div>
+          <div class="mydata-err" id="err-water" hidden><i class="fa-solid fa-triangle-exclamation"></i> <span></span></div>
+        </div>
+        <div class="mydata-default-pill" style="border-color:rgba(56,189,248,.2);color:var(--water)">
+          <i class="fa-solid fa-database" style="font-size:.7rem"></i> Default: 850 L/day
+        </div>
+      </div>
+
+      <!-- OFFICE SUPPLIES -->
+      <div class="ctrl-box mydata-card" id="card-paper" style="border-top:3px solid var(--paper);gap:.8rem">
+        <h2 style="font-size:.82rem"><i class="fa-solid fa-file-alt" style="color:var(--paper)"></i> Office Supplies</h2>
+        <div class="mydata-field-wrap">
+          <label class="field-lbl" for="my-paper-monthly">A4 paper packs per month</label>
+          <div class="mydata-input-row">
+            <input type="number" id="my-paper-monthly" class="itb-input mydata-input" placeholder="22.5"
+              min="0.5" max="500" step="0.5" data-unit="packs/month" data-default="22.5" data-max="500" />
+            <span class="mydata-unit" style="color:var(--paper)">packs/mo</span>
+          </div>
+          <div class="mydata-range-hint">Valid range: <strong>0.5 – 500 packs/month</strong></div>
+          <div class="mydata-err" id="err-paper" hidden><i class="fa-solid fa-triangle-exclamation"></i> <span></span></div>
+        </div>
+        <div class="mydata-default-pill" style="border-color:rgba(167,139,250,.2);color:var(--paper)">
+          <i class="fa-solid fa-database" style="font-size:.7rem"></i> Default: 22.5 packs/month
+        </div>
+      </div>
+
+      <!-- CLEANING -->
+      <div class="ctrl-box mydata-card" id="card-clean" style="border-top:3px solid var(--clean);gap:.8rem">
+        <h2 style="font-size:.82rem"><i class="fa-solid fa-soap" style="color:var(--clean)"></i> Cleaning Products</h2>
+        <div class="mydata-field-wrap">
+          <label class="field-lbl" for="my-clean-monthly">Toilet paper rolls per month</label>
+          <div class="mydata-input-row">
+            <input type="number" id="my-clean-monthly" class="itb-input mydata-input" placeholder="108"
+              min="1" max="2000" step="1" data-unit="rolls/month" data-default="108" data-max="2000" />
+            <span class="mydata-unit" style="color:var(--clean)">rolls/mo</span>
+          </div>
+          <div class="mydata-range-hint">Valid range: <strong>1 – 2,000 rolls/month</strong></div>
+          <div class="mydata-err" id="err-clean" hidden><i class="fa-solid fa-triangle-exclamation"></i> <span></span></div>
+        </div>
+        <div class="mydata-default-pill" style="border-color:rgba(52,211,153,.2);color:var(--clean)">
+          <i class="fa-solid fa-database" style="font-size:.7rem"></i> Default: 108 rolls/month
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Seasonality (collapsible) -->
+    <details class="ctrl-box" style="padding:0;overflow:hidden">
+      <summary style="padding:1rem 1.4rem;cursor:pointer;display:flex;align-items:center;gap:.6rem;font-size:.82rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;list-style:none;user-select:none">
+        <i class="fa-solid fa-calendar-days" style="color:var(--green)"></i>
+        Optional: Monthly Seasonality Factors
+        <span style="margin-left:auto;font-size:.72rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">click to expand ▾</span>
+      </summary>
+      <div style="padding:0 1.4rem 1.2rem;display:flex;flex-direction:column;gap:.85rem;border-top:1px solid var(--border)">
+        <p style="font-size:.8rem;color:var(--muted);padding-top:.85rem">12 monthly multipliers (Jan–Dec). A value of <strong style="color:var(--text)">1.2</strong> means 20% more than average that month. All 12 values must be between <strong style="color:var(--text)">0.1</strong> and <strong style="color:var(--text)">3.0</strong>.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div>
+            <label class="field-lbl">⚡ Electricity — 12 comma-separated values</label>
+            <input type="text" id="my-elec-factors" class="itb-input" placeholder="1.15,1.18,1.05,0.92,0.88,0.80,0.75,0.78,0.90,1.02,1.12,1.20" style="font-family:'JetBrains Mono',monospace;font-size:.8rem" />
+            <div class="mydata-err" id="err-elec-f" hidden style="margin-top:.35rem"><i class="fa-solid fa-triangle-exclamation"></i> <span></span></div>
+          </div>
+          <div>
+            <label class="field-lbl">💧 Water — 12 comma-separated values</label>
+            <input type="text" id="my-water-factors" class="itb-input" placeholder="0.80,0.82,0.88,0.95,1.05,1.15,1.20,1.18,1.05,0.95,0.85,0.78" style="font-family:'JetBrains Mono',monospace;font-size:.8rem" />
+            <div class="mydata-err" id="err-water-f" hidden style="margin-top:.35rem"><i class="fa-solid fa-triangle-exclamation"></i> <span></span></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- Action buttons -->
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:center">
+      <button id="btn-apply-mydata" class="btn btn-primary" style="min-width:200px;justify-content:center">
+        <i class="fa-solid fa-bolt-lightning"></i> Apply &amp; Calculate
+      </button>
+      <button id="btn-reset-mydata" class="btn btn-secondary">
+        <i class="fa-solid fa-rotate-left"></i> Reset to defaults
+      </button>
+      <span id="mydata-status" style="font-size:.8rem;font-family:'JetBrains Mono',monospace"></span>
+    </div>
+
+    <!-- Live results panel (shown after apply) -->
+    <div id="mydata-results" hidden style="display:flex;flex-direction:column;gap:1.25rem">
+
+      <div class="section-title">
+        <i class="fa-solid fa-chart-bar"></i> Calculated Results with Your Data
+        <span class="muted">— based on the values you entered</span>
+      </div>
+
+      <!-- mini KPI row -->
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <span class="kpi-label">⚡ Electricity / year</span>
+          <span class="kpi-value elec" id="myd-elec-year">–</span>
+          <span class="kpi-sub">kWh</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">💧 Water / year</span>
+          <span class="kpi-value water" id="myd-water-year">–</span>
+          <span class="kpi-sub">litres</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">📝 Paper / year</span>
+          <span class="kpi-value paper" id="myd-paper-year">–</span>
+          <span class="kpi-sub">A4 packs</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">🧼 Cleaning / year</span>
+          <span class="kpi-value clean" id="myd-clean-year">–</span>
+          <span class="kpi-sub">rolls</span>
+        </div>
+      </div>
+
+      <!-- Period selector for results -->
+      <div class="ctrl-box" style="flex-direction:row;align-items:center;gap:1rem;flex-wrap:wrap;padding:1rem 1.2rem">
+        <span style="font-size:.8rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap">Period estimate:</span>
+        <div style="display:flex;gap:.4rem;flex-wrap:wrap">
+          <button class="year-btn active" data-myd-period="anual" onclick="mydSetPeriod(this,'anual')">Full Year</button>
+          <button class="year-btn" data-myd-period="curs" onclick="mydSetPeriod(this,'curs')">Academic (Sep–Jun)</button>
+          <button class="year-btn" data-myd-period="hivern" onclick="mydSetPeriod(this,'hivern')">Winter (Dec–Feb)</button>
+        </div>
+        <span id="myd-period-label" style="font-size:.78rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-left:auto"></span>
+      </div>
+
+      <!-- 8 indicators in results grid -->
+      <div class="results-grid">
+        <div class="card card-accent-elec">
+          <div class="card-top"><div class="card-icon icon-elec"><i class="fa-solid fa-bolt"></i></div><h3>Electricity</h3><span class="unit-tag">kWh</span></div>
+          <div class="card-body">
+            <div class="data-row"><span class="row-label">① Next year</span><div class="row-values"><span id="myd-res-elec-any" class="val-main">–</span></div></div>
+            <div class="data-row"><span class="row-label">② Selected period</span><div class="row-values"><span id="myd-res-elec-per" class="val-secondary">–</span></div></div>
+          </div>
+        </div>
+        <div class="card card-accent-water">
+          <div class="card-top"><div class="card-icon icon-water"><i class="fa-solid fa-droplet"></i></div><h3>Water</h3><span class="unit-tag">L</span></div>
+          <div class="card-body">
+            <div class="data-row"><span class="row-label">③ Next year</span><div class="row-values"><span id="myd-res-water-any" class="val-main">–</span></div></div>
+            <div class="data-row"><span class="row-label">④ Selected period</span><div class="row-values"><span id="myd-res-water-per" class="val-secondary">–</span></div></div>
+          </div>
+        </div>
+        <div class="card card-accent-paper">
+          <div class="card-top"><div class="card-icon icon-paper"><i class="fa-solid fa-file-alt"></i></div><h3>Office Supplies</h3><span class="unit-tag">packs</span></div>
+          <div class="card-body">
+            <div class="data-row"><span class="row-label">⑤ Next year</span><div class="row-values"><span id="myd-res-paper-any" class="val-main">–</span></div></div>
+            <div class="data-row"><span class="row-label">⑥ Selected period</span><div class="row-values"><span id="myd-res-paper-per" class="val-secondary">–</span></div></div>
+          </div>
+        </div>
+        <div class="card card-accent-clean">
+          <div class="card-top"><div class="card-icon icon-clean"><i class="fa-solid fa-soap"></i></div><h3>Cleaning</h3><span class="unit-tag">rolls</span></div>
+          <div class="card-body">
+            <div class="data-row"><span class="row-label">⑦ Next year</span><div class="row-values"><span id="myd-res-clean-any" class="val-main">–</span></div></div>
+            <div class="data-row"><span class="row-label">⑧ Selected period</span><div class="row-values"><span id="myd-res-clean-per" class="val-secondary">–</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- −30% with their data -->
+      <div class="ctrl-box" style="background:rgba(52,211,153,.04);border-color:rgba(52,211,153,.2)">
+        <h2 style="font-size:.82rem"><i class="fa-solid fa-recycle" style="color:var(--green)"></i> With −30% Reduction Plan (applied to your data)</h2>
+        <div class="kpi-row" style="margin-top:.5rem">
+          <div class="kpi-card" style="background:var(--bg3)">
+            <span class="kpi-label">⚡ Elec saved/year</span>
+            <span class="kpi-value" style="color:var(--green)" id="myd-save-elec">–</span>
+            <span class="kpi-sub">kWh</span>
+          </div>
+          <div class="kpi-card" style="background:var(--bg3)">
+            <span class="kpi-label">💧 Water saved/year</span>
+            <span class="kpi-value" style="color:var(--blue)" id="myd-save-water">–</span>
+            <span class="kpi-sub">litres</span>
+          </div>
+          <div class="kpi-card" style="background:var(--bg3)">
+            <span class="kpi-label">📝 Paper saved/year</span>
+            <span class="kpi-value" style="color:var(--paper)" id="myd-save-paper">–</span>
+            <span class="kpi-sub">packs</span>
+          </div>
+          <div class="kpi-card" style="background:var(--bg3)">
+            <span class="kpi-label">🧼 Cleaning saved/year</span>
+            <span class="kpi-value" style="color:var(--clean)" id="myd-save-clean">–</span>
+            <span class="kpi-sub">rolls</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /mydata-results -->
+
+  </div><!-- /tab-mydata -->
 
 <footer>
   <p>Sustainable Calculator · Institut de Tecnologia del Bages · Circular Economy Phase 3 · 2025–2026</p>
@@ -2106,7 +2401,7 @@ const DATA = {
 const DAYS = { ANNUAL: 365, ACADEMIC_YEAR: 304, WINTER: 90 };
 
 const PERIOD_CONFIG = {
-  anual:  { electricitat:{days:365,sf:1.0},  aigua:{days:365,sf:0.9},   oficina:{months:12,sf:1.0},  neteja:{months:12,sf:1.0}  },
+  anual:  { electricitat:{days:365,sf:1.0},  aigua:{days:365,sf:1.0},   oficina:{months:12,sf:1.0},  neteja:{months:12,sf:1.0}  },
   curs:   { electricitat:{days:304,sf:1.1},  aigua:{days:304,sf:1.0},   oficina:{months:10,sf:1.2},  neteja:{months:10,sf:1.1}  },
   hivern: { electricitat:{days:90, sf:1.3},  aigua:{days:90, sf:0.8},   oficina:{months:3, sf:1.1},  neteja:{months:3, sf:1.3}  },
 };
@@ -2272,11 +2567,19 @@ function render(result) {
   setRow('res-net-any',     'res-net-any-old',     'pill-net-any',     base.netAny,   show.netAny);
   setRow('res-net-periode', 'res-net-periode-old', 'pill-net-periode',  base.netPer,   show.netPer);
 
-  // KPI row — show period values so they match the selected date range
-  animateCount(document.getElementById('kpi-elec'),  show.elecPer);
-  animateCount(document.getElementById('kpi-water'), show.aiguaPer);
-  animateCount(document.getElementById('kpi-paper'), show.ofiPer);
-  animateCount(document.getElementById('kpi-clean'), show.netPer);
+  // KPI row — always show ANNUAL values (independent of selected period)
+  animateCount(document.getElementById('kpi-elec'),  show.elecAny);
+  animateCount(document.getElementById('kpi-water'), show.aiguaAny);
+  animateCount(document.getElementById('kpi-paper'), show.ofiAny);
+  animateCount(document.getElementById('kpi-clean'), show.netAny);
+
+  // KPI sub-labels always say "annual" since we show annual values
+  document.querySelectorAll('.kpi-sub').forEach(el => {
+    if (el.textContent.includes('kWh') || el.textContent.includes('full year')) el.textContent = 'kWh · annual';
+    else if (el.textContent.includes('L ·')) el.textContent = 'L · annual';
+    else if (el.textContent.includes('packs')) el.textContent = 'A4 packs · annual';
+    else if (el.textContent.includes('rolls')) el.textContent = 'rolls · annual';
+  });
 
   ['elec','water','paper','clean'].forEach(k => {
     const el = document.getElementById(`kpi-${k}-delta`);
@@ -2300,8 +2603,7 @@ function render(result) {
     `;
   } else { banner.hidden = true; }
 
-  // Impact bars — normalize to annual base as 100%
-  const maxVal = base.elecAny; // electricity annual is always biggest reference
+  // Impact bars — each resource normalized against its OWN annual baseline (= 100%)
   function setBar(fillId, pctId, val, refMax) {
     const pct = Math.min(100, Math.round(val / refMax * 100));
     const fill = document.getElementById(fillId);
@@ -2311,10 +2613,10 @@ function render(result) {
   }
   setBar('imp-elec-any',  'imp-elec-any-pct',  show.elecAny,  base.elecAny);
   setBar('imp-elec-per',  'imp-elec-per-pct',  show.elecPer,  base.elecAny);
-  setBar('imp-water-any', 'imp-water-any-pct', show.aiguaAny, base.elecAny);
-  setBar('imp-water-per', 'imp-water-per-pct', show.aiguaPer, base.elecAny);
-  setBar('imp-paper-any', 'imp-paper-any-pct', show.ofiAny * 100, base.elecAny); // scale up for visibility
-  setBar('imp-clean-any', 'imp-clean-any-pct', show.netAny * 80, base.elecAny);
+  setBar('imp-water-any', 'imp-water-any-pct', show.aiguaAny, base.aiguaAny);
+  setBar('imp-water-per', 'imp-water-per-pct', show.aiguaPer, base.aiguaAny);
+  setBar('imp-paper-any', 'imp-paper-any-pct', show.ofiAny,   base.ofiAny);
+  setBar('imp-clean-any', 'imp-clean-any-pct', show.netAny,   base.netAny);
 }
 
 // ─── CHARTS ──────────────────────────────────────────────
@@ -2805,8 +3107,8 @@ async function exportPDF() {
     setFill(...C.green); doc.setGState(new doc.GState({opacity: 0.15}));
     doc.circle(W-22, 29, 18, 'F');
     doc.setGState(new doc.GState({opacity: 1}));
-    font('normal', 18); setColor(...C.green);
-    txt('🌿', W-30, 34);
+    font('bold', 14); setColor(...C.green);
+    txt('ITB', W-26, 34);
 
     // Title block
     font('bold', 20); setColor(...C.text);
@@ -2818,10 +3120,10 @@ async function exportPDF() {
 
     // Tags row
     const tags = [
-      {t:'⚡ 8 Indicators', c:C.yellow},
-      {t:'📊 Charts', c:C.blue},
+      {t:'8 Indicators', c:C.yellow},
+      {t:'Charts', c:C.blue},
       {t:'−30% Reduction', c:C.yellow},
-      {t:'📅 ' + periodLabel, c:C.purple},
+      {t:periodLabel, c:C.purple},
     ];
     let tx = M;
     tags.forEach(tag => {
@@ -2862,10 +3164,10 @@ async function exportPDF() {
 
     // 4 big KPI cards in a 2×2 grid
     const kpiData = [
-      { label:'⚡ Electricity', id:'kpi-elec', unit:'kWh/year', clr:C.yellow, sub:'Annual full year' },
-      { label:'💧 Water', id:'kpi-water', unit:'L/year', clr:C.blue, sub:'Annual full year' },
-      { label:'📝 Office Paper', id:'kpi-paper', unit:'A4 packs/year', clr:C.purple, sub:'Annual full year' },
-      { label:'🧼 Cleaning', id:'kpi-clean', unit:'rolls/year', clr:C.green, sub:'Annual full year' },
+      { label:'Electricity', id:'kpi-elec', unit:'kWh/year', clr:C.yellow, sub:'Annual full year' },
+      { label:'Water', id:'kpi-water', unit:'L/year', clr:C.blue, sub:'Annual full year' },
+      { label:'Office Paper', id:'kpi-paper', unit:'A4 packs/year', clr:C.purple, sub:'Annual full year' },
+      { label:'Cleaning', id:'kpi-clean', unit:'rolls/year', clr:C.green, sub:'Annual full year' },
     ];
 
     const kpiW = (CW - 6) / 2;
@@ -2896,14 +3198,14 @@ async function exportPDF() {
     y = sectionHeader('8 Sustainability Indicators', y, C.blue);
 
     const indData = [
-      { label:'① Electricity — Next year',        id:'res-elec-any',      oldId:'res-elec-any-old',      unit:'kWh',      clr:C.yellow  },
-      { label:'② Electricity — Selected period',   id:'res-elec-periode',  oldId:'res-elec-periode-old',  unit:'kWh',      clr:C.yellow  },
-      { label:'③ Water — Next year',               id:'res-aigua-any',     oldId:'res-aigua-any-old',     unit:'L',        clr:C.blue    },
-      { label:'④ Water — Selected period',         id:'res-aigua-periode', oldId:'res-aigua-periode-old', unit:'L',        clr:C.blue    },
-      { label:'⑤ Office Paper — Next year',        id:'res-ofi-any',       oldId:'res-ofi-any-old',       unit:'A4 packs', clr:C.purple  },
-      { label:'⑥ Office Paper — Selected period',  id:'res-ofi-periode',   oldId:'res-ofi-periode-old',   unit:'A4 packs', clr:C.purple  },
-      { label:'⑦ Cleaning Products — Next year',   id:'res-net-any',       oldId:'res-net-any-old',       unit:'rolls',    clr:C.green   },
-      { label:'⑧ Cleaning Products — Selected period', id:'res-net-periode', oldId:'res-net-periode-old',  unit:'rolls',    clr:C.green   },
+      { label:'[A] Electricity — Next year',        id:'res-elec-any',      oldId:'res-elec-any-old',      unit:'kWh',      clr:C.yellow  },
+      { label:'[B] Electricity — Selected period',   id:'res-elec-periode',  oldId:'res-elec-periode-old',  unit:'kWh',      clr:C.yellow  },
+      { label:'[C] Water — Next year',               id:'res-aigua-any',     oldId:'res-aigua-any-old',     unit:'L',        clr:C.blue    },
+      { label:'[D] Water — Selected period',         id:'res-aigua-periode', oldId:'res-aigua-periode-old', unit:'L',        clr:C.blue    },
+      { label:'[E] Office Paper — Next year',        id:'res-ofi-any',       oldId:'res-ofi-any-old',       unit:'A4 packs', clr:C.purple  },
+      { label:'[F] Office Paper — Selected period',  id:'res-ofi-periode',   oldId:'res-ofi-periode-old',   unit:'A4 packs', clr:C.purple  },
+      { label:'[G] Cleaning Products — Next year',   id:'res-net-any',       oldId:'res-net-any-old',       unit:'rolls',    clr:C.green   },
+      { label:'[H] Cleaning Products — Selected period', id:'res-net-periode', oldId:'res-net-periode-old',  unit:'rolls',    clr:C.green   },
     ];
 
     indData.forEach(ind => {
@@ -2919,11 +3221,11 @@ async function exportPDF() {
     if (y < H - 60) {
       y = sectionHeader('Relative Impact by Indicator', y, C.purple);
       const impData = [
-        { label:'⚡ Electricity year', id:'imp-elec-any', pctId:'imp-elec-any-pct', clr:C.yellow },
-        { label:'⚡ Electricity period', id:'imp-elec-per', pctId:'imp-elec-per-pct', clr:[251,191,36] },
-        { label:'💧 Water year', id:'imp-water-any', pctId:'imp-water-any-pct', clr:C.blue },
-        { label:'📝 Paper year', id:'imp-paper-any', pctId:'imp-paper-any-pct', clr:C.purple },
-        { label:'🧼 Cleaning year', id:'imp-clean-any', pctId:'imp-clean-any-pct', clr:C.green },
+        { label:'Electricity year', id:'imp-elec-any', pctId:'imp-elec-any-pct', clr:C.yellow },
+        { label:'Electricity period', id:'imp-elec-per', pctId:'imp-elec-per-pct', clr:[251,191,36] },
+        { label:'Water year', id:'imp-water-any', pctId:'imp-water-any-pct', clr:C.blue },
+        { label:'Paper year', id:'imp-paper-any', pctId:'imp-paper-any-pct', clr:C.purple },
+        { label:'Cleaning year', id:'imp-clean-any', pctId:'imp-clean-any-pct', clr:C.green },
       ];
       const maxPct = 100;
       impData.forEach(imp => {
@@ -2952,40 +3254,61 @@ async function exportPDF() {
     y = 25;
 
     // ── CHARTS CAPTURE ────────────────────────────────────
-    if (typeof html2canvas !== 'undefined') {
-      y = sectionHeader('Monthly Distribution Charts', y, C.yellow);
-      try {
-        const chartIds = ['chart-elec','chart-water','chart-paper','chart-clean'];
-        const chartLabels = ['⚡ Electricity (kWh/month)','💧 Water (L/month)','📝 Office Paper (packs/month)','🧼 Cleaning (rolls/month)'];
-        const chartClrs = [C.yellow, C.blue, C.purple, C.green];
-        const imgW = (CW - 4) / 2, imgH = 32;
+    y = sectionHeader('Monthly Distribution Charts', y, C.yellow);
+    try {
+      const chartIds = ['chart-elec','chart-water','chart-paper','chart-clean'];
+      const chartLabels = ['Electricity (kWh/month)','Water (L/month)','Office Paper (packs/month)','Cleaning (rolls/month)'];
+      const chartClrs = [C.yellow, C.blue, C.purple, C.green];
+      const imgW = (CW - 4) / 2, imgH = 32;
 
-        for (let ci = 0; ci < chartIds.length; ci++) {
-          const canvas = document.getElementById(chartIds[ci]);
-          if (!canvas) continue;
-          const col = ci % 2, row = Math.floor(ci / 2);
-          const cx = M + col * (imgW + 4);
-          const cy = y + row * (imgH + 10);
-
-          rrect(cx, cy, imgW, imgH + 8, C.bg2, 2);
-          font('bold', 6.5); setColor(...chartClrs[ci]);
-          txt(chartLabels[ci], cx + 3, cy + 5);
-
-          try {
-            const imgData = await html2canvas(canvas, {
-              backgroundColor: null, scale: 1.5, logging: false,
-              useCORS: true, allowTaint: true
-            });
-            doc.addImage(imgData.toDataURL('image/png'), 'PNG', cx+1, cy+6, imgW-2, imgH);
-          } catch(chartErr) {
-            font('italic', 7); setColor(...C.muted);
-            txt('[Chart not available]', cx + imgW/2, cy + imgH/2, {align:'center'});
-          }
-        }
-        y += (imgH + 10) * 2 + 6;
-      } catch(e) {
-        y += 4;
+      // Temporarily make the charts tab visible so canvases have real dimensions
+      const graficsTab = document.getElementById('tab-grafics');
+      const wasHidden = graficsTab && graficsTab.style.display === 'none' || (graficsTab && !graficsTab.classList.contains('active'));
+      if (graficsTab && wasHidden) {
+        graficsTab.style.cssText = 'display:flex !important; visibility:hidden; position:absolute; pointer-events:none;';
       }
+      // Re-render charts to ensure they're painted at correct size
+      const period = document.getElementById('periode-select').value;
+      const customFrom = state.customFrom || undefined;
+      const customTo = state.customTo || undefined;
+      renderCharts(period, customFrom, customTo);
+      // Small yield to let Chart.js finish painting
+      await new Promise(r => setTimeout(r, 300));
+
+      for (let ci = 0; ci < chartIds.length; ci++) {
+        const canvas = document.getElementById(chartIds[ci]);
+        const col = ci % 2, row = Math.floor(ci / 2);
+        const cx = M + col * (imgW + 4);
+        const cy = y + row * (imgH + 10);
+
+        rrect(cx, cy, imgW, imgH + 8, C.bg2, 2);
+        font('bold', 6.5); setColor(...chartClrs[ci]);
+        txt(chartLabels[ci], cx + 3, cy + 5);
+
+        let chartAdded = false;
+        if (canvas && canvas.width > 0 && canvas.height > 0) {
+          try {
+            const imgData = canvas.toDataURL('image/png');
+            if (imgData && imgData.length > 500) {
+              doc.addImage(imgData, 'PNG', cx+1, cy+6, imgW-2, imgH);
+              chartAdded = true;
+            }
+          } catch(e) { /* tainted canvas, fall through */ }
+        }
+        if (!chartAdded) {
+          font('italic', 7); setColor(...C.muted);
+          txt('[Chart not available]', cx + imgW/2, cy + imgH/2 + 4, {align:'center'});
+        }
+      }
+
+      // Restore tab visibility
+      if (graficsTab && wasHidden) {
+        graficsTab.style.cssText = '';
+      }
+
+      y += (imgH + 10) * 2 + 6;
+    } catch(e) {
+      y += 4;
     }
 
     // ── 3-YEAR REDUCTION PLAN ─────────────────────────────
@@ -2993,7 +3316,7 @@ async function exportPDF() {
 
     const planData = [
       {
-        resource:'⚡ Electricity', clr:C.yellow,
+        resource:'Electricity', clr:C.yellow,
         steps:[
           {yr:'Year 1',phase:'Reduce',   badge:'−10%', desc:'Presence sensors in all classrooms and common areas'},
           {yr:'Year 2',phase:'Reuse',    badge:'−15%', desc:'Full LED lighting replacement across all facilities'},
@@ -3001,7 +3324,7 @@ async function exportPDF() {
         ]
       },
       {
-        resource:'💧 Water', clr:C.blue,
+        resource:'Water', clr:C.blue,
         steps:[
           {yr:'Year 1',phase:'Reduce',   badge:'−10%', desc:'Aerator installation on all taps in the centre'},
           {yr:'Year 2',phase:'Reduce',   badge:'−10%', desc:'Dual-flush cisterns in all toilet facilities'},
@@ -3009,7 +3332,7 @@ async function exportPDF() {
         ]
       },
       {
-        resource:'📝 Office Paper', clr:C.purple,
+        resource:'Office Paper', clr:C.purple,
         steps:[
           {yr:'Year 1',phase:'Reduce',   badge:'−15%', desc:'Mandatory Zero Paper policy on Moodle & digital comms'},
           {yr:'Year 2',phase:'Reuse',    badge:'−5%',  desc:'Exclusive purchase of refillable pens and markers'},
@@ -3017,7 +3340,7 @@ async function exportPDF() {
         ]
       },
       {
-        resource:'🧼 Cleaning', clr:C.green,
+        resource:'Cleaning', clr:C.green,
         steps:[
           {yr:'Year 1',phase:'Reduce',   badge:'−20%', desc:'Replace paper towels with energy-efficient air dryers'},
           {yr:'Year 2',phase:'Reuse',    badge:'−8%',  desc:'Bulk soap and products in reusable refillable containers'},
@@ -3133,8 +3456,8 @@ async function exportPDF() {
         if (sE && rE) {
           const saved = (parseInt(sE.replace(/\D/g,'')) - parseInt(rE.replace(/\D/g,'')));
           font('normal', 7); setColor(...C.text2);
-          txt(`⚡ ${saved.toLocaleString()} kWh electricity saved`, M+4, sumY+15);
-          txt(`💧 Water −30%  ·  📝 Paper −30%  ·  🧼 Cleaning −30%`, M+4, sumY+20.5);
+          txt(`Electricity: ${saved.toLocaleString()} kWh saved`, M+4, sumY+15);
+          txt(`Water -30%  |  Paper -30%  |  Cleaning -30%`, M+4, sumY+20.5);
         }
       }
     }
@@ -3241,7 +3564,16 @@ function updateSimulator() {
   updateSimMeasureStyles();
   const reds = calcSimReductions();
   const base = getSimBase();
-  const avg = Math.round((reds.elec + reds.water + reds.paper + reds.clean) / 4);
+
+  // Weighted average: weight each resource by its relative environmental impact
+  // Electricity dominates, so give it more weight in the overall % shown
+  const weights = { elec: 0.50, water: 0.25, paper: 0.15, clean: 0.10 };
+  const avg = Math.round(
+    reds.elec  * weights.elec  +
+    reds.water * weights.water +
+    reds.paper * weights.paper +
+    reds.clean * weights.clean
+  );
 
   // Update donut
   if (simDonutChart) {
@@ -3423,6 +3755,236 @@ function initSimulator() {
   updateSimulator();
 }
 
+// ─── MY DATA (custom inputs) ─────────────────────────────
+const MYDATA_LIMITS = {
+  elec:  { min: 1,   max: 5000,  id: 'my-elec-daily',    errId: 'err-elec'  },
+  water: { min: 10,  max: 50000, id: 'my-water-daily',   errId: 'err-water' },
+  paper: { min: 0.5, max: 500,   id: 'my-paper-monthly', errId: 'err-paper' },
+  clean: { min: 1,   max: 2000,  id: 'my-clean-monthly', errId: 'err-clean' },
+};
+
+const DEFAULT_DATA_BACKUP = {
+  elecDaily:    261.54,
+  waterDaily:   850,
+  paperMonthly: 22.5,
+  cleanMonthly: 108,
+  elecFactors:  [1.15,1.18,1.05,0.92,0.88,0.80,0.75,0.78,0.90,1.02,1.12,1.20],
+  waterFactors: [0.80,0.82,0.88,0.95,1.05,1.15,1.20,1.18,1.05,0.95,0.85,0.78],
+};
+
+let mydCurrentPeriod = 'anual';
+
+// Clamp a value and enforce min/max
+function clampInput(input, min, max) {
+  let v = parseFloat(input.value);
+  if (isNaN(v) || input.value === '') return null;
+  if (v < min) { input.value = min; v = min; }
+  if (v > max) { input.value = max; v = max; }
+  return v;
+}
+
+function validateField(key) {
+  const cfg = MYDATA_LIMITS[key];
+  const input = document.getElementById(cfg.id);
+  const errEl = document.getElementById(cfg.errId);
+  const raw = input.value.trim();
+  if (raw === '') {
+    input.classList.remove('is-valid','is-error');
+    if (errEl) errEl.hidden = true;
+    return null; // blank = use default
+  }
+  let v = parseFloat(raw);
+  if (isNaN(v)) {
+    input.classList.add('is-error'); input.classList.remove('is-valid');
+    if (errEl) { errEl.querySelector('span').textContent = 'Must be a number.'; errEl.hidden = false; }
+    return 'error';
+  }
+  if (v < cfg.min || v > cfg.max) {
+    // Auto-clamp
+    v = Math.max(cfg.min, Math.min(cfg.max, v));
+    input.value = v;
+    if (errEl) { errEl.querySelector('span').textContent = `Clamped to valid range (${cfg.min}–${cfg.max}).`; errEl.hidden = false; }
+    input.classList.remove('is-error'); input.classList.add('is-valid');
+    return v;
+  }
+  input.classList.add('is-valid'); input.classList.remove('is-error');
+  if (errEl) errEl.hidden = true;
+  return v;
+}
+
+// Live validation on input
+Object.keys(MYDATA_LIMITS).forEach(key => {
+  const input = document.getElementById(MYDATA_LIMITS[key].id);
+  if (!input) return;
+  input.addEventListener('input', () => validateField(key));
+  input.addEventListener('blur',  () => validateField(key));
+});
+
+function parseFactors(str) {
+  if (!str || !str.trim()) return null;
+  const vals = str.split(',').map(s => parseFloat(s.trim())).filter(v => !isNaN(v));
+  if (vals.length !== 12) return 'err-count';
+  if (vals.some(v => v < 0.1 || v > 3.0)) return 'err-range';
+  return vals;
+}
+
+function validateFactors(inputId, errId) {
+  const input = document.getElementById(inputId);
+  const errEl = document.getElementById(errId);
+  const raw = input.value.trim();
+  if (!raw) { if (errEl) errEl.hidden = true; return null; }
+  const result = parseFactors(raw);
+  if (result === 'err-count') {
+    if (errEl) { errEl.querySelector('span').textContent = 'Exactly 12 comma-separated values required.'; errEl.hidden = false; }
+    input.style.borderColor = 'rgba(248,113,113,.6)';
+    return 'error';
+  }
+  if (result === 'err-range') {
+    if (errEl) { errEl.querySelector('span').textContent = 'All values must be between 0.1 and 3.0.'; errEl.hidden = false; }
+    input.style.borderColor = 'rgba(248,113,113,.6)';
+    return 'error';
+  }
+  if (errEl) errEl.hidden = true;
+  input.style.borderColor = 'rgba(52,211,153,.5)';
+  return result;
+}
+
+function mydComputeAndRender(period, myVals) {
+  // myVals: { elecDaily, waterDaily, paperMonthly, cleanMonthly, elecFactors, waterFactors }
+  // Uses ONLY myVals — never touches the global DATA object
+  const fmt = n => Math.round(n).toLocaleString('ca-ES');
+
+  const elecD  = myVals.elecDaily;
+  const waterD = myVals.waterDaily;
+  const paperM = myVals.paperMonthly;
+  const cleanM = myVals.cleanMonthly;
+
+  // Annual totals
+  const elecAny  = Math.round(elecD  * 365);
+  const waterAny = Math.round(waterD * 365);
+  const paperAny = Math.round(paperM * 12);
+  const cleanAny = Math.round(cleanM * 12);
+
+  // KPI row (always annual)
+  document.getElementById('myd-elec-year').textContent  = fmt(elecAny);
+  document.getElementById('myd-water-year').textContent = fmt(waterAny);
+  document.getElementById('myd-paper-year').textContent = fmt(paperAny);
+  document.getElementById('myd-clean-year').textContent = fmt(cleanAny);
+
+  // Period-based
+  const P = PERIOD_CONFIG[period] || PERIOD_CONFIG.anual;
+
+  // Seasonal factor for electricity & water using provided factors
+  const elecSF  = myVals.elecFactors.reduce((s,v,i) => s + v * DAYS_PER_MONTH[i], 0) / 365;
+  const waterSF = myVals.waterFactors.reduce((s,v,i) => s + v * DAYS_PER_MONTH[i], 0) / 365;
+
+  const elecPer  = Math.round(elecD  * P.electricitat.days * P.electricitat.sf);
+  const waterPer = Math.round(waterD * P.aigua.days         * P.aigua.sf);
+  const paperPer = Math.round(paperM * P.oficina.months     * P.oficina.sf);
+  const cleanPer = Math.round(cleanM * P.neteja.months      * P.neteja.sf);
+
+  document.getElementById('myd-res-elec-any').textContent  = fmt(elecAny);
+  document.getElementById('myd-res-elec-per').textContent  = fmt(elecPer);
+  document.getElementById('myd-res-water-any').textContent = fmt(waterAny);
+  document.getElementById('myd-res-water-per').textContent = fmt(waterPer);
+  document.getElementById('myd-res-paper-any').textContent = fmt(paperAny);
+  document.getElementById('myd-res-paper-per').textContent = fmt(paperPer);
+  document.getElementById('myd-res-clean-any').textContent = fmt(cleanAny);
+  document.getElementById('myd-res-clean-per').textContent = fmt(cleanPer);
+
+  // −30% savings
+  document.getElementById('myd-save-elec').textContent  = fmt(elecAny  * 0.30);
+  document.getElementById('myd-save-water').textContent = fmt(waterAny * 0.30);
+  document.getElementById('myd-save-paper').textContent = fmt(paperAny * 0.30);
+  document.getElementById('myd-save-clean').textContent = fmt(cleanAny * 0.30);
+
+  // Period label
+  const periodLabels = { anual:'12 months (full year)', curs:'10 months (Sep–Jun)', hivern:'3 months (Dec–Feb)' };
+  const lbl = document.getElementById('myd-period-label');
+  if (lbl) lbl.textContent = periodLabels[period] || '';
+}
+
+// Store the last applied values so period changes can re-render
+let mydLastVals = null;
+
+function mydSetPeriod(btn, period) {
+  document.querySelectorAll('[data-myd-period]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  mydCurrentPeriod = period;
+  if (mydLastVals) mydComputeAndRender(period, mydLastVals);
+}
+
+function applyMyData() {
+  // Validate all fields
+  const elecVal  = validateField('elec');
+  const waterVal = validateField('water');
+  const paperVal = validateField('paper');
+  const cleanVal = validateField('clean');
+  const elecF    = validateFactors('my-elec-factors', 'err-elec-f');
+  const waterF   = validateFactors('my-water-factors', 'err-water-f');
+
+  if ([elecVal, waterVal, paperVal, cleanVal, elecF, waterF].includes('error')) {
+    document.getElementById('mydata-status').textContent = '⚠️ Fix the errors above before applying.';
+    document.getElementById('mydata-status').style.color = 'var(--red)';
+    return;
+  }
+
+  // Build a standalone values object — never mutate the global DATA
+  const myVals = {
+    elecDaily:    elecVal  !== null ? elecVal  : DEFAULT_DATA_BACKUP.elecDaily,
+    waterDaily:   waterVal !== null ? waterVal : DEFAULT_DATA_BACKUP.waterDaily,
+    paperMonthly: paperVal !== null ? paperVal : DEFAULT_DATA_BACKUP.paperMonthly,
+    cleanMonthly: cleanVal !== null ? cleanVal : DEFAULT_DATA_BACKUP.cleanMonthly,
+    elecFactors:  Array.isArray(elecF)  ? elecF  : [...DEFAULT_DATA_BACKUP.elecFactors],
+    waterFactors: Array.isArray(waterF) ? waterF : [...DEFAULT_DATA_BACKUP.waterFactors],
+  };
+  mydLastVals = myVals;
+
+  // Count how many custom values were entered
+  const count = [elecVal, waterVal, paperVal, cleanVal].filter(v => v !== null).length;
+
+  // Show inline results
+  const resultsEl = document.getElementById('mydata-results');
+  if (resultsEl) { resultsEl.hidden = false; resultsEl.style.display = 'flex'; }
+  mydComputeAndRender(mydCurrentPeriod, myVals);
+
+  // Status message
+  const statusEl = document.getElementById('mydata-status');
+  statusEl.style.color = 'var(--green)';
+  statusEl.textContent = count > 0
+    ? `✅ ${count} custom value${count > 1 ? 's' : ''} applied — results shown below`
+    : '✅ Using all default values — results shown below';
+
+  // NOTE: handleCalc() is intentionally NOT called here.
+  // My Data is fully independent from the Calculator tab.
+}
+
+function resetMyData() {
+  mydLastVals = null;
+
+  ['my-elec-daily','my-water-daily','my-paper-monthly','my-clean-monthly','my-elec-factors','my-water-factors'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.value = ''; el.classList.remove('is-valid','is-error'); el.style.borderColor = ''; }
+  });
+  ['err-elec','err-water','err-paper','err-clean','err-elec-f','err-water-f'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.hidden = true;
+  });
+
+  const resultsEl = document.getElementById('mydata-results');
+  if (resultsEl) { resultsEl.hidden = true; resultsEl.style.display = ''; }
+
+  const statusEl = document.getElementById('mydata-status');
+  statusEl.style.color = 'var(--muted)';
+  statusEl.textContent = '↩ Cleared — enter new values and click Apply & Calculate';
+
+  // NOTE: handleCalc() is intentionally NOT called here.
+  // Resetting My Data does NOT affect the Calculator tab.
+}
+
+document.getElementById('btn-apply-mydata').addEventListener('click', applyMyData);
+document.getElementById('btn-reset-mydata').addEventListener('click', resetMyData);
+
 // ─── INIT ────────────────────────────────────────────────
 // Set default dates for custom range
 const today = new Date();
@@ -3570,6 +4132,7 @@ initSimulator();
         pla:         "🗺️ Reduction Plan",
         simulador:   '🔬 Simulador d\'estalvi',
         consells:    "💡 Practical Tips",
+        mydata:      "✏️ My Custom Data",
       };
       const key = tab.dataset.tab;
       if (labels[key]) showToast(labels[key]);
