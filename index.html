@@ -2499,17 +2499,20 @@ function compute(period, isReduction, customFrom, customTo) {
   }
 
   if (isReduction) {
+    // Derive reduced values by subtracting exactly 30% of the base.
+    // Math.round(v * 0.30) gives the saving; subtracting guarantees the pill always shows -30.00%.
+    const exact30pct = v => v - Math.round(v * 0.30);
     return {
       base: { elecAny, elecPer, aiguaAny, aiguaPer, ofiAny, ofiPer, netAny, netPer },
       reduced: {
-        elecAny:  Math.round(elecAny  * REDUCTION),
-        elecPer:  Math.round(elecPer  * REDUCTION),
-        aiguaAny: Math.round(aiguaAny * REDUCTION),
-        aiguaPer: Math.round(aiguaPer * REDUCTION),
-        ofiAny:   Math.round(ofiAny   * REDUCTION),
-        ofiPer:   Math.round(ofiPer   * REDUCTION),
-        netAny:   Math.round(netAny   * REDUCTION),
-        netPer:   Math.round(netPer   * REDUCTION),
+        elecAny:  exact30pct(elecAny),
+        elecPer:  exact30pct(elecPer),
+        aiguaAny: exact30pct(aiguaAny),
+        aiguaPer: exact30pct(aiguaPer),
+        ofiAny:   exact30pct(ofiAny),
+        ofiPer:   exact30pct(ofiPer),
+        netAny:   exact30pct(netAny),
+        netPer:   exact30pct(netPer),
       }
     };
   }
@@ -2573,10 +2576,11 @@ function render(result) {
   animateCount(document.getElementById('kpi-paper'), show.ofiAny);
   animateCount(document.getElementById('kpi-clean'), show.netAny);
 
-  // KPI sub-labels always say "annual" since we show annual values
-  document.querySelectorAll('.kpi-sub').forEach(el => {
+  // KPI sub-labels — scope only to the calculator tab KPIs
+  const calcKpiRow = document.getElementById('kpi-row');
+  if (calcKpiRow) calcKpiRow.querySelectorAll('.kpi-sub').forEach(el => {
     if (el.textContent.includes('kWh') || el.textContent.includes('full year')) el.textContent = 'kWh · annual';
-    else if (el.textContent.includes('L ·')) el.textContent = 'L · annual';
+    else if (el.textContent.includes('L ·') || el.textContent.includes('L/day')) el.textContent = 'L · annual';
     else if (el.textContent.includes('packs')) el.textContent = 'A4 packs · annual';
     else if (el.textContent.includes('rolls')) el.textContent = 'rolls · annual';
   });
@@ -2761,10 +2765,11 @@ function renderCompareCharts() {
   const baseO = Math.round(d.consumibles_oficina.mitjana_mensual.paper_A4_paquets * 12);
   const baseN = Math.round(d.productes_neteja.mitjana_mensual.paper_higienic_rotllos * 12);
 
-  const redE = Math.round(baseE * REDUCTION);
-  const redA = Math.round(baseA * REDUCTION);
-  const redO = Math.round(baseO * REDUCTION);
-  const redN = Math.round(baseN * REDUCTION);
+  // Exact 30%: saving = round(base * 0.30), reduced = base - saving
+  const redE = baseE - Math.round(baseE * 0.30);
+  const redA = baseA - Math.round(baseA * 0.30);
+  const redO = baseO - Math.round(baseO * 0.30);
+  const redN = baseN - Math.round(baseN * 0.30);
 
   // Comparison bar chart
   const ctxC = document.getElementById('chart-compare')?.getContext('2d');
@@ -3893,10 +3898,10 @@ function mydComputeAndRender(period, myVals) {
   document.getElementById('myd-res-clean-per').textContent = fmt(cleanPer);
 
   // −30% savings
-  document.getElementById('myd-save-elec').textContent  = fmt(elecAny  * 0.30);
-  document.getElementById('myd-save-water').textContent = fmt(waterAny * 0.30);
-  document.getElementById('myd-save-paper').textContent = fmt(paperAny * 0.30);
-  document.getElementById('myd-save-clean').textContent = fmt(cleanAny * 0.30);
+  document.getElementById('myd-save-elec').textContent  = fmt(Math.round(elecAny  * 0.30));
+  document.getElementById('myd-save-water').textContent = fmt(Math.round(waterAny * 0.30));
+  document.getElementById('myd-save-paper').textContent = fmt(Math.round(paperAny * 0.30));
+  document.getElementById('myd-save-clean').textContent = fmt(Math.round(cleanAny * 0.30));
 
   // Period label
   const periodLabels = { anual:'12 months (full year)', curs:'10 months (Sep–Jun)', hivern:'3 months (Dec–Feb)' };
